@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <string-array name="contacts">
+        <item>1张艺</item>
+        <item>1周训</item>
+        <item>1张宇飞</item>
+        <item>1梁思琪</item>
+        <item>1程益良</item>
+        <item>1张志军</item>
+        <item>1刘苗苗</item>
+        <item>1博雅萌</item>
+        <item>1黄子卿</item>
+        <item>1秦宇</item>
+        <item>2黄振琴</item>
+        <item>2刘一河</item>
+        <item>2刘丽荣</item>
+        <item>2李旭浩</item>
+        <item>2张悦</item>
+        <item>2王机桥</item>
+        <item>2胡巧千</item>
+        <item>2汪莹</item>
+        <item>2拉晓东</item>
+        <item>2朱名</item>
+        <item>3李代英</item>
+        <item>3张聍兮</item>
+        <item>3于佳怡</item>
+        <item>3让喵</item>
+        <item>3刘珍</item>
+        <item>3黄颖</item>
+        <item>3白羊</item>
+        <item>3李龙</item>
+        <item>3李双燕</item>
+        <item>4郑益昕</item>
+        <item>4李德</item>
+        <item>4张学友</item>
+        <item>4夕颜</item>
+        <item>4刘翔</item>
+        <item>4李嘉</item>
+        <item>4何鸿</item>
+        <item>5于丹</item>
+        <item>5李政</item>
+        <item>5杨宁</item>
+    </string-array>
+</resources>

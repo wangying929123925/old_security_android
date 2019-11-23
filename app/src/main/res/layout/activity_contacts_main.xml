@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include  android:id="@+id/layout_bar" layout="@layout/layout_title"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        >
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            >
+            <TextView
+                android:id="@+id/department_num"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="4"
+                android:textColor="#2761A0"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/department_num"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="部门"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <View
+                android:layout_width="0.1dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="#2761A0" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/board_un_repair"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            >
+
+            <TextView
+                android:id="@+id/department_men_num"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="4"
+                android:textColor="#2761A0"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/department_men_num"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="人员"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <View
+                android:layout_width="0.1dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="#2761A0" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/department_add"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            >
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="+邀请"
+                android:textColor="#2761A0"
+                android:textSize="16sp"
+                android:background="@drawable/shape_corner"
+                android:textStyle="bold" />
+            <View
+                android:layout_width="0.1dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="#2761A0" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/board_repaired"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            >
+
+            <TextView
+                android:id="@+id/depart_manage_intro"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#2761A0"
+                android:text="管理" />
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/depart_manage_intro"
+                android:src="@drawable/ic_right"
+                />
+            <View
+                android:layout_width="0.1dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="#2761A0" />
+        </RelativeLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#457DBB" />
+    <com.example.weather.view.EditTextWithDel
+        android:id="@+id/et_search_contact"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="搜索"
+        android:singleLine="true"
+        android:paddingLeft="16dp"
+        android:textSize="16sp"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <include layout="@layout/layout_search_result"/>
+        <ListView
+            android:id="@+id/lv_contact"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:divider="@null"
+            android:scrollbars="none" />
+    </FrameLayout>
+</LinearLayout>
