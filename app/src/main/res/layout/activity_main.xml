@@ -5,12 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity">
+    tools:context="com.example.annanops.activity.MainActivity">
 
 <!--碎片不能直接在界面上显示-->
    <fragment
        android:id="@+id/choose_area_fragment"
-       android:name="com.example.weather.activity.ChooseAreaFragment"
+       android:name="com.example.annanops.activity.ChooseAreaFragment"
        android:layout_width="match_parent"
        android:layout_height="match_parent"/>
 

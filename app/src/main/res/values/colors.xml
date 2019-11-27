@@ -11,4 +11,5 @@
     <color name="gray">#ff999999</color>
     <color name="deep_black">#ff000000</color>
     <color name="black">#ff000000</color>
+    <color name="link">#1024ED</color>
 </resources>

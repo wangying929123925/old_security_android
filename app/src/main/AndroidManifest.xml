@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.weather">
+    package="com.example.annaops">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -18,22 +19,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".service.AutoUpdateService"
+            android:name="com.example.annanops.service.AutoUpdateService"
             android:enabled="true"
             android:exported="true"></service>
-        <activity android:name=".activity.LoginActivity1"/>
-        <activity android:name=".activity.WeatherActivity" />
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.Alipay_test"/>
-        <activity android:name=".activity.ContactActivity"/>
-        <activity android:name=".activity.ContactPersonActivity"/>
-        <activity android:name=".activity.UserMainActivity"/>
-        <activity android:name=".activity.RepairAddActivity"/>
-        <activity android:name=".activity.OrderSearchActivity"/>
-        <activity android:name=".activity.OrderResearchInputActivity"/>
-        <activity android:name=".activity.UerMessageActivity"/>
-        <activity android:name=".activity.UserOrderSearchActivitySpinner"/>
-        <activity android:name=".activity.LoadingActivity">
+        <activity android:name="com.example.annanops.activity.LoginActivity1"/>
+        <activity android:name="com.example.annanops.activity.WeatherActivity" />
+        <activity android:name="com.example.annanops.activity.MainActivity" />
+        <activity android:name="com.example.annanops.activity.Alipay_test"/>
+        <activity android:name="com.example.annanops.activity.ContactActivity"/>
+        <activity android:name="com.example.annanops.activity.ContactPersonActivity"/>
+        <activity android:name="com.example.annanops.activity.UserMainActivity"/>
+        <activity android:name="com.example.annanops.activity.RepairAddActivity"/>
+        <activity android:name="com.example.annanops.activity.OrderSearchActivity"/>
+        <activity android:name="com.example.annanops.activity.OrderResearchInputActivity"/>
+        <activity android:name="com.example.annanops.activity.UerMessageActivity"/>
+        <activity android:name="com.example.annanops.activity.UserOrderSearchActivitySpinner"/>
+        <activity android:name="com.example.annanops.activity.LoadingActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -50,7 +52,12 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"/>
-
+        <activity
+            android:name="photopicker.PhotoPickerActivity"
+            android:theme="@style/PhotoPickerTheme"
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name="photopicker.PhotoPreviewActivity"
+            android:theme="@style/PhotoPickerTheme"/>
     </application>
 
 </manifest>
