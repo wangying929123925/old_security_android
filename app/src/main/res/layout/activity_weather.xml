@@ -40,7 +40,7 @@
     </android.support.v4.widget.SwipeRefreshLayout>
         <fragment
             android:id="@+id/choose_area_fragment"
-            android:name="com.example.weather.activity.ChooseAreaFragment"
+            android:name="com.example.ananops1.activity.ChooseAreaFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start"/>
