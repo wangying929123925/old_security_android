@@ -59,7 +59,5 @@ public class SPUtils {
     public int getInt(String key, int defValue) {
         return mSharedPreferences.getInt(key, defValue);
     }
-    public static void actionStart(Context context,String data1,String data2,Class<?> cs){
-        Intent intent=new Intent();
-    }
+
 }
