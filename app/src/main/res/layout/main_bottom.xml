@@ -19,7 +19,7 @@
             android:focusableInTouchMode="true"
             android:padding="3dp">
             <RelativeLayout
-                android:id="@+id/tab_main"
+                android:id="@+id/tab_main_1"
                 android:layout_width="80dp"
                 android:gravity="center"
                 android:onClick="onTabClicked"
@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:clickable="false">
                 <ImageView
-                    android:id="@+id/ib_main"
+                    android:id="@+id/tab_main_img1"
                     android:layout_width="wrap_content"
                     android:layout_height="28dp"
                     android:layout_centerHorizontal="true"
@@ -35,12 +35,11 @@
                     android:src="@drawable/tab_main_page"
                     android:focusable="false"
                     android:clickable="false"/>
-
                 <TextView
-                    android:id="@+id/tv_main"
+                    android:id="@+id/tab_main_text1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/ib_main"
+                    android:layout_below="@id/tab_main_img1"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="3dp"
                     android:text="首页"
@@ -55,14 +54,14 @@
         android:layout_weight="1"
         android:padding="3dp">
         <RelativeLayout
-            android:id="@+id/tab_train"
+            android:id="@+id/tab_main_2"
             android:layout_width="80dp"
             android:gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_height="match_parent"
             android:onClick="onTabClicked">
             <ImageView
-                android:id="@+id/ib_train"
+                android:id="@+id/tab_main_img2"
                 android:layout_width="wrap_content"
                 android:layout_height="28dp"
                 android:layout_centerHorizontal="true"
@@ -71,13 +70,13 @@
                 android:clickable="false"/>
 
             <TextView
-                android:id="@+id/tv_train"
+                android:id="@+id/tab_main_text2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ib_train"
+                android:layout_below="@id/tab_main_img2"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="3dp"
-                android:text="培训"
+                android:text="消息"
                 android:textColor="#9A9A9A"
                 android:textSize="12sp"
                 android:clickable="false"/>
@@ -89,26 +88,26 @@
             android:layout_weight="1"
             android:padding="3dp">
             <RelativeLayout
-                android:id="@+id/tab_device"
+                android:id="@+id/tab_main_3"
                 android:layout_width="80dp"
                 android:gravity="center"
                 android:layout_centerHorizontal="true"
                 android:layout_height="match_parent"
                 android:onClick="onTabClicked">
                 <ImageView
-                    android:id="@+id/ib_device"
+                    android:id="@+id/tab_main_img3"
                     android:layout_width="wrap_content"
                     android:layout_height="28dp"
                     android:layout_centerHorizontal="true"
                     android:background="#ffffff"
-                    android:src="@drawable/tab_device"
+                    android:src="@drawable/tab_mine"
                     android:clickable="false"/>
 
                 <TextView
-                    android:id="@+id/tv_device"
+                    android:id="@+id/tab_main_text3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/ib_device"
+                    android:layout_below="@id/tab_main_img3"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="3dp"
                     android:text="设备"
@@ -121,7 +120,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="3dp">
+            android:padding="3dp"
+            android:visibility="gone">
             <RelativeLayout
                 android:id="@+id/tab_mine"
                 android:onClick="onTabClicked"

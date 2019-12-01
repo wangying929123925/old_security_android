@@ -112,7 +112,7 @@
             android:layout_height="30dp"
             android:layout_toRightOf="@+id/train_message_img"
             android:layout_alignTop="@+id/train_message_img"
-            android:text="培训消息"
+            android:text="巡检消息"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="16sp"/>
@@ -122,7 +122,7 @@
             android:layout_height="20dp"
             android:layout_toRightOf="@+id/train_message_img"
             android:layout_alignBottom="@+id/train_message_img"
-            android:text="您暂未有最新培训消息~"
+            android:text="您暂未有最新巡检消息~"
             android:textColor="@color/black"
             android:textSize="14sp"/>
         <View

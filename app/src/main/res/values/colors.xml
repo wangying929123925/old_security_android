@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
-    <color name="navpage">#FFE1E8EB</color>
-    <color name="state_pressed">#ffeeeeee</color>
-    <color name="state_selected">#ffffff</color>
-    <color name="blue">#69ACF5</color>
-    <color name="deep_blue">#4E76A8</color>
-    <color name="gray">#ff999999</color>
-    <color name="deep_black">#ff000000</color>
-    <color name="black">#ff000000</color>
-    <color name="link">#1024ED</color>
-</resources>
+
+    <resources>
+        <color name="colorPrimary">#008577</color>
+        <color name="colorPrimaryDark">#00574B</color>
+        <color name="colorAccent">#D81B60</color>
+        <color name="navpage">#FFE1E8EB</color>
+        <color name="state_pressed">#ffeeeeee</color>
+        <color name="state_selected">#ffffff</color>
+        <color name="blue">#69ACF5</color>
+        <color name="deep_blue">#4E76A8</color>
+        <color name="gray">#ff999999</color>
+        <color name="deep_black">#ff000000</color>
+        <color name="black">#ff000000</color>
+        <color name="link">#1024ED</color>
+    </resources>
+

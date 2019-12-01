@@ -142,7 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:background="#457DBB" />
-    <com.example.annanops.view.EditTextWithDel
+    <com.example.ananops_android.view.EditTextWithDel
         android:id="@+id/et_search_contact"
         android:layout_width="match_parent"
         android:layout_height="50dp"
