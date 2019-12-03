@@ -19,6 +19,7 @@ import com.example.ananops_android.adapter.BaseViewHolder;
 import com.example.ananops_android.adapter.InspectionAdapter;
 import com.example.ananops_android.adapter.RepairAdapter;
 import com.example.ananops_android.entity.InspectionContent;
+import com.example.ananops_android.util.BaseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,31 +80,7 @@ public class InspectionSerchListActivity extends AppCompatActivity implements Vi
         mRecyclerView.setAdapter(inspectionAdapter);
     }
     private void initDatas() {
-        InspectionContent inspectionContent=new InspectionContent();
-        inspectionContent.setInspection_id("000000001");
-        inspectionContent.setInspection_name("邮政储蓄银行北京邮电大学支行巡检");
-        inspectionContent.setDevice_name("ATM机");
-        inspectionContent.setInspection_status("待执行");
-        InspectionContent inspectionContent1=new InspectionContent();
-        inspectionContent1.setInspection_id("000000001");
-        inspectionContent1.setInspection_name("邮政储蓄银行北京邮电大学支行巡检");
-        inspectionContent1.setDevice_name("ATM机");
-        inspectionContent1.setInspection_status("已完成");
-        inspectionContents.add(inspectionContent);
-        inspectionContents.add(inspectionContent);
-        inspectionContents.add(inspectionContent);
-        inspectionContents.add(inspectionContent);
-        inspectionContents.add(inspectionContent);
-        inspectionContents.add(inspectionContent);
-        inspectionContents.add(inspectionContent1);
-        inspectionContents.add(inspectionContent1);
-        inspectionContents.add(inspectionContent1);
-        inspectionContents.add(inspectionContent1);
-        inspectionContents.add(inspectionContent1);
-        inspectionContents.add(inspectionContent1);
-        inspectionContents.add(inspectionContent1);
-
-
+     inspectionContents= BaseUtils.getInstence().initInspectionContent(inspectionContents);
     }
     private void setOnListener() {
         back_img.setOnClickListener(this);

@@ -1,7 +1,10 @@
 package com.example.ananops_android.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.GridAdapter;
 import com.example.ananops_android.photopicker.PhotoPickerActivity;
@@ -21,6 +25,7 @@ import com.example.ananops_android.photopicker.PhotoPreviewActivity;
 import com.example.ananops_android.photopicker.SelectModel;
 import com.example.ananops_android.photopicker.intent.PhotoPickerIntent;
 import com.example.ananops_android.photopicker.intent.PhotoPreviewIntent;
+import com.example.ananops_android.util.BaseUtils;
 
 import org.json.JSONArray;
 
@@ -56,14 +61,23 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private static final int REQUEST_PREVIEW_CODE = 20;
     private ArrayList<String> imagePaths = new ArrayList<>();//图片
     private String tmp="";
+    private String[] result = new String[4];
+    private Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repair_add);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        mContext = this;
         initViews();
        // initDatas();
         setOnListener();
 
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     private void setOnListener() {
@@ -71,6 +85,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         fault_addr.setOnClickListener(this);
         fault_name.setOnClickListener(this);
         basicinfo_back.setOnClickListener(this);
+        et_appointment_time.setOnClickListener(this);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -103,11 +118,12 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         fault_addr=findViewById(R.id.et_fault_addr);
         et_repair_address=findViewById(R.id.et_repair_address);
         fault_description=findViewById(R.id.et_fault_description);
+
         fault_name=findViewById(R.id.et_fault_name);
         et_fault_degree=findViewById(R.id.et_fault_degree);
         et_emergency_degree=findViewById(R.id.et_emergency_degree);
         choose_service=findViewById(R.id. choose_service);
-
+        et_appointment_time = findViewById(R.id.et_appointment_time);
         basicinfo_back=findViewById(R.id.basicinfo_back);
         repair_time.setText(getTime());
         gridView = (GridView) findViewById(R.id.gridView_photo);
@@ -164,6 +180,22 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.basicinfo_back:
                 showExitAlertDialog(v);
+                break;
+            case R.id.et_appointment_time:
+                BaseUtils.showConfirmDialog(result,mContext,"请选择具体保修的时间", new ConfirmDialogInterface() {
+                    @Override
+                    public void onConfirmClickListener() {
+//                        Toast.makeText(RepairAddActivity.this, "queding", Toast.LENGTH_SHORT).show();
+                        et_appointment_time.setText(result[0]+"-"+result[1]+"-"+result[2]+"-"+result[3]);
+                    }
+
+                    @Override
+                    public void onCancelClickListener() {
+//                        Toast.makeText(RepairAddActivity.this, "quxiao", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            default:
                 break;
         }
     }

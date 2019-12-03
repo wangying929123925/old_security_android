@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
-    >
+    android:layout_margin="2dp">
     <LinearLayout
         android:id="@+id/main_repair"
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="30dp"
             android:gravity="center_vertical"
-            android:text="维修"
+            android:text="故障报修"
             android:textColor="@color/black"
             android:textSize="16dp"
             android:textStyle="bold" />
@@ -87,6 +87,19 @@
                 android:text="新建报修"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
+            <TextView
+                android:id="@+id/main_order_num1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/aii"
+                android:gravity="center"
+                android:text="7"
+                android:visibility="visible"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="1dp"
+                android:textColor="@android:color/white"
+                android:textSize="12sp" />
             </RelativeLayout>
         </RelativeLayout>
         <RelativeLayout
@@ -124,6 +137,19 @@
                     android:textColor="@color/black"
                     android:textSize="12sp"
                     android:clickable="false"/>
+                <TextView
+                    android:id="@+id/main_order_num2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/aii"
+                    android:gravity="center"
+                    android:text="7"
+                    android:visibility="visible"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="1dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
             </RelativeLayout>
         </RelativeLayout>
         <RelativeLayout
@@ -131,8 +157,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:focusableInTouchMode="true"
-            android:padding="3dp"
-            >
+            android:padding="3dp">
             <RelativeLayout
                 android:id="@+id/main_repair_3"
                 android:layout_width="80dp"
@@ -161,6 +186,19 @@
                     android:textColor="@color/black"
                     android:textSize="12sp"
                     android:clickable="false"/>
+                <TextView
+                    android:id="@+id/main_order_num3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/aii"
+                    android:gravity="center"
+                    android:text="7"
+                    android:visibility="visible"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="1dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
             </RelativeLayout>
         </RelativeLayout>
         <RelativeLayout
@@ -169,7 +207,100 @@
             android:layout_weight="1"
             android:focusableInTouchMode="true"
             android:padding="3dp"
-           />
+            >
+            <RelativeLayout
+                android:id="@+id/main_repair_4"
+                android:layout_width="80dp"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                >
+                <ImageView
+                    android:id="@+id/main_repair_img4"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="#ffffff"
+                    android:src="@drawable/ic_workorder"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:scaleType="fitXY"/>
+                <TextView
+                    android:id="@+id/main_order_text4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/main_repair_img4"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="3dp"
+                    android:text="新建报修"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:clickable="false"/>
+                <TextView
+                    android:id="@+id/main_order_num4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/aii"
+                    android:gravity="center"
+                    android:text="7"
+                    android:visibility="visible"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="1dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:focusableInTouchMode="true"
+            android:padding="3dp"
+            >
+            <RelativeLayout
+                android:id="@+id/main_repair_5"
+                android:layout_width="80dp"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent"
+                >
+                <ImageView
+                    android:id="@+id/main_repair_img5"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="#ffffff"
+                    android:src="@drawable/ic_workorder"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:scaleType="fitXY"/>
+                <TextView
+                    android:id="@+id/main_order_text5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/main_repair_img5"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="3dp"
+                    android:text="新建报修"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:clickable="false"/>
+                <TextView
+                    android:id="@+id/main_order_num5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/aii"
+                    android:gravity="center"
+                    android:text="7"
+                    android:visibility="visible"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="1dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+        </RelativeLayout>
     </LinearLayout>
     </LinearLayout>
     <View
@@ -196,7 +327,7 @@
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="30dp"
-                android:text="巡检"
+                android:text="巡检计划"
                 android:gravity="center_vertical"
                 android:textStyle="bold"
                 android:textSize="16dp"
@@ -256,6 +387,19 @@
                         android:textColor="@color/black"
                         android:textSize="12sp"
                         android:clickable="false"/>
+                    <TextView
+                        android:id="@+id/main_inspection_num1"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/aii"
+                        android:gravity="center"
+                        android:text="7"
+                        android:visibility="visible"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="1dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp" />
                 </RelativeLayout>
             </RelativeLayout>
             <RelativeLayout
@@ -293,6 +437,19 @@
                         android:textColor="@color/black"
                         android:textSize="12sp"
                         android:clickable="false"/>
+                    <TextView
+                        android:id="@+id/main_inspection_num2"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/aii"
+                        android:gravity="center"
+                        android:text="7"
+                        android:visibility="visible"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="1dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp" />
                 </RelativeLayout>
             </RelativeLayout>
             <RelativeLayout
@@ -329,6 +486,19 @@
                         android:textColor="@color/black"
                         android:textSize="12sp"
                         android:clickable="false"/>
+                    <TextView
+                        android:id="@+id/main_inspection_num3"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/aii"
+                        android:gravity="center"
+                        android:text="7"
+                        android:visibility="visible"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="1dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp" />
                 </RelativeLayout>
             </RelativeLayout>
             <RelativeLayout
@@ -336,17 +506,109 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:focusableInTouchMode="true"
-                android:padding="3dp"
-                />
+                android:padding="3dp">
+                <RelativeLayout
+                    android:id="@+id/main_inspection_4"
+                    android:layout_width="80dp"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="match_parent"
+                    >
+                    <ImageView
+                        android:id="@+id/main_inspection_img4"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="#ffffff"
+                        android:src="@drawable/ic_workorder"
+                        android:focusable="false"
+                        android:clickable="false"
+                        android:scaleType="fitXY"/>
+                    <TextView
+                        android:id="@+id/main_inspection_text4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/main_inspection_img4"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="3dp"
+                        android:text="巡检结果"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:clickable="false"/>
+                    <TextView
+                        android:id="@+id/main_inspection_num4"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/aii"
+                        android:gravity="center"
+                        android:text="7"
+                        android:visibility="visible"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="1dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:focusableInTouchMode="true"
+                android:padding="3dp">
+                <RelativeLayout
+                    android:id="@+id/main_inspection_5"
+                    android:layout_width="80dp"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="match_parent"
+                    >
+                    <ImageView
+                        android:id="@+id/main_inspection_img5"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="#ffffff"
+                        android:src="@drawable/ic_workorder"
+                        android:focusable="false"
+                        android:clickable="false"
+                        android:scaleType="fitXY"/>
+                    <TextView
+                        android:id="@+id/main_inspection_text5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/main_inspection_img5"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="3dp"
+                        android:text="巡检结果"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:clickable="false"/>
+                    <TextView
+                        android:id="@+id/main_inspection_num5"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/aii"
+                        android:gravity="center"
+                        android:text="7"
+                        android:visibility="visible"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="1dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="15dp"/>
     <LinearLayout
-        android:id="@+id/main_data"
+        android:id="@+id/main_undo"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical"
         android:background="@drawable/shape_corner_bluewidge_19">
         <RelativeLayout
@@ -356,151 +618,39 @@
                 android:layout_width="5dp"
                 android:layout_height="25dp"
                 android:background="@color/deep_blue"
+                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"/>
             <TextView
-                android:id="@+id/data_item_title"
+                android:id="@+id/undo_item_title"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="30dp"
-                android:text="统计分析"
+                android:text="待办事项"
                 android:gravity="center_vertical"
                 android:textStyle="bold"
                 android:textSize="16dp"
                 android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/main_undo_all"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:textSize="16dp"
+                tools:text="查看代办事项 >"/>
         </RelativeLayout>
-
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/state_pressed"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="90dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             >
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:focusableInTouchMode="true"
-                android:gravity="center"
-                android:padding="3dp"
-               >
-                <RelativeLayout
-                    android:id="@+id/main_data_1"
-                    android:layout_width="80dp"
-                    android:gravity="center"
-                    android:layout_centerHorizontal="true"
-                    android:layout_height="match_parent"
-                    >
-                    <ImageView
-                        android:id="@+id/main_data_img1"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_centerHorizontal="true"
-                        android:background="#ffffff"
-                        android:src="@drawable/ic_workorder"
-                        android:focusable="false"
-                        android:clickable="false"
-                        android:scaleType="fitXY"/>
-                    <TextView
-                        android:id="@+id/main_data_text1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/main_data_img1"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="3dp"
-                        android:text="巡检结果"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:clickable="false"/>
-                </RelativeLayout>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:focusableInTouchMode="true"
-                android:padding="3dp"
-                >
-                <RelativeLayout
-                    android:id="@+id/main_data_2"
-                    android:layout_width="80dp"
-                    android:gravity="center"
-                    android:layout_centerHorizontal="true"
-                    android:layout_height="match_parent"
-                    >
-                    <ImageView
-                        android:id="@+id/main_data_img2"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_centerHorizontal="true"
-                        android:background="#ffffff"
-                        android:src="@drawable/ic_workorder"
-                        android:focusable="false"
-                        android:clickable="false"
-                        android:scaleType="fitXY"/>
-                    <TextView
-                        android:id="@+id/main_data_text2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/main_data_img2"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="3dp"
-                        android:text="巡检结果"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:clickable="false"/>
-                </RelativeLayout>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:focusableInTouchMode="true"
-                android:padding="3dp"
-                >
-                <RelativeLayout
-                    android:id="@+id/main_data_3"
-                    android:layout_width="80dp"
-                    android:gravity="center"
-                    android:layout_centerHorizontal="true"
-                    android:layout_height="match_parent"
-                    >
-                    <ImageView
-                        android:id="@+id/main_data_img3"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_centerHorizontal="true"
-                        android:background="#ffffff"
-                        android:src="@drawable/ic_workorder"
-                        android:focusable="false"
-                        android:clickable="false"
-                        android:scaleType="fitXY"/>
-                    <TextView
-                        android:id="@+id/main_data_text3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/main_data_img3"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="3dp"
-                        android:text="巡检结果"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:clickable="false"/>
-                </RelativeLayout>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:focusableInTouchMode="true"
-                android:padding="3dp"
-                />
-
+            <include layout="@layout/research_order_display"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
 </LinearLayout>

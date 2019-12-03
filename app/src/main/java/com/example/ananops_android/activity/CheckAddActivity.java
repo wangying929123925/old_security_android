@@ -68,6 +68,7 @@ public class CheckAddActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
     }
+
     public void showExitAlertDialog(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("未填完巡检计划，确认退出吗？");

@@ -1,4 +1,4 @@
-package com.example.ananops_android.activity;
+package com.example.ananops_android.Interface;
 
 public interface ConfirmDialogInterface {
     //监听确认按钮点击事件

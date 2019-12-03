@@ -65,15 +65,19 @@ public class LoginActivity extends AppCompatActivity {
             editor.commit();
             if(userName.equals("2") && userPwd.equals("2")
                     ||(userName.equals("1")) && (userPwd.equals("1"))
-                    ||(userName.equals("3")) && (userPwd.equals("3"))) {
-                if(userName.equals("2") && userPwd.equals("2")){
+                    ||(userName.equals("3")) && (userPwd.equals("3"))
+                    ||(userName.equals("4")) && (userPwd.equals("4"))) {
+                if(userName.equals("2")){
                     UserLogin.useCode=2;
                 }
-                if(userName.equals("1") && userPwd.equals("1")){
+                if(userName.equals("1")){
                     UserLogin.useCode=1;
                 }
-                if(userName.equals("3") && userPwd.equals("3")){
+                if(userName.equals("3")){
                     UserLogin.useCode=3;
+                }
+                if(userName.equals("4")){
+                    UserLogin.useCode=4;
                 }
                 Intent intent1 = new Intent(LoginActivity.this, UserMainActivity.class);
                 startActivity(intent1);
