@@ -60,14 +60,14 @@
                 android:id="@+id/tv_audit_man"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_above="@+id/null"
+                android:layout_marginBottom="55dp"
+                android:background="@null"
                 android:maxLength="11"
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp"
-                android:background="@null"
-                />
+                android:textSize="16sp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.1dp"
@@ -132,6 +132,7 @@
                 android:textColorHint="#DDDDDD"
                 android:textSize="16sp"
                 android:background="@null"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.1dp"

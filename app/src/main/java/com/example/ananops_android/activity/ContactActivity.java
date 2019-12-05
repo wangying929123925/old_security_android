@@ -58,7 +58,6 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         initEvents();
         setListAdapter();
 
-
     }
     private void setListAdapter() {
         SourceDateList = filledData(getResources().getStringArray(R.array.contacts));

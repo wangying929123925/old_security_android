@@ -15,23 +15,21 @@
             android:paddingRight="5dp"
             android:paddingBottom="10dp"
             android:orientation="vertical">
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="@drawable/setting_item_selector"
                 android:layout_gravity="center_vertical" >
-
                 <TextView
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:text="开始时间"
+                    android:text="是否更换"
                     android:textColor="#353535"
                     android:textSize="16sp" />
                 <TextView
-                    android:id="@+id/tv_repair_start_time"
+                    android:id="@+id/tv_project_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -39,159 +37,17 @@
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
                     android:textSize="16sp" />
-                <Button
-                    android:id="@+id/fragment_order_start_time"
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="38dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:text="开始维修"
-                    android:textColor="@color/state_selected"
+                    android:text="请选择 >"
+                    android:textColor="#1A73C0"
                     android:textSize="14sp"
-                    android:background="@drawable/shape_corner_blue"
                     />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#dbdbdb" />
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@drawable/setting_item_selector"
-                android:layout_gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="结束时间"
-                    android:textColor="#353535"
-                    android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/tv_repair_end_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:maxLength="11"
-                    android:paddingLeft="90dp"
-                    android:singleLine="true"
-                    android:textColorHint="#DDDDDD"
-                    android:textSize="16sp"
-                    android:background="@null"
-                    />
-                <Button
-                    android:id="@+id/fragment_order_end_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="38dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="结束维修"
-                    android:textColor="@color/state_selected"
-                    android:textSize="14sp"
-                    android:background="@drawable/shape_corner_blue"
-                    />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#dbdbdb" />
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@drawable/setting_item_selector"
-                android:layout_gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="维修费用"
-                    android:textColor="#353535"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_repair_money"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:maxLength="11"
-                    android:paddingLeft="90dp"
-                    android:singleLine="true"
-                    android:textColorHint="#DDDDDD"
-                    android:textSize="16sp"
-                    android:background="@null"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#dbdbdb" />
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@drawable/setting_item_selector"
-                android:layout_gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="维修状态"
-                    android:textColor="#353535"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_repair_status"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:maxLength="11"
-                    android:paddingLeft="90dp"
-                    android:singleLine="true"
-                    android:textColorHint="#DDDDDD"
-                    android:textSize="16sp"
-                    android:background="@null"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#dbdbdb" />
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@drawable/setting_item_selector"
-                android:layout_gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="维修班组"
-                    android:textColor="#353535"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_repair_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:maxLength="11"
-                    android:paddingLeft="90dp"
-                    android:singleLine="true"
-                    android:textColorHint="#DDDDDD"
-                    android:textSize="16sp"
-                    android:background="@null"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
@@ -209,18 +65,57 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:text="维修级别"
+                    android:text="设备编号"
+                    android:textColor="#353535"
+                    android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/tv_fault_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="90dp"
+                    android:singleLine="true"
+                    android:textColorHint="#DDDDDD"
+                    android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/fragment_order_choose_replacement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:text="请选择 >"
+                    android:textColor="#1A73C0"
+                    android:textSize="14sp"
+                    />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#dbdbdb" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/setting_item_selector"
+                android:layout_gravity="center_vertical"
+                >
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="故障位置"
                     android:textColor="#353535"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/tv_repair_degree"
+                    android:id="@+id/tv_fault_addr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="56dp"
+                    android:layout_centerVertical="true"
                     android:paddingLeft="90dp"
                     android:singleLine="true"
-                    android:layout_centerVertical="true"
                     android:textColorHint="#DDDDDD"
                     android:textSize="16sp" />
                 <View
@@ -240,12 +135,55 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:text="紧急程度"
+                    android:text="维修定位"
                     android:textColor="#353535"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/tv_emergency_degree"
+                    android:id="@+id/tv_repair_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:maxLength="11"
+                    android:paddingLeft="90dp"
+                    android:singleLine="true"
+                    android:textColorHint="#DDDDDD"
+                    android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/choose_fault_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:text="查看位置 >"
+                    android:textColor="#1A73C0"
+                    android:textSize="14sp"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#dbdbdb" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/setting_item_selector"
+                android:layout_gravity="center_vertical"
+                >
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="故障名称"
+                    android:textColor="#353535"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_fault_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -263,7 +201,7 @@
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="44dp"
                 android:background="@drawable/setting_item_selector"
                 android:layout_gravity="center_vertical"
                 >
@@ -272,21 +210,20 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:text="维修方案"
+                    android:text="故障等级"
                     android:textColor="#353535"
                     android:textSize="16sp" />
-                <EditText
-                    android:id="@+id/tv_repair_description"
+
+                <TextView
+                    android:id="@+id/tv_fault_degree"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="90dp"
+                    android:maxLength="11"
+                    android:paddingLeft="90dp"
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
-                    android:textSize="16sp"
-                    android:background="@null"
-                    android:inputType="none"
-                    />
+                    android:textSize="16sp" />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"

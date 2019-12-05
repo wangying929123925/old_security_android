@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.services.help.Tip;
 import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.GridAdapter;
@@ -63,6 +64,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private String tmp="";
     private String[] result = new String[4];
     private Context mContext;
+    private static final int REQUEST_PLACE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +88,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         fault_name.setOnClickListener(this);
         basicinfo_back.setOnClickListener(this);
         et_appointment_time.setOnClickListener(this);
+        et_repair_address.setOnClickListener(this);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -165,6 +168,15 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                     break;
             }
         }
+        if (requestCode == REQUEST_PLACE) {
+            if (resultCode == AddressSearchActivity.RESULT_CODE_INPUTTIPS && data != null) {
+                final Tip tip = data.getParcelableExtra("tip");
+                if (tip.getName() != null) {
+                    et_repair_address.setText(tip.getName());
+                    Toast.makeText(RepairAddActivity.this,"经度="+tip.getPoint().getLongitude()+"纬度="+tip.getPoint().getLatitude(),Toast.LENGTH_LONG).show();
+                }
+            }
+        }
     }
     @Override
     public void onClick(View v) {
@@ -195,10 +207,14 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                     }
                 });
                 break;
+            case R.id.et_repair_address:
+                Intent intent=new Intent(RepairAddActivity.this,AddressSearchActivity.class);
+                startActivityForResult(intent, REQUEST_PLACE);
             default:
                 break;
         }
     }
+
     public String getTime() {
         /* 获取当前系统时间 */
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

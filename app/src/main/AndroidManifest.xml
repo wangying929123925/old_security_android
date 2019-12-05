@@ -9,6 +9,17 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <!--用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <!--这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+    <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"></uses-permission>
+    <!--用于申请获取蓝牙信息进行室内定位-->
+    <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,9 +27,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="8a605283ec7b96f377e9acd6e46091d6"/>
+        <service android:name="com.amap.api.location.APSService"/>c
+
         <service android:name=".service.AutoUpdateService"
             android:enabled="true"
             android:exported="true"></service>
@@ -36,6 +50,7 @@
         <activity android:name=".activity.InspectionSerchListActivity"/>
         <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.MainActivity"/>
+        <activity android:name=".activity.AddressSearchActivity"/>
         <activity android:name=".activity.LoadingActivity">
 
             <intent-filter>
@@ -48,6 +63,7 @@
             android:configChanges="orientation|screenSize"/>
         <activity android:name=".photopicker.PhotoPreviewActivity"
             android:theme="@style/PhotoPickerTheme"/>
+
     </application>
 
 </manifest>

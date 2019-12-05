@@ -13,7 +13,7 @@
         android:src="@drawable/ic_address"
         />
     <TextView
-        android:id="@+id/position_detail"
+        android:id="@+id/address_name"
         android:layout_width="match_parent"
         android:paddingLeft="10dp"
         android:layout_marginTop="10dp"
@@ -26,12 +26,12 @@
         tools:text="北京邮电大学-西门"
         />
     <TextView
-        android:id="@+id/position"
+        android:id="@+id/address_detail"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:layout_toRightOf="@+id/iv_position_img"
-        android:layout_below="@+id/position_detail"
+        android:layout_below="@+id/address_name"
         tools:text="北京邮电大学"
         />
     <View
