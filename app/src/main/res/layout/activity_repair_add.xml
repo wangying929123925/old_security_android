@@ -212,7 +212,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:hint="填写报修时间"
-                android:maxLength="11"
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"

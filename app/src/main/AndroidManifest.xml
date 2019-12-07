@@ -42,7 +42,8 @@
         <activity android:name=".activity.UserMainActivity"/>
         <activity android:name=".activity.RepairAddActivity"
             android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activity.OrderDetailActivity"/>
+        <activity android:name=".activity.OrderDetailActivity"
+            android:configChanges="orientation|keyboardHidden"/>
         <activity android:name=".activity.OrderSearchListActivity"/>
         <activity android:name=".activity.UerMessageActivity"/>
         <activity android:name=".activity.UserOrderSearchActivitySpinner"/>
@@ -51,6 +52,7 @@
         <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.MainActivity"/>
         <activity android:name=".activity.AddressSearchActivity"/>
+        <activity android:name=".activity.RepairCommentActivity"/>
         <activity android:name=".activity.LoadingActivity">
 
             <intent-filter>

@@ -644,13 +644,9 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/state_pressed"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            >
-            <include layout="@layout/research_order_display"/>
-        </LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/contact_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>

@@ -1,19 +1,28 @@
 package com.example.ananops_android.activity;
 
+import android.app.PendingIntent;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.FindTabAdapter;
 import com.example.ananops_android.fragment.OrderDetailAppendix;
 import com.example.ananops_android.fragment.OrderDetailAuditFragment;
 import com.example.ananops_android.fragment.OrderDetailContentFragment;
 import com.example.ananops_android.fragment.OrderDetailRepairFragment;
+import com.example.ananops_android.fragment.OrderDetailReplacementFragment;
 import com.example.ananops_android.fragment.TimeLineFragment;
 
 import java.util.ArrayList;
@@ -29,10 +38,16 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     private OrderDetailContentFragment myOrderFragment;
     private OrderDetailAppendix orderDetailAppendix;
     private OrderDetailAuditFragment orderDetailAuditFragment;
+    private OrderDetailReplacementFragment orderDetailReplacementFragment;
     private FindTabAdapter findTabAdapter;
     private TextView title;
   //  private ImageView search_img;
     private ImageView back_img;
+    private static String ACTIVITY_STATUS;
+    private static String ORDER_ID;
+    private Button order_detail_button1;
+    private Button order_detail_button2;
+    private LinearLayout fragment_order_commit;
 
       @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -46,9 +61,193 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     private void initViews() {
         tab_search_order_title=findViewById(R.id.search_order_tab);
         vp_search_order_pager=findViewById(R.id.vp_search_order_pager);
-        //title=findViewById(R.id.txt_title);
         title=findViewById(R.id.txt_title);//标题
       //  search_img=findViewById(R.id.img_search);
+        order_detail_button1=findViewById(R.id.order_detail_button1);
+        order_detail_button2=findViewById(R.id.order_detail_button2);
+        fragment_order_commit=findViewById(R.id.fragment_order_commit);
+        Intent intent=getIntent();
+        Bundle bundle=intent.getExtras();
+        if(bundle!=null){
+        ACTIVITY_STATUS=bundle.getString("status_do");
+            ORDER_ID=bundle.getString("order_id");}
+        switch (ACTIVITY_STATUS){
+            case "1-1"://审核通过
+                fragment_order_commit.setVisibility(View.VISIBLE);
+                order_detail_button1.setVisibility(View.GONE);
+                order_detail_button2.setVisibility(View.VISIBLE);
+                order_detail_button2.setText("确认");
+                order_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //确认审核
+                        Toast.makeText(getApplicationContext(), "确认审核", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case "1-2":
+                //审核不通过
+                fragment_order_commit.setVisibility(View.VISIBLE);
+                order_detail_button1.setVisibility(View.VISIBLE);
+                order_detail_button2.setVisibility(View.VISIBLE);
+                order_detail_button1.setText("重新填单");
+                order_detail_button2.setText("放弃填单");
+                order_detail_button1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //重新填单
+                        Toast.makeText(getApplicationContext(), "重新填单", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                order_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //放弃填单
+                        Toast.makeText(getApplicationContext(), "放弃填单", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case "1-3":
+                //待验收
+                fragment_order_commit.setVisibility(View.VISIBLE);
+                order_detail_button1.setVisibility(View.VISIBLE);
+                order_detail_button2.setVisibility(View.VISIBLE);
+                order_detail_button1.setText("通过");
+                order_detail_button2.setText("不通过");
+                order_detail_button1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //通过
+                        Toast.makeText(getApplicationContext(), "通过", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                order_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //不通过
+                        Toast.makeText(getApplicationContext(), "不通过", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case "2-1":
+                //待接单
+                fragment_order_commit.setVisibility(View.VISIBLE);
+                order_detail_button1.setVisibility(View.VISIBLE);
+                order_detail_button2.setVisibility(View.VISIBLE);
+                order_detail_button1.setText("接单派工");
+                order_detail_button2.setText("不接单");
+                order_detail_button1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //接单派工
+                        Toast.makeText(getApplicationContext(), "接单派工", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                order_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //不接单
+                        Toast.makeText(getApplicationContext(), "不接单", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case "2-2":
+                //服务商待审核
+                fragment_order_commit.setVisibility(View.VISIBLE);
+                order_detail_button1.setVisibility(View.GONE);
+                order_detail_button2.setVisibility(View.VISIBLE);
+                order_detail_button2.setText("确认提交");
+                order_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //确认审核
+                        Toast.makeText(getApplicationContext(), "确认提交", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case "3-1":
+                //维修工待接单
+                fragment_order_commit.setVisibility(View.VISIBLE);
+                order_detail_button1.setVisibility(View.VISIBLE);
+                order_detail_button2.setVisibility(View.VISIBLE);
+                order_detail_button1.setText("接单");
+                order_detail_button2.setText("不接单");
+                order_detail_button1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //维修工接单
+                        Toast.makeText(getApplicationContext(), "接单", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                order_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //不接单
+                        Toast.makeText(getApplicationContext(), "不接单", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case "3-2":
+                //维修中
+                fragment_order_commit.setVisibility(View.VISIBLE);
+                order_detail_button1.setVisibility(View.GONE);
+                order_detail_button2.setVisibility(View.VISIBLE);
+                order_detail_button2.setText("提交方案");
+                order_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //维修提交
+                        Toast.makeText(getApplicationContext(), "确认提交", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case "3-3":
+                //维修中
+                fragment_order_commit.setVisibility(View.VISIBLE);
+                order_detail_button1.setVisibility(View.GONE);
+                order_detail_button2.setVisibility(View.VISIBLE);
+                order_detail_button2.setText("确认提交");
+                order_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //维修提交
+                        Toast.makeText(getApplicationContext(), "确认提交", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case "4-1":
+                //计划中
+                fragment_order_commit.setVisibility(View.VISIBLE);
+                order_detail_button1.setVisibility(View.GONE);
+                order_detail_button2.setVisibility(View.VISIBLE);
+                order_detail_button2.setText("确认提交");
+                order_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //审核计划
+                        Toast.makeText(getApplicationContext(), "确认提交", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case "4-2":
+                //甲方审核备件
+                fragment_order_commit.setVisibility(View.VISIBLE);
+                order_detail_button1.setVisibility(View.GONE);
+                order_detail_button2.setVisibility(View.VISIBLE);
+                order_detail_button2.setText("确认提交");
+                order_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //确认审核
+                        Toast.makeText(getApplicationContext(), "确认提交", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+                default://查看界面
+                    Toast.makeText(getApplicationContext(),"ACTIVITY_STATUS"+ACTIVITY_STATUS, Toast.LENGTH_SHORT).show();
+                    fragment_order_commit.setVisibility(View.GONE);
+                    break;
+        }
         back_img=findViewById(R.id.img_back);
         title.setText("工单详情");
     }
@@ -57,35 +256,72 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         list_title.add("处理进度");
         list_title.add("工单详情");
         list_title.add("维修详情");
+        list_title.add("备品备件");
         list_title.add("审核详情");
         list_title.add("附件信息");
         list_fragment=new ArrayList<>();
        unDoFragment=new TimeLineFragment();//维修记录
         servicingOrderFragment=new OrderDetailRepairFragment();
         myOrderFragment=new OrderDetailContentFragment();
+       orderDetailReplacementFragment=new OrderDetailReplacementFragment();
         orderDetailAuditFragment=new OrderDetailAuditFragment();
         orderDetailAppendix=new OrderDetailAppendix();
+        //传值
+        if(ACTIVITY_STATUS!=null||!ACTIVITY_STATUS.equals("")) {
+            Bundle bundle = new Bundle();
+            bundle.putString("str", ACTIVITY_STATUS);
+            bundle.putString("order_id",ORDER_ID);
+            orderDetailReplacementFragment.setArguments(bundle);
+            servicingOrderFragment.setArguments(bundle);
+            orderDetailAuditFragment.setArguments(bundle);
+        }
         list_fragment.add(unDoFragment);
         list_fragment.add(myOrderFragment);
        list_fragment.add(servicingOrderFragment);
+       list_fragment.add(orderDetailReplacementFragment);
         list_fragment.add(orderDetailAuditFragment);
         list_fragment.add(orderDetailAppendix);
         findTabAdapter=new FindTabAdapter(getSupportFragmentManager(),list_fragment,list_title);
         vp_search_order_pager.setAdapter(findTabAdapter);
         tab_search_order_title.setupWithViewPager(vp_search_order_pager);
-        vp_search_order_pager.setOffscreenPageLimit(5);
+        vp_search_order_pager.setOffscreenPageLimit(6);
     }
     private void setOnListener() {
          // search_img.setOnClickListener(this);
           back_img.setOnClickListener(this);
     }
-
     @Override
     public void onClick(View v) {
           switch (v.getId()){
               case R.id.img_back:
-                  finish();
+                  if(ACTIVITY_STATUS=="no"||ACTIVITY_STATUS.equals("no")){
+                      finish();
+                 }
+                  else {
+                      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                      builder.setMessage("退出后信息将不保存，确认退出吗？");
+                      builder.setTitle("提示");
+                      builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                          @Override
+                          public void onClick(DialogInterface dialog, int which) {
+                              dialog.dismiss();
+                              finish();
+                          }
+                      });
+                      builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                          @Override
+                          public void onClick(DialogInterface dialog, int which) {
+                              dialog.dismiss();
+                          }
+                      });
+
+                      builder.create().show();
+                  }
                   break;
+              case R.id.fragment_order_commit:
+                  break;
+                  default:
+                      break;
           }
 
     }

@@ -128,7 +128,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         choose_service=findViewById(R.id. choose_service);
         et_appointment_time = findViewById(R.id.et_appointment_time);
         basicinfo_back=findViewById(R.id.basicinfo_back);
-        repair_time.setText(getTime());
+        repair_time.setText(BaseUtils.getInstence().getTime());
         gridView = (GridView) findViewById(R.id.gridView_photo);
         int cols = getResources().getDisplayMetrics().widthPixels / getResources().getDisplayMetrics().densityDpi;
         cols = cols < 3 ? 3 : cols;
@@ -215,13 +215,6 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    public String getTime() {
-        /* 获取当前系统时间 */
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
-        String time = sdf.format(curDate);
-        return time;
-    }
     private void loadAdpater(ArrayList<String> paths){
         if (imagePaths!=null&& imagePaths.size()>0){
             imagePaths.clear();

@@ -13,6 +13,7 @@ import com.example.ananops_android.adapter.GridAdapter;
 import java.util.ArrayList;
 
 public class OrderDetailAppendix extends Fragment {
+    private static String ORDER_ID;
     private GridView gridView;
     private GridAdapter gridAdapter;
     private static final int REQUEST_CAMERA_CODE = 10;
@@ -32,6 +33,8 @@ public class OrderDetailAppendix extends Fragment {
     }
 
     private void initData() {
+        if(!(getArguments()==null)){
+            ORDER_ID=(String) getArguments().get("order_id");}
       //  imagePaths.add(R.drawable.ic_message_orange);
     }
 }

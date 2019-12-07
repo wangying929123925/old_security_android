@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDetailContentFragment extends Fragment {
+    private static String ORDER_ID;
    private TextView tv_project_name;
     private TextView tv_repair_listid;
     private TextView tv_repair_person;
@@ -58,6 +59,8 @@ public class OrderDetailContentFragment extends Fragment {
     }
 
     private void initdata() {
+        if(!(getArguments()==null)){
+            ORDER_ID=(String) getArguments().get("order_id");}
         tv_project_name.setText("测试");
         tv_repair_listid.setText("测试");
         tv_repair_person.setText("测试");

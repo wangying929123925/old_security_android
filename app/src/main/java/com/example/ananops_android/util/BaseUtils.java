@@ -52,7 +52,8 @@ public class BaseUtils {
         repairContent.setRepair_man("李民浩");
         repairContent.setRepair_time("2019-11-11 18:39");
         repairContent.setRepair_content("笔记本电脑");
-        repairContent.setRepair_status("待维修");
+        repairContent.setRepair_status("待填方案");
+
         RepairContent repairContent1=new RepairContent();
         repairContent1.setRepair_id("2019140282");
         repairContent1.setCheck_group("第一组");
@@ -68,8 +69,7 @@ public class BaseUtils {
         repairContent2.setRepair_man("李民浩");
         repairContent1.setRepair_time("2019-11-11 18:39");
         repairContent2.setRepair_content("笔记本电脑");
-        repairContent2.setRepair_status("待审核");
-
+        repairContent2.setRepair_status("计划中");
         RepairContent repairContent3=new RepairContent();
         repairContent3.setRepair_id("2019140282");
         repairContent3.setCheck_group("第一组");
@@ -77,8 +77,23 @@ public class BaseUtils {
         repairContent3.setRepair_man("李民浩");
         repairContent3.setRepair_time("2019-11-11 18:39");
         repairContent3.setRepair_content("笔记本电脑");
-        repairContent3.setRepair_status("待接单");
-
+        repairContent3.setRepair_status("维修工待接单");
+        RepairContent repairContent7=new RepairContent();
+        repairContent7.setRepair_id("2019140282");
+        repairContent7.setCheck_group("第一组");
+        repairContent7.setRepair_address("科研楼一楼");
+        repairContent7.setRepair_man("李民浩");
+        repairContent7.setRepair_time("2019-11-11 18:39");
+        repairContent7.setRepair_content("笔记本电脑");
+        repairContent7.setRepair_status("待接单");
+        RepairContent repairContent8=new RepairContent();
+        repairContent8.setRepair_id("2019140282");
+        repairContent8.setCheck_group("第一组");
+        repairContent8.setRepair_address("科研楼一楼");
+        repairContent8.setRepair_man("李民浩");
+        repairContent8.setRepair_time("2019-11-11 18:39");
+        repairContent8.setRepair_content("笔记本电脑");
+        repairContent8.setRepair_status("审核不通过");
         RepairContent repairContent4=new RepairContent();
         repairContent4.setRepair_id("2019140282");
         repairContent4.setCheck_group("第一组");
@@ -96,7 +111,6 @@ public class BaseUtils {
         repairContent5.setRepair_time("2019-11-11 18:39");
         repairContent5.setRepair_content("笔记本电脑");
         repairContent5.setRepair_status("已完成");
-
         RepairContent repairContent6=new RepairContent();
         repairContent6.setRepair_id("2019140282");
         repairContent6.setCheck_group("第一组");
@@ -104,7 +118,7 @@ public class BaseUtils {
         repairContent6.setRepair_man("李民浩");
         repairContent6.setRepair_time("2019-11-11 18:39");
         repairContent6.setRepair_content("笔记本电脑");
-        repairContent6.setRepair_status("已完成");
+        repairContent6.setRepair_status("待评价");
 
         repairContents.add(repairContent);
         repairContents.add(repairContent);
@@ -125,6 +139,10 @@ public class BaseUtils {
         repairContents.add(repairContent5);
         repairContents.add(repairContent6);
         repairContents.add(repairContent6);
+        repairContents.add(repairContent7);
+        repairContents.add(repairContent7);
+        repairContents.add(repairContent8);
+        repairContents.add(repairContent8);
         return repairContents;
     }
     public List<InspectionContent> initInspectionContent(List<InspectionContent>inspectionContents){
@@ -273,7 +291,13 @@ public class BaseUtils {
             return true;
         }
     }
-
+    public String getTime() {
+        /* 获取当前系统时间 */
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
+        String time = sdf.format(curDate);
+        return time;
+    }
     /**
      * 选择预约时间的dialog
      * @param title

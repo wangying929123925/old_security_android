@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TimeLineFragment extends Fragment {
+    private static String ORDER_ID;
     private List<TimeLine> timeLines=new ArrayList<>();
     private TimeLineAdapter adapter;//适配器
     private ListView mListView;
@@ -39,6 +40,8 @@ public class TimeLineFragment extends Fragment {
     }
 
     private void initdata() {
+        if(!(getArguments()==null)){
+            ORDER_ID=(String) getArguments().get("order_id");}
        TimeLine timeLine=new TimeLine();
        timeLine.setOrderDirector("试用用户");
        timeLine.setProcessStatus("执行维修");

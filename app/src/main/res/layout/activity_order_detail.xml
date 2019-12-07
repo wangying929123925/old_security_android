@@ -12,6 +12,10 @@
         android:layout_marginTop="10dp"
         android:orientation="vertical"
         >
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           >
         <android.support.design.widget.TabLayout
             android:id="@+id/search_order_tab"
             android:layout_width="match_parent"
@@ -25,6 +29,7 @@
             app:tabBackground="@color/state_selected"
             >
         </android.support.design.widget.TabLayout>
+        </HorizontalScrollView>
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_search_order_pager"
             android:layout_marginTop="1dp"
@@ -33,5 +38,37 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             />
+        <LinearLayout
+            android:id="@+id/fragment_order_commit"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/order_detail_button1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="接单"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:background="@color/deep_blue"
+                android:textColor="@color/state_selected"/>
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="@color/state_selected"/>
+            <Button
+                android:id="@+id/order_detail_button2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="不接单"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:background="@color/deep_blue"
+                android:textColor="@color/state_selected"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

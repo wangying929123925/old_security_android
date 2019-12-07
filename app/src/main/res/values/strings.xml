@@ -30,8 +30,8 @@
 
     <!--用户-->
     <string name="user_main_repair1">新建工单</string>
-    <string name="user_main_repair2">待验收</string>
-    <string name="user_main_repair3">待验收</string>
+    <string name="user_main_repair2">待确认</string>
+    <string name="user_main_repair3">维修中</string>
     <string name="user_main_repair4">待验收</string>
     <string name="user_main_repair5">待评价</string>
     <!--用户管理员-->
