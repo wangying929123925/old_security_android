@@ -19,6 +19,7 @@ import com.example.ananops_android.adapter.BaseViewHolder;
 import com.example.ananops_android.adapter.InspectionAdapter;
 import com.example.ananops_android.adapter.RepairAdapter;
 import com.example.ananops_android.entity.InspectionContent;
+import com.example.ananops_android.entity.UserLogin;
 import com.example.ananops_android.util.BaseUtils;
 
 import java.util.ArrayList;
@@ -75,6 +76,99 @@ public class InspectionSerchListActivity extends AppCompatActivity implements Vi
             public void onItemClick(int position) {
                 InspectionContent inspectionContent=inspectionContents.get(position);
                 Toast.makeText(getApplicationContext(), "工单详情" + (position + 1), Toast.LENGTH_SHORT).show();
+                switch (UserLogin.useCode){
+                    case 1:
+                        break;
+                    case 2:
+                        switch (inspectionContent.getInspection_status()){
+                            case "服务商待接单":
+                                //服务商务接单派工
+                                break;
+                            case "服务商已接单":
+                                //巡检工去接单
+                                break;
+                            case "巡检工已接单":
+                                //巡检工接单
+                                break;
+                            case "等待巡检":
+                                //填写方案
+                                break;
+                            case "巡检工巡检中":
+                                //巡检工巡检
+                                break;
+                            case "待支付":
+                                break;
+                            case "待评价":
+                                break;
+                            case "已完成":
+                                break;
+                                default:
+                                    //其他情况
+                                    break;
+                        }
+                        break;
+                    case 3:
+                        switch (inspectionContent.getInspection_status()){
+                            case "服务商待接单":
+                                //服务商务接单派工
+                                break;
+                            case "服务商已接单":
+                                //巡检工去接单
+                                break;
+                            case "巡检工已接单":
+                                //巡检工接单
+                                break;
+                            case "等待巡检":
+                                //巡检工填写方案
+                                break;
+                            case "巡检工巡检中":
+                                //巡检工巡检
+                                break;
+                            case "待支付":
+                                break;
+                            case "待评价":
+                                break;
+                            case "已完成":
+                                break;
+                            default:
+                                //其他情况
+                                break;
+                        }
+                        break;
+                    case 4:
+                        switch (inspectionContent.getInspection_status()){
+                            case "服务商待接单":
+                                //服务商务接单派工
+                                break;
+                            case "服务商已接单":
+                                //巡检工去接单
+                                break;
+                            case "巡检工已接单":
+                                //巡检工接单
+                                break;
+                            case "等待巡检":
+                                //巡检工填写方案
+                                break;
+                            case "巡检工巡检中":
+                                //确认维修工情况
+                                break;
+                            case "待验收":
+                                break;
+                            case "待支付":
+                                break;
+                            case "待评价":
+                                break;
+                            case "已完成":
+                                break;
+                            default:
+                                //其他情况
+                                break;
+                        }
+                        break;
+                        default:
+                            break;
+                }
+
             }
         });
         mRecyclerView.setAdapter(inspectionAdapter);

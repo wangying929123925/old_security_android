@@ -31,8 +31,7 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="8a605283ec7b96f377e9acd6e46091d6"/>
-        <service android:name="com.amap.api.location.APSService"/>c
-
+        <service android:name="com.amap.api.location.APSService"/>
         <service android:name=".service.AutoUpdateService"
             android:enabled="true"
             android:exported="true"></service>
@@ -53,6 +52,7 @@
         <activity android:name=".activity.MainActivity"/>
         <activity android:name=".activity.AddressSearchActivity"/>
         <activity android:name=".activity.RepairCommentActivity"/>
+        <activity android:name=".activity.ChooseReplacementActivity"/>
         <activity android:name=".activity.LoadingActivity">
 
             <intent-filter>

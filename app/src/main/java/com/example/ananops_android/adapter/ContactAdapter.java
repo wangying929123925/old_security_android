@@ -42,7 +42,7 @@ public class ContactAdapter extends BaseAdapter {
         final Contacts mContent = list.get(position);
         if (view == null) {
             viewHolder = new ViewHolder();
-            view = LayoutInflater.from(mContext).inflate(R.layout.contacts_item, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_contacts, null);
             viewHolder.tvTitle = (TextView) view.findViewById(R.id.tv_catagory);
             view.setTag(viewHolder);
             viewHolder.tvName = (TextView) view.findViewById(R.id.contact_name);

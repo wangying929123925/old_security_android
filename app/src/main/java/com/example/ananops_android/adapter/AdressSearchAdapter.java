@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.amap.api.services.help.Tip;
 import com.example.ananops_android.R;
-import com.example.ananops_android.entity.AddressSearch;
 
 
 import java.util.List;
@@ -46,7 +45,7 @@ public class AdressSearchAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         if(view==null){
             viewHolder=new ViewHolder();
-            view= LayoutInflater.from(mContact).inflate(R.layout.address_search_item,null);
+            view= LayoutInflater.from(mContact).inflate(R.layout.item_address_search,null);
             viewHolder.address_name=view.findViewById(R.id.address_name);
             viewHolder.address_deteail=view.findViewById(R.id.address_detail);
             view.setTag(viewHolder);

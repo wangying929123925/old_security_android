@@ -20,6 +20,7 @@ import com.example.ananops_android.activity.OrderDetailActivity;
 import com.example.ananops_android.activity.OrderSearchListActivity;
 import com.example.ananops_android.activity.RepairCommentActivity;
 import com.example.ananops_android.entity.RepairContent;
+import com.example.ananops_android.entity.RepairListContent;
 import com.example.ananops_android.entity.UserLogin;
 import com.example.ananops_android.util.BaseUtils;
 
@@ -28,7 +29,6 @@ import java.util.List;
 public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder> implements View.OnClickListener {
     private Context mComtext;
     private List<RepairContent> mrepairContentList;
-
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         View order_item_view;
@@ -75,10 +75,14 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder,int position){//对RecycleView子项进行赋值，
         // 通过position参数得到当前实例，再将数据设置到ViewHolder
         RepairContent repairContent=mrepairContentList.get(position);
-        holder.order_item_title.setText(repairContent.getRepair_content());
+//        holder.order_item_title.setText(repairContent.getTitle());
+//        holder.order_item_id.setText(repairContent.getPrincipalId());
+//        holder.order_item_name.setText(repairContent.getProjectId());
+//        holder.order_item_status.setText(repairContent.getUserId());
+        holder.order_item_title.setText(repairContent.getRepair_id());
         holder.order_item_id.setText(repairContent.getRepair_id());
-        holder.order_item_name.setText(repairContent.getRepair_address());
-        holder.order_item_status.setText(repairContent.getRepair_status());
+        holder.order_item_name.setText(repairContent.getRepair_content());
+       holder.order_item_status.setText(repairContent.getRepair_status());
         switch (UserLogin.useCode){
             case 1:
                 switch (repairContent.getRepair_status()){
@@ -374,11 +378,11 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     Toast.makeText(mComtext, "你点击了放弃填单按钮" , Toast.LENGTH_SHORT).show();
                                     break;
                                 case "待评价":
-                                    BaseUtils.getInstence().intent(mComtext, RepairCommentActivity.class,"order_id",repairContent.getRepair_id());
+                                 //   BaseUtils.getInstence().intent(mComtext, RepairCommentActivity.class,"order_id",repairContent.getRepair_id());
                                     break;
                                 default:
                                     Bundle bundle1=new Bundle();
-                                    bundle1.putString("order_id",repairContent.getRepair_id());
+                                  //  bundle1.putString("order_id",repairContent.getRepair_id());
                                     bundle1.putString("status_do","no");
                                     BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle1);
                                     break;
@@ -431,13 +435,13 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         switch (repairContent.getRepair_status()){
                             case "待接单":
                                 Bundle bundle=new Bundle();
-                                bundle.putString("order_id",repairContent.getRepair_id());
+                              //  bundle.putString("order_id",repairContent.getRepair_id());
                                 bundle.putString("status_do","1-1");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle);
                                 break;
                             case "审核不通过":
                                 Bundle bundle1=new Bundle();
-                                bundle1.putString("order_id",repairContent.getRepair_id());
+                             //   bundle1.putString("order_id",repairContent.getRepair_id());
                                 bundle1.putString("status_do","1-2");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle1);
                                 break;
@@ -449,13 +453,13 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 break;
                             case "待验收":
                                 Bundle bundle3=new Bundle();
-                                bundle3.putString("order_id",repairContent.getRepair_id());
+                               // bundle3.putString("order_id",repairContent.getRepair_id());
                                 bundle3.putString("status_do","1-3");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle3);
                                 break;
                             default:
                                 Bundle bundle0=new Bundle();
-                                bundle0.putString("order_id",repairContent.getRepair_id());
+                             //   bundle0.putString("order_id",repairContent.getRepair_id());
                                 bundle0.putString("status_do","no");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle0);
                                 break;
@@ -465,19 +469,19 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         switch (repairContent.getRepair_status()){
                             case "待接单":
                                 Bundle bundle=new Bundle();
-                                bundle.putString("order_id",repairContent.getRepair_id());
+                             //   bundle.putString("order_id",repairContent.getRepair_id());
                                 bundle.putString("status_do","2-1");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle);
                                 break;
                             case"服务商待审核备件":
                                 Bundle bundle1=new Bundle();
-                                bundle1.putString("order_id",repairContent.getRepair_id());
+                             //   bundle1.putString("order_id",repairContent.getRepair_id());
                                 bundle1.putString("status_do","2-2");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle1);
                                 break;
                             default:
                                 Bundle bundle0=new Bundle();
-                                bundle0.putString("order_id",repairContent.getRepair_id());
+                             //   bundle0.putString("order_id",repairContent.getRepair_id());
                                 bundle0.putString("status_do","no");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle0);
                                 break;
@@ -487,25 +491,25 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         switch (repairContent.getRepair_status()){
                             case "维修工待接单":
                                 Bundle bundle=new Bundle();
-                                bundle.putString("order_id",repairContent.getRepair_id());
+                           //     bundle.putString("order_id",repairContent.getRepair_id());
                                 bundle.putString("status_do","3-1");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle);
                                 break;
                             case "待填方案":
                                 Bundle bundle2=new Bundle();
-                                bundle2.putString("order_id",repairContent.getRepair_id());
+                          //      bundle2.putString("order_id",repairContent.getRepair_id());
                                 bundle2.putString("status_do","3-2");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle2);
                                 break;
                             case "维修中":
                                 Bundle bundle1=new Bundle();
-                                bundle1.putString("order_id",repairContent.getRepair_id());
+                          //      bundle1.putString("order_id",repairContent.getRepair_id());
                                 bundle1.putString("status_do","3-3");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle1);
                                 break;
                             default:
                                 Bundle bundle0=new Bundle();
-                                bundle0.putString("order_id",repairContent.getRepair_id());
+                          //      bundle0.putString("order_id",repairContent.getRepair_id());
                                 bundle0.putString("status_do","no");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle0);
                                 break;
@@ -515,13 +519,13 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         switch (repairContent.getRepair_status()){
                             case"计划中":
                                 Bundle bundle=new Bundle();
-                                bundle.putString("order_id",repairContent.getRepair_id());
+                            //    bundle.putString("order_id",repairContent.getRepair_id());
                                 bundle.putString("status_do","4-1");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle);
                                 break;
                             case "甲方待审核备件":
                                 Bundle bundle1=new Bundle();
-                                bundle1.putString("order_id",repairContent.getRepair_id());
+                          //      bundle1.putString("order_id",repairContent.getRepair_id());
                                 bundle1.putString("status_do","4-2");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle1);
                                 break;
@@ -530,7 +534,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 break;
                             default:
                                 Bundle bundle0=new Bundle();
-                                bundle0.putString("order_id",repairContent.getRepair_id());
+                           //     bundle0.putString("order_id",repairContent.getRepair_id());
                                 bundle0.putString("status_do","no");
                                 BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle0);
                                 break;

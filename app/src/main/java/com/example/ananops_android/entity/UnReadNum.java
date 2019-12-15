@@ -11,6 +11,4 @@ public class UnReadNum {
     public static volatile int main_inspection_num3=1;
     public static volatile int main_inspection_num4=1;
     public static volatile int main_inspection_num5=1;
-
-
 }

@@ -137,8 +137,8 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView=view.findViewById(R.id.contact_recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        repairContents=BaseUtils.getInstence().initRepairContent(repairContents);
-        adapter=new RepairAdapter(repairContents);
+       // repairContents=BaseUtils.getInstence().initRepairContent(repairContents);
+       // adapter=new RepairAdapter(repairContents);
         mRecyclerView.setAdapter(adapter);
         initData();
        // mRecyclerView.setLayoutManager(new GridLayoutManager(this,4,VERTICAL,false));

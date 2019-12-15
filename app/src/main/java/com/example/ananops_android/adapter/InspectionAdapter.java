@@ -1,10 +1,8 @@
 package com.example.ananops_android.adapter;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,7 +20,7 @@ public class InspectionAdapter extends BaseRecyclerAdapter {
     }
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.inspection_board_item,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_inspection_board,parent,false);
         ViewHolder holder=new ViewHolder(view);
         return holder;
     }
@@ -64,6 +62,25 @@ public class InspectionAdapter extends BaseRecyclerAdapter {
                     relativeButton.setVisibility(View.GONE);
                     break;
                 case 2:
+                    switch (inspectionContent.getInspection_status()){
+                        case "服务商待接单":
+                            //服务商务接单派工
+                            break;
+                        case "服务商已接单":
+                            //巡检工去接单
+                            break;
+                        case "巡检工已接单":
+                            //巡检工接单
+                            break;
+                        case "等待巡检":
+                            //填写方案
+                            break;
+                        case "巡检工巡检中":
+                            //巡检工巡检
+                            break;
+                        case "已完成":
+                            break;
+                    }
                     relativeButton.setVisibility(View.GONE);
                     break;
                 case 3:

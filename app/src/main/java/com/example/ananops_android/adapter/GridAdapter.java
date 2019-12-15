@@ -43,7 +43,7 @@ public class GridAdapter extends BaseAdapter {
         ViewHolder holder = null;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.choose_photo_item, parent,false);
+            convertView = inflater.inflate(R.layout.item_choose_photo, parent,false);
             holder.image = (ImageView) convertView.findViewById(R.id.imageView);
             convertView.setTag(holder);
         } else {
