@@ -47,11 +47,14 @@ public interface Net {
     Observable<LoginResponse> login(@Field("username")String username,
                                     @Field("password")String password,
                                     @Field("imageCode")String imageCode,
+                                    @Field("grant_type")String grantType,
+                                    @Field("client_id")String client_id,
+                                    @Field("client_secret")String client_secret,
                                     @Header("deviceId")Long deviceId
                                    );
 
     //获取用户信息
-    @POST("/uac/user/queryUserRoleInfo/{loginName}")
+    @POST("/uac/user/queryUserInfo/{loginName}")
     Observable<UserInformation>getUserInfo(@Path("loginName")String loginName, @Header("Authorization")String postToken);
 
     //获取工单列表

@@ -44,15 +44,15 @@ public class UserInformation {
          * roles : [{"id":"781805692947268608","version":null,"creator":null,"creatorId":null,"createdTime":null,"lastOperator":null,"lastOperatorId":null,"updateTime":null,"pageNum":null,"pageSize":null,"orderBy":null,"roleCode":"user_watcher","roleName":"用户值机员","status":"DISABLE","remark":"账户由\u201c用户管理员\u201d创建，配置报修、维修维护工单验收、维修维护任务评价等权限"}]
          */
 
-        private String userId;
+        private String id;
         private List<RolesBean> roles;
 
-        public String getUserId() {
-            return userId;
+        public String getId() {
+            return id;
         }
 
-        public void setUserId(String userId) {
-            this.userId = userId;
+        public void setId(String id) {
+            this.id = id;
         }
 
         public List<RolesBean> getRoles() {

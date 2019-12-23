@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
            // getUerinfo(userName);
-            Net.instance.login(userName,userPwd,imgCode,deviceId)
+            Net.instance.login(userName,userPwd,imgCode,"password","ananops-client-gateway","",deviceId)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<LoginResponse>() {
@@ -128,7 +128,9 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onError(Throwable e) {
                             Log.v("LoginTime", System.currentTimeMillis() + "");
+                            Log.v("deviceIdLogin", deviceId + "");
                             e.printStackTrace();
+
                             Toast.makeText(getApplicationContext(), "网络异常，请检查网络状态1", Toast.LENGTH_SHORT).show();
 
                         }
@@ -140,6 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                               if (TOKEN != null && TOKEN.length()!=0) {
                                   Toast.makeText(getApplicationContext(), loginResponse.getResult().getLoginName(), Toast.LENGTH_SHORT).show();
                                   SPUtils.getInstance().putString("LoginName", loginResponse.getResult().getLoginName());
+                                  Log.v("Token", loginResponse.getResult().getAccess_token());
                                   SPUtils.getInstance().putString("Token", "Bearer" + " " + TOKEN);
                                   getUerinfo();
                               }
@@ -195,13 +198,14 @@ public class LoginActivity extends AppCompatActivity {
                     public void onError(Throwable e) {
                         Log.v("LoginTime", System.currentTimeMillis() + "");
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "网络异常，请检查网络状态getuserInfo", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onNext(UserInformation userInfo) {
                         if (TextUtils.equals(userInfo.getCode(), "200")) {
-                            String USERID = userInfo.getResult().getUserId();
+                            String USERID = userInfo.getResult().getId();
+                            Log.v("user_id",USERID);
                             if (USERID != null && USERID.length() != 0) {
                                 SPUtils.getInstance().putString("user_id", USERID);
                                 if (!userInfo.getResult().getRoles().isEmpty()) {
@@ -222,6 +226,8 @@ public class LoginActivity extends AppCompatActivity {
     }
        private void getImg(){
         deviceId=new Date().getTime();
+           Log.v("deviceId", deviceId + "");
+
            Net.instance.getImage(deviceId)
                    .subscribeOn(Schedulers.newThread())
                    .observeOn(AndroidSchedulers.mainThread())
@@ -241,14 +247,16 @@ public class LoginActivity extends AppCompatActivity {
                        @Override
                        public void onNext(PostResponse postResponse) {
                            if (TextUtils.equals(postResponse.getCode(), "200")) {
+                               Toast.makeText(LoginActivity.this," "+deviceId, Toast.LENGTH_SHORT).show();
                                byte[] input = Base64.decode(postResponse.getResult(), Base64.DEFAULT);
                                bitmap = BitmapFactory.decodeByteArray(input, 0, input.length);
+                               validate_img.setImageBitmap(bitmap);
                            }else {
-                               Toast.makeText(getApplicationContext(), "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
+                               Toast.makeText(getApplicationContext(), postResponse.getMessage(), Toast.LENGTH_SHORT).show();
                            }
                        }
 
                    });
-         validate_img.setImageBitmap(bitmap);
+
        }
 }
