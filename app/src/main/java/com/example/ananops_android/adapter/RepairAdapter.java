@@ -1,7 +1,6 @@
 package com.example.ananops_android.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,10 +16,7 @@ import com.bumptech.glide.Glide;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.activity.OrderDetailActivity;
-import com.example.ananops_android.activity.OrderSearchListActivity;
-import com.example.ananops_android.activity.RepairCommentActivity;
 import com.example.ananops_android.entity.RepairContent;
-import com.example.ananops_android.entity.RepairListContent;
 import com.example.ananops_android.entity.UserLogin;
 import com.example.ananops_android.util.BaseUtils;
 

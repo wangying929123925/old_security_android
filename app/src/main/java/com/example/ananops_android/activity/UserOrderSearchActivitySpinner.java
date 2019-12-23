@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.RepairAdapter;
 import com.example.ananops_android.entity.RepairContent;
-import com.example.ananops_android.entity.RepairListContent;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.ArrayList;

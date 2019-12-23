@@ -1,5 +1,6 @@
 package com.example.ananops_android.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,10 +24,13 @@ import com.example.ananops_android.activity.OrderDetailActivity;
 import com.example.ananops_android.activity.RepairAddActivity;
 import com.example.ananops_android.activity.UserOrderSearchActivitySpinner;
 import com.example.ananops_android.adapter.RepairAdapter;
+import com.example.ananops_android.db.OrderRequest;
+import com.example.ananops_android.db.UserInfo;
 import com.example.ananops_android.entity.RepairContent;
 import com.example.ananops_android.entity.UnReadNum;
 import com.example.ananops_android.entity.UserLogin;
 import com.example.ananops_android.util.BaseUtils;
+import com.example.ananops_android.util.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +85,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<RepairContent> repairContents=new ArrayList<>();
-
+   private Context mContext;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       View view=inflater.inflate(R.layout.fragment_user_main,container,false);
@@ -89,6 +93,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
        // mRecyclerView=view.findViewById(R.id.contact_recycler_view);
      //   uer_message=view.findViewById(R.id.main_user_message);
         //init
+        mContext=getContext();
         user_Type=view.findViewById(R.id.user_type);
         main_repair=view.findViewById(R.id.main_repair);
         main_inspection=view.findViewById(R.id.main_inspection);
@@ -137,8 +142,14 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView=view.findViewById(R.id.contact_recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
        // repairContents=BaseUtils.getInstence().initRepairContent(repairContents);
-       // adapter=new RepairAdapter(repairContents);
+       // adapter=new RepairAdapter(repairContents);r
+        OrderRequest orderRequest=new OrderRequest();
+        //orderRequest.setUer_id(SPUtils.getInstance().getString("user_id",""));
+      //  orderRequest.setStatus(0);
+        //orderRequest.setIdClassity(SPUtils.getInstance().getInt("role_code",1));
+        repairContents=BaseUtils.getInstence().getRepairList(repairContents,orderRequest,mContext);
         mRecyclerView.setAdapter(adapter);
         initData();
        // mRecyclerView.setLayoutManager(new GridLayoutManager(this,4,VERTICAL,false));
@@ -153,7 +164,8 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
 //        UserLogin userLogin=new UserLogin();
 //        userLogin.setUseCode(2);
        // UserLogin.useCode = 2;
-        switch (UserLogin.useCode){
+        //switch (SPUtils.getInstance().getInt("role_code",1)){
+        switch (UserInfo.user_code){
             case 1:
                 initUserData();
                 break;
@@ -293,10 +305,10 @@ private void initUserManagerData(){
                         BaseUtils.getInstence().intent(getContext(),RepairAddActivity.class);
                         break;
                     case 2://待接单
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","待接单");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","服务商待接单");
                         break;
-                    case 3://维修工待确认
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","待确认");
+                    case 3://维修工待接单
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","维修工待接单");
                         break;
                     case 4://甲方待审核
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","待审核");

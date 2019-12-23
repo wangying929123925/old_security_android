@@ -1,13 +1,12 @@
 package com.example.ananops_android.db;
-
-
-import com.example.ananops_android.entity.RepairListContent;
+import com.example.ananops_android.entity.RepairAddContent;
+import com.example.ananops_android.entity.RepairContent;
 
 import java.util.List;
 
 public class OrderResponse {
     private String code;
-    private List<RepairListContent> result;
+    private List<RepairContent> result;
     private String message;
 
     public String getCode() {
@@ -18,11 +17,11 @@ public class OrderResponse {
         this.code = code;
     }
 
-    public List<RepairListContent> getResult() {
+    public List<RepairContent> getResult() {
         return result;
     }
 
-    public void setResult(List<RepairListContent> result) {
+    public void setResult(List<RepairContent> result) {
         this.result = result;
     }
 

@@ -7,15 +7,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
-import com.example.ananops_android.activity.MainActivity;
+import com.example.ananops_android.db.OrderRequest;
+import com.example.ananops_android.db.OrderResponse;
+import com.example.ananops_android.db.UserInfo;
 import com.example.ananops_android.entity.InspectionContent;
 import com.example.ananops_android.entity.RepairContent;
+import com.example.ananops_android.net.Net;
 import com.zyyoona7.picker.DatePickerView;
 import com.zyyoona7.picker.base.BaseDatePickerView;
 import com.zyyoona7.picker.listener.OnDateSelectedListener;
@@ -31,6 +36,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class BaseUtils {
     public static BaseUtils instence;
     public static BaseUtils getInstence() {
@@ -43,7 +52,118 @@ public class BaseUtils {
     private BaseUtils() {
 
     }
+    public String statusNumConvertString(int status){
+        final String statusString;
+        switch (status){
+            case 3:
+                statusString= "待审核";
+                break;
+            case 4:
+                statusString= "服务商待接单";
+            break;
+            case 5:
+                statusString= "维修工待接单";
+            break;
+            case 6:
+                statusString= "维修中";
+            break;
+            case 7:
+                statusString= "待验收";
+            break;
+            case 11:
+                statusString= "待评价";
+            break;
+            case 12:
+                statusString= "已完成";
+            break;
+           default:
+                statusString= " ";
+            break;
+        }
+        return statusString;
+    }
+    public int statusStringConvertNum(String statusString){
+        final int statusInt;
+        switch (statusString){
+            case "待审核":
+                statusInt=3;
+                break;
+            case "服务商待接单":
+                statusInt=4;
+                break;
+            case "维修工待接单":
+                statusInt=5;
+                break;
+            case "维修工":
+                statusInt=6;
+                break;
+            case "待验收":
+                statusInt=7;
+                break;
+            case "待评价":
+                statusInt=11;
+                break;
+            case "已完成":
+                statusInt=12;
+                break;
+              default:
+                  statusInt=0;
+                  break;
+        }
+        return statusInt;
+    }
+    public void roleStringConvertNum(String roleName){
+        switch (roleName){
+            case "用户管理员":
+                SPUtils.getInstance().putInt("role_code",4);
+                break;
+            case "用户值机员":
+                SPUtils.getInstance().putInt("role_code",1);
+                break;
+            case "维修工程师":
+                SPUtils.getInstance().putInt("role_code",3);
+                break;
+            case"服务商负责人":
+                SPUtils.getInstance().putInt("role_code",2);
+                break;
+                 default:
+                 SPUtils.getInstance().putInt("role_code",4);
 
+        }
+    }
+    public List<RepairContent> getRepairList(final List<RepairContent> repairContents, OrderRequest orderRequest, final Context mContext){
+        Net.instance.getRepairList(orderRequest, UserInfo.TOKEN)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<OrderResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("LoginTime", System.currentTimeMillis() + "");
+                        e.printStackTrace();
+                       Toast.makeText(mContext, "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(OrderResponse orderResponse) {
+                        if(TextUtils.equals(orderResponse.getCode(),"200")){
+                            for (int i = 0; i < orderResponse.getResult().size(); i++) {
+                            repairContents.add(orderResponse.getResult().get(i));
+                        }
+                        Toast.makeText(mContext,"repairContents"+repairContents.get(0).getRepair_id(), Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(mContext, orderResponse.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                    }
+                });
+        return repairContents;
+    }
     public List<RepairContent> initRepairContent(List<RepairContent> repairContents){
         RepairContent repairContent=new RepairContent();
         repairContent.setRepair_id("2019140282");

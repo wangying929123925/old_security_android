@@ -1,34 +1,27 @@
 package com.example.ananops_android.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.RepairAdapter;
-import com.example.ananops_android.db.OrderResponse;
+import com.example.ananops_android.db.OrderRequest;
 import com.example.ananops_android.entity.RepairContent;
-import com.example.ananops_android.entity.RepairListContent;
-import com.example.ananops_android.net.Net;
+import com.example.ananops_android.db.UserInfo;
 import com.example.ananops_android.util.BaseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class OrderSearchListActivity extends AppCompatActivity implements View.OnClickListener {
     private String searchType;
@@ -42,10 +35,12 @@ public class OrderSearchListActivity extends AppCompatActivity implements View.O
     private EditText search_content;
     private TextView search_text;
     private static String TITLE;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        mContext=this;
         setContentView(R.layout.activity_research_order_list);
         initDatas();
         initViews();
@@ -62,14 +57,22 @@ public class OrderSearchListActivity extends AppCompatActivity implements View.O
         TITLE=intent.getStringExtra("title");
         title.setText(TITLE);
         mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView=findViewById(R.id.contact_recycler_view);
+        mRecyclerView = findViewById(R.id.contact_recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        adapter=new RepairAdapter(repairContents);
+        adapter = new RepairAdapter(repairContents);
         mRecyclerView.setAdapter(adapter);
     }
     private void initDatas() {
-      repairContents= BaseUtils.getInstence().initRepairContent(repairContents);
-//        Net.instance.login1(4)
+    //  repairContents = BaseUtils.getInstence().initRepairContent(repairContents);
+      String userId = "123";
+      int id_classify = 1;
+      int queryStatus=BaseUtils.getInstence().statusStringConvertNum(TITLE);
+      OrderRequest orderRequest=new OrderRequest();
+    //  orderRequest.setIdClassity(id_classify);
+     // orderRequest.setUer_id(userId);
+    //  orderRequest.setStatus(queryStatus);
+      repairContents = BaseUtils.getInstence().getRepairList(repairContents,orderRequest,mContext);
+//        Net.instance.getRepairList(4)
 //                .subscribeOn(Schedulers.newThread())
 //                .observeOn(AndroidSchedulers.mainThread())
 //                .subscribe(new Subscriber<OrderResponse>() {
@@ -88,7 +91,7 @@ public class OrderSearchListActivity extends AppCompatActivity implements View.O
 //                    @Override
 //                    public void onNext(OrderResponse orderResponse) {
 //                    if(TextUtils.equals(orderResponse.getCode(),"200")){
-////                        List<RepairListContent> result = orderResponse.getResult();
+////                        List<RepairAddContent> result = orderResponse.getResult();
 ////                        repairContents = result;
 ////                        adapter.notifyDataSetChanged();
 //                        for (int i = 0; i < orderResponse.getResult().size(); i++) {

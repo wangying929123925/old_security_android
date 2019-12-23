@@ -63,7 +63,7 @@
     <string name="service_main_manage1">全部成员</string>
     <string name="service_main_manage2">设备管理</string>
     <string name="service_main_manage3">故障统计</string>
-
+    <string name="login_again">角色不正确，请重新登陆！</string>
 
 
 </resources>

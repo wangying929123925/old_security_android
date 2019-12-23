@@ -5,18 +5,20 @@ public class LoginRequest {
      * userName : 15611237123
      * password : 123456
      */
-    public static final String RESPONSE_OK = "0000";
-    public static final String TOKEN_INVALID = "1001";
-    public static final String TOKEN_INVALID2 = "1002";
-    public static final String VIDEO_INVALID = "1003";
-    public static final String PASSWORD_ERROR = "1005";
 
-    public String getUserName() {
-        return userName;
+    private String username;
+    private String password;
+    private String grant_type;
+    private String client_id;
+    private String client_secret;
+    private String scope;
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -27,8 +29,35 @@ public class LoginRequest {
         this.password = password;
     }
 
-    private String userName;
-    private String password;
+    public String getGrant_type() {
+        return grant_type;
+    }
 
+    public void setGrant_type(String grant_type) {
+        this.grant_type = "password";
+    }
 
+    public String getClient_id() {
+        return client_id;
+    }
+
+    public void setClient_id(String client_id) {
+        this.client_id = "ananops-client-gateway";
+    }
+
+    public String getClient_secret() {
+        return client_secret;
+    }
+
+    public void setClient_secret(String client_secret) {
+        this.client_secret = "ananopsClientSecret";
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = "*";
+    }
 }

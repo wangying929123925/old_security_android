@@ -32,17 +32,6 @@ public class CheckAddActivity extends AppCompatActivity implements View.OnClickL
         setOnListener();
     }
     private void initViews() {
-        et_check_id=findViewById(R.id.et_check_id);//id
-        et_check_name=findViewById(R.id.et_check_name);
-        et_device_name=findViewById(R.id.et_device_name);
-       et_device_type=findViewById(R.id.et_device_type);//设备类型
-        et_service_man=findViewById(R.id.et_service_man);//服务商
-       et_check_degree=findViewById(R.id. et_check_degree);//等级
-        et_check_start_time=findViewById(R.id.et_check_start_time);//开始时间
-         et_check_end_time=findViewById(R.id.et_check_end_time);//结束时间
-         et_check_description=findViewById(R.id. et_check_description);//描述
-        choose_check_man=findViewById(R.id.choose_check_man);//选择巡检人
-        basicinfo_back=findViewById(R.id.basicinfo_back);
     }
     private void setOnListener() {
         et_device_name.setOnClickListener(this);
@@ -57,8 +46,8 @@ public class CheckAddActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()){
             case R.id.et_device_name:
                 break;
-            case R.id.et_check_degree:
-                break;
+           // case R.id.et_check_degree:
+             //   break;
             case R.id. et_check_end_time:
                 break;
             case R.id.choose_check_man:

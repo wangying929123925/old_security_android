@@ -57,7 +57,7 @@ public class LoginActivity1 extends AppCompatActivity {
         mPwd = (EditText) findViewById(R.id.login_edit_pwd);
         mRegisterButton = (Button) findViewById(R.id.login_btn_register);
         mLoginButton = (Button) findViewById(R.id.login_btn_login);
-        mCancleButton = (Button) findViewById(R.id.login_btn_cancle);
+      //  mCancleButton = (Button) findViewById(R.id.login_btn_cancle);
         loginView = findViewById(R.id.login_view);
         loginSuccessView = findViewById(R.id.login_success_view);
         loginSuccessShow = (TextView) findViewById(R.id.login_success_show);
@@ -102,9 +102,9 @@ public class LoginActivity1 extends AppCompatActivity {
                 case R.id.login_btn_login:                              //登录界面的登录按钮
                     login();
                     break;
-                case R.id.login_btn_cancle:                             //登录界面的注销按钮
-                    cancel();
-                    break;
+           //     case R.id.login_btn_cancle:                             //登录界面的注销按钮
+              //      cancel();
+            //        break;
                // case R.id.login_text_change_pwd:                             //登录界面的修改密码按钮
                 //   Intent intent_Login_to_reset = new Intent(LoginActivity1.this,Resetpwd.class) ;    //切换Login Activity至User Activity
                  //  startActivity(intent_Login_to_reset);
@@ -120,56 +120,57 @@ public class LoginActivity1 extends AppCompatActivity {
             final SharedPreferences.Editor editor =login_sp.edit();
                 //??
                 final LoginRequest loginRequest = new LoginRequest();
-                loginRequest.setUserName(userName);
+                loginRequest.setUsername(userName);
                 loginRequest.setPassword(userPwd);
-                Net.instance.login(loginRequest)
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<LoginResponse>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.v("LoginTime", System.currentTimeMillis() + "");
-                                e.printStackTrace();
-                                Toast.makeText(LoginActivity1.this, "网络异常，请检查网络状态后登陆", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onNext(LoginResponse loginResponse) {
-                                Log.v("LoginTime", System.currentTimeMillis() + "");
-                                if (TextUtils.equals(loginResponse.getRetn(), LoginRequest.RESPONSE_OK)) {
-                                    String token = loginResponse.getToken();
-                                    SPUtils.getInstance().putString("TOKEN", token);
-                                    SPUtils.getInstance().putString("phoneNumber", userName);
-                                    SPUtils.getInstance().putString("password",userPwd);
-                                    SPUtils.getInstance().putString("userId", loginResponse.getUserIndex());
-                                    //保存用户名和密码
-                                    editor.putString("USER_NAME", userName);
-                                    editor.putString("PASSWORD", userPwd);
-                                    //是否记住密码
-                                    if(mRememberCheck.isChecked()){
-                                        editor.putBoolean("mRememberCheck", true);
-                                    }else{
-                                        editor.putBoolean("mRememberCheck", false);
-                                    }
-                                    editor.commit();
-                                    Intent intent1 = new Intent(LoginActivity1.this, UserMainActivity.class);
-                                    startActivity(intent1);
-                                    finish();
-                                } else if (TextUtils.equals(loginResponse.getRetn(), LoginRequest.PASSWORD_ERROR)) {
+//                Net.instance.login(loginRequest)
+//                Net.instance.login(userName,userPwd,"1","password","ananops-client-gateway","ananopsClientSecret","*")
+//                    .subscribeOn(Schedulers.newThread())
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .subscribe(new Subscriber<LoginResponse>() {
+//                            @Override
+//                            public void onCompleted() {
+//
+//                            }
+//
+//                            @Override
+//                            public void onError(Throwable e) {
+//                                Log.v("LoginTime", System.currentTimeMillis() + "");
+//                                e.printStackTrace();
+//                                Toast.makeText(LoginActivity1.this, "网络异常，请检查网络状态后登陆", Toast.LENGTH_SHORT).show();
+//                            }
+//
+//                            @Override
+//                            public void onNext(LoginResponse loginResponse) {
+//                                Log.v("LoginTime", System.currentTimeMillis() + "");
+//                                if (TextUtils.equals(loginResponse.getCode(),"200")) {
+//                                  //  String token = loginResponse.getToken();
+//                                   // SPUtils.getInstance().putString("TOKEN", token);
+//                                   // SPUtils.getInstance().putString("phoneNumber", userName);
+//                                  //  SPUtils.getInstance().putString("password",userPwd);
+//                                 //   SPUtils.getInstance().putString("userId", loginResponse.getUserIndex());
+//                                    //保存用户名和密码
+//                                    editor.putString("USER_NAME", userName);
+//                                    editor.putString("PASSWORD", userPwd);
+//                                    //是否记住密码
+//                                    if(mRememberCheck.isChecked()){
+//                                        editor.putBoolean("mRememberCheck", true);
+//                                    }else{
+//                                        editor.putBoolean("mRememberCheck", false);
+//                                    }
+//                                    editor.commit();
+//                                    Intent intent1 = new Intent(LoginActivity1.this, UserMainActivity.class);
+//                                    startActivity(intent1);
+//                                    finish();
+//                                } //else if (TextUtils.equals(loginResponse.getRetn(), LoginRequest.PASSWORD_ERROR)) {
                                     Toast.makeText(LoginActivity1.this, "密码错误", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(LoginActivity1.this, loginResponse.getDesc(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                                }// else {
+                               //     Toast.makeText(LoginActivity1.this, loginResponse.getDesc(), Toast.LENGTH_SHORT).show();
+                              //  }
+                          //  }
+//                        });
                 //??
 
-        }
+     //   }
     }
     public void cancel() {           //注销
         if (isUserNameAndPwdValid()) {
