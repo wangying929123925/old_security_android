@@ -12,6 +12,8 @@ public class RepairContent {
     private int repair_image_id;//图标
 
 
+
+
     public String getOrder_depart() {
         return order_depart;
     }

@@ -193,7 +193,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         main_repair_img2.setImageResource(R.drawable.ic_workorder);
         main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
         main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
-        main_repair_text1.setText(getResources().getString(R.string.worker_main_repair1));//待执行
+        main_repair_text1.setText(getResources().getString(R.string.worker_main_repair1));//待确认
         main_repair_text2.setText(getResources().getString(R.string.worker_main_repair2));//维修中
         main_inspection_img1.setImageResource(R.drawable.ic_workorder);
         main_inspection_img2.setImageResource(R.drawable.ic_workorder);
