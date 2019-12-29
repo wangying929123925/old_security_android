@@ -15,23 +15,28 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import com.example.ananops_android.R;
+import com.example.ananops_android.activity.ContactActivity;
 import com.example.ananops_android.activity.OrderDetailActivity;
+import com.example.ananops_android.activity.RepairAddActivity;
+import com.example.ananops_android.activity.RepairCommentActivity;
+import com.example.ananops_android.activity.UserMainActivity;
 import com.example.ananops_android.entity.RepairContent;
-import com.example.ananops_android.entity.UserLogin;
 import com.example.ananops_android.util.BaseUtils;
+import com.example.ananops_android.util.SPUtils;
 
 import java.util.List;
 
 public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder> implements View.OnClickListener {
-    private Context mComtext;
+    private Context mContext;
     private List<RepairContent> mrepairContentList;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         View order_item_view;
         ImageView repairImage;
         TextView order_item_title;
-        TextView order_item_id;
-        TextView order_item_name;
+        TextView order_item_project;
+        TextView order_item_contract;
+        TextView order_item_time;
         TextView order_item_status;
         TextView order_item_details;
         Button order_item_button1;
@@ -42,8 +47,9 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
             order_item_view=view;
             repairImage=view.findViewById(R.id.order_item_img);
             order_item_title=view.findViewById(R.id.order_item_title);
-            order_item_id=view.findViewById(R.id.order_item_id);
-            order_item_name=view.findViewById(R.id.order_item_name);
+            order_item_project=view.findViewById(R.id.order_item_id);
+            order_item_contract=view.findViewById(R.id.order_item_name);
+            order_item_time=view.findViewById(R.id.order_item_time);
             order_item_status=view.findViewById(R.id.order_item_status);
             order_item_details=view.findViewById(R.id.order_item_details);
             order_item_button1=view.findViewById(R.id.order_item_button1);
@@ -60,10 +66,10 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewTye){//创建ViewHolder实例
-        if(mComtext==null){
-            mComtext=parent.getContext();
+        if(mContext ==null){
+            mContext =parent.getContext();
         }
-        View view= LayoutInflater.from(mComtext).inflate(R.layout.repairs_board_item,parent,false);//动态加载布局文件，第一个参数是要加载布局文件的ID，第二个是给布局添加父布局
+        View view= LayoutInflater.from(mContext).inflate(R.layout.repairs_board_item,parent,false);//动态加载布局文件，第一个参数是要加载布局文件的ID，第二个是给布局添加父布局
         final ViewHolder holder=new ViewHolder(view);
         return holder;
     }
@@ -75,193 +81,89 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
 //        holder.order_item_id.setText(repairContent.getPrincipalId());
 //        holder.order_item_name.setText(repairContent.getProjectId());
 //        holder.order_item_status.setText(repairContent.getUserId());
-        holder.order_item_title.setText(repairContent.getRepair_id());
-        holder.order_item_id.setText(repairContent.getRepair_id());
-        holder.order_item_name.setText(repairContent.getRepair_content());
-       holder.order_item_status.setText(repairContent.getRepair_status());
-        switch (UserLogin.useCode){
-            case 1:
-                switch (repairContent.getRepair_status()){
-                    case"计划中":
-                        holder.relative_button.setVisibility(View.GONE);
-                    break;
-                    case "待接单":
-                        holder.relative_button.setVisibility(View.VISIBLE);
-                        holder.order_item_button1.setVisibility(View.INVISIBLE);
-                        holder.order_item_button2.setText("确认");
-                        break;
-                    case "审核不通过":
+        holder.order_item_title.setText(repairContent.getId());
+        holder.order_item_project.setText(String.valueOf(repairContent.getProjectId()));
+        holder.order_item_contract.setText(String.valueOf(repairContent.getContractId()));
+        holder.order_item_time.setText(repairContent.getAppointTime());
+       holder.order_item_status.setText(BaseUtils.getInstence().statusNumConvertString(repairContent.getStatus()));
+        switch (SPUtils.getInstance().getString("role_code","user_watcher")){
+            case "user_watcher":
+                switch (repairContent.getStatus()){
+                    case 1:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button1.setText("重新报修");
                         holder.order_item_button2.setText("放弃报修");
                         break;
-                    case "维修工待接单":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "待填方案":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case"服务商待审核备件":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case"甲方待审核备件":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "维修中":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "待验收":
+                    case 10:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button1.setText("合格");
                         holder.order_item_button2.setText("不合格");
                         break;
-                    case "待支付":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "待评价":
+                    case 11:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button2.setText("去评价");
                         holder.order_item_button1.setVisibility(View.INVISIBLE);
                         break;
-                    case "已评价":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
+                        default:
+                            holder.relative_button.setVisibility(View.GONE);
+                            break;
                 }
                 break;
-            case 2:
-                switch (repairContent.getRepair_status()){
-                    case"计划中":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "待接单":
+            case "fac_service":
+                switch (repairContent.getStatus()){
+                    case 3:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button1.setText("接单派工");
                         holder.order_item_button2.setText("不接单");
                         break;
-                    case "审核不通过":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "维修工待接单":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "待填方案":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case"服务商待审核备件":
+                    case 6:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button1.setText("通过");
                         holder.order_item_button2.setText("不通过");
                         break;
-                    case"甲方待审核备件":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "维修中":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "待验收":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "待评价":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "待支付":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "已评价":
+                    default:
                         holder.relative_button.setVisibility(View.GONE);
                         break;
                 }
                 break;
-            case 3:
-                switch (repairContent.getRepair_status()){
-                    case"计划中":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "待接单":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "审核不通过":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "维修工待接单":
+            case "engineer":
+                switch (repairContent.getStatus()){
+                    case 4:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button1.setText("去接单");
                         holder.order_item_button2.setText("不接单");
                         break;
-                    case "待填方案":
+                    case 5:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button1.setVisibility(View.INVISIBLE);
                         holder.order_item_button2.setText("去填方案");
                         break;
-                    case"服务商待审核备件":
-                        holder.relative_button.setVisibility(View.VISIBLE);
-                        holder.order_item_button1.setText("通过");
-                        holder.order_item_button2.setText("不通过");
-                        break;
-                    case"甲方待审核备件":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "维修中":
+                    case 7:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button1.setVisibility(View.INVISIBLE);
                         holder.order_item_button2.setText("进入维修");
-                    case "待验收":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "待评价":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "待支付":
-                        holder.relative_button.setVisibility(View.GONE);
-                        break;
-                    case "已评价":
+                    break;
+                    default:
                         holder.relative_button.setVisibility(View.GONE);
                         break;
                 }
                 break;
-            case 4:
-                switch (repairContent.getRepair_status()){
-            case"计划中":
+            case "user_leader":
+                switch (repairContent.getStatus()){
+            case 2:
                 holder.relative_button.setVisibility(View.VISIBLE);
                 holder.order_item_button1.setText("通过");
                 holder.order_item_button2.setText("不通过");
                 break;
-            case "待接单":
-                holder.relative_button.setVisibility(View.GONE);
-                break;
-            case "审核不通过":
-                holder.relative_button.setVisibility(View.GONE);
-                break;
-            case "维修工待接单":
-                holder.relative_button.setVisibility(View.GONE);
-                break;
-            case "待填方案":
-                holder.relative_button.setVisibility(View.GONE);
-                break;
-            case"服务商待审核备件":
-                holder.relative_button.setVisibility(View.GONE);
-                break;
-            case"甲方待审核备件":
+            case 9:
                 holder.relative_button.setVisibility(View.VISIBLE);
                 holder.order_item_button1.setText("通过");
                 holder.order_item_button2.setText("不通过");
                 break;
-            case "维修中":
-                holder.relative_button.setVisibility(View.GONE);
-                break;
-            case "待验收":
-                holder.relative_button.setVisibility(View.GONE);
-                break;
-            case "待支付":
+            case 12:
                 holder.relative_button.setVisibility(View.VISIBLE);
                 holder.order_item_button1.setVisibility(View.INVISIBLE);
                 holder.order_item_button2.setText("去支付");
-                break;
-            case "待评价":
-                holder.relative_button.setVisibility(View.GONE);
-                break;
-            case "已评价":
-                holder.relative_button.setVisibility(View.GONE);
                 break;
                 default:
                     holder.relative_button.setVisibility(View.GONE);
@@ -273,7 +175,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                     break;
         }
 
-        Glide.with(mComtext).load(R.drawable.haoyue).into(holder.repairImage);//使用Glide依赖库，是一个强大的图片加载库load()可以传入URL或者本地路径或者资源ID
+        Glide.with(mContext).load(R.drawable.haoyue).into(holder.repairImage);//使用Glide依赖库，是一个强大的图片加载库load()可以传入URL或者本地路径或者资源ID
         //into()将图片设置到某个具体的ImageView
         holder.order_item_details.setTag(position);
         holder.order_item_button1.setTag(position);
@@ -305,56 +207,66 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
         RepairContent repairContent = mrepairContentList.get(position);
         switch (v.getId()) {
             case R.id.order_item_details:
-                //Intent intent1=new Intent(mComtext.getApplicationContext(), OrderSearchListActivity.class);
-               // Toast.makeText(mComtext, "工单详情" + (position + 1), Toast.LENGTH_SHORT).show();
-               // Intent intent1=new Intent(mComtext, OrderDetailActivity.class);
-             //   mComtext.startActivity(intent1);
-              //  mComtext.startActivity(intent1);
+                //Intent intent1=new Intent(mContext.getApplicationContext(), OrderSearchListActivity.class);
+               // Toast.makeText(mContext, "工单详情" + (position + 1), Toast.LENGTH_SHORT).show();
+               // Intent intent1=new Intent(mContext, OrderDetailActivity.class);
+             //   mContext.startActivity(intent1);
+              //  mContext.startActivity(intent1);
                 break;
             case R.id.order_item_button1:
-                switch (UserLogin.useCode){
-                    case 1:
-                        switch (repairContent.getRepair_status()){
-                            case "待验收":
-                                Toast.makeText(mComtext, "你点击了合格按钮" , Toast.LENGTH_SHORT).show();
+                switch (SPUtils.getInstance().getString("role_code","user_watcher")){
+                    case "user_watcher":
+                        switch (repairContent.getStatus()){
+                            case 10:
+                                Toast.makeText(mContext, "你点击了合格按钮" , Toast.LENGTH_SHORT).show();
+                                BaseUtils.getInstence().changeStatus(11, repairContent.getId(), "验收通过", mContext);
+                                BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
-                            case "审核不通过":
-                                Toast.makeText(mComtext, "你点击了重新填单按钮" , Toast.LENGTH_SHORT).show();
+                            case 1:
+                                Toast.makeText(mContext, "你点击了重新填单按钮" , Toast.LENGTH_SHORT).show();
+                                BaseUtils.getInstence().intent(mContext, RepairAddActivity.class);
                                 break;
                              default:
                                 break;
                         }
                         break;
-                    case 2:
-                        switch (repairContent.getRepair_status()){
-                            case "待接单":
-                                Toast.makeText(mComtext, "你点击了接单派工按钮" , Toast.LENGTH_SHORT).show();
+                    case "fac_service":
+                        switch (repairContent.getStatus()){
+                            case 3:
+                                Toast.makeText(mContext, "接单派工" , Toast.LENGTH_SHORT).show();
+                                BaseUtils.getInstence().changeStatus(4, repairContent.getId(), "服务商接单", mContext);
+                                BaseUtils.getInstence().intent(mContext, ContactActivity.class);
                                 break;
-                            case"服务商待审核备件":
-                                Toast.makeText(mComtext, "你点击了通过按钮" , Toast.LENGTH_SHORT).show();
+                            case 6:
+                                Toast.makeText(mContext, "你点击了通过按钮" , Toast.LENGTH_SHORT).show();
+                                BaseUtils.getInstence().changeStatus(9, repairContent.getId(), "服务商审核通过", mContext);
+                                BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
                             default:
                                 break;
                         }
                         break;
-                    case 3:
-                        switch (repairContent.getRepair_status()){
-                            case "维修工待接单":
-                                Toast.makeText(mComtext, "你点击了去接单按钮" , Toast.LENGTH_SHORT).show();
-                                break;
-                            case "维修中":
-                                Toast.makeText(mComtext, "你点击了进入维修按钮" , Toast.LENGTH_SHORT).show();
+                    case "engineer":
+                        switch (repairContent.getStatus()){
+                            case 4:
+                                Toast.makeText(mContext, "你点击了去接单按钮" , Toast.LENGTH_SHORT).show();
+                                BaseUtils.getInstence().changeStatus(5, repairContent.getId(), "维修工接单", mContext);
+                                BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
                             default:
                                 break;
                         }
-                    case 4:
-                        switch (repairContent.getRepair_status()){
-                            case"计划中":
-                                Toast.makeText(mComtext, "你点击了通过按钮" , Toast.LENGTH_SHORT).show();
+                    case "user_leader":
+                        switch (repairContent.getStatus()){
+                            case 2:
+                                Toast.makeText(mContext, "你点击了通过按钮" , Toast.LENGTH_SHORT).show();
+                                BaseUtils.getInstence().changeStatus(3, repairContent.getId(), "提交方案", mContext);
+                                BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
-                            case "甲方待审核备件":
-                                Toast.makeText(mComtext, "你点击了合格按钮" , Toast.LENGTH_SHORT).show();
+                            case 9:
+                                Toast.makeText(mContext, "你点击了合格按钮" , Toast.LENGTH_SHORT).show();
+                                BaseUtils.getInstence().changeStatus(10, repairContent.getId(), "提交方案", mContext);
+                                BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
                             default:
                                 break;
@@ -364,59 +276,85 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                 }
                 break;
             case R.id.order_item_button2:
-                switch (UserLogin.useCode){
-                        case 1:
-                            switch (repairContent.getRepair_status()){
-                                case "待验收":
-                                    Toast.makeText(mComtext, "你点击了不合格按钮" , Toast.LENGTH_SHORT).show();
+                switch (SPUtils.getInstance().getString("role_code","user_watcher")){
+                        case "user_watcher":
+                            switch (repairContent.getStatus()){
+                                case 10:
+                                    Toast.makeText(mContext, "你点击了不合格按钮" , Toast.LENGTH_SHORT).show();
+                                    BaseUtils.getInstence().changeStatus(1,repairContent.getId(), "验收不通过通过", mContext);
+                                    BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     break;
-                                case "审核不通过":
-                                    Toast.makeText(mComtext, "你点击了放弃填单按钮" , Toast.LENGTH_SHORT).show();
+                                case 1:
+                                    Toast.makeText(mContext, "你点击了放弃填单按钮" , Toast.LENGTH_SHORT).show();
+                                    BaseUtils.getInstence().changeStatus(15,repairContent.getId(), "放弃填单", mContext);
+                                    BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
                                     break;
-                                case "待评价":
-                                 //   BaseUtils.getInstence().intent(mComtext, RepairCommentActivity.class,"order_id",repairContent.getRepair_id());
+                                case 11:
+                                 //   BaseUtils.getInstence().intent(mContext, RepairCommentActivity.class,"order_id",repairContent.getRepair_id());
+                                    BaseUtils.getInstence().intent(mContext, RepairCommentActivity.class);
                                     break;
                                 default:
                                     Bundle bundle1=new Bundle();
                                   //  bundle1.putString("order_id",repairContent.getRepair_id());
                                     bundle1.putString("status_do","no");
-                                    BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle1);
+                                    BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                     break;
                             }
                             break;
-                        case 2:
-                            switch (repairContent.getRepair_status()){
-                                case "待接单":
-                                    Toast.makeText(mComtext, "你点击了不接单按钮" , Toast.LENGTH_SHORT).show();
+                        case "fac_service":
+                            switch (repairContent.getStatus()){
+                                case 3:
+                                    Toast.makeText(mContext, "你点击了不接单按钮" , Toast.LENGTH_SHORT).show();
+                                    BaseUtils.getInstence().changeStatus(14, repairContent.getId(), "服务商不接单", mContext);
+                                    BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     break;
-                                case"服务商待审核备件":
-                                    Toast.makeText(mComtext, "你点击了不通过按钮" , Toast.LENGTH_SHORT).show();
+                                case 8:
+                                    Toast.makeText(mContext, "你点击了不通过按钮" , Toast.LENGTH_SHORT).show();
+                                    BaseUtils.getInstence().changeStatus(16, repairContent.getId(), "服务商不接单", mContext);
+                                    BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     break;
                                 default:
                                     break;
                             }
                             break;
-                        case 3:
-                            switch (repairContent.getRepair_status()){
-                                case "维修工待接单":
-                                    Toast.makeText(mComtext, "你点击了去不接单按钮" , Toast.LENGTH_SHORT).show();
+                        case "engineer":
+                            switch (repairContent.getStatus()){
+                                case 4:
+                                    Toast.makeText(mContext, "你点击了去不接单按钮" , Toast.LENGTH_SHORT).show();
+                                    BaseUtils.getInstence().changeStatus(15, repairContent.getId(), "服务商审核通过", mContext);
+                                    BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     break;
-                                case "维修中":
-                                    Toast.makeText(mComtext, "你点击了进入维修按钮" , Toast.LENGTH_SHORT).show();
+                                case 5:
+                                    Toast.makeText(mContext, "你点击了填方案按钮" , Toast.LENGTH_SHORT).show();
+                                    Bundle bundle0=new Bundle();
+                                    bundle0.putString("order_id",repairContent.getId());
+                                    bundle0.putString("status_do","3-2");
+                                    BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
+                                    break;
+                                case 7:
+                                    Toast.makeText(mContext, "你点击了进入维修按钮" , Toast.LENGTH_SHORT).show();
+                                    Bundle bundle1=new Bundle();
+                                    bundle1.putString("order_id",repairContent.getId());
+                                    bundle1.putString("status_do","3-3");
+                                    BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                     break;
                                 default:
                                     break;
                             }
-                        case 4:
-                            switch (repairContent.getRepair_status()){
-                                case"计划中":
-                                    Toast.makeText(mComtext, "你点击了合格按钮" , Toast.LENGTH_SHORT).show();
+                        case "user_leader":
+                            switch (repairContent.getStatus()){
+                                case 2:
+                                    Toast.makeText(mContext, "你点击了不合格按钮" , Toast.LENGTH_SHORT).show();
+                                    BaseUtils.getInstence().changeStatus(16, repairContent.getId(), "提交方案", mContext);
+                                    BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     break;
-                                case "甲方待审核备件":
-                                    Toast.makeText(mComtext, "你点击了合格按钮" , Toast.LENGTH_SHORT).show();
+                                case 9:
+                                    Toast.makeText(mContext, "你点击了不通过按钮" , Toast.LENGTH_SHORT).show();
+                                    BaseUtils.getInstence().changeStatus(17, repairContent.getId(), "提交方案", mContext);
+                                    BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     break;
-                                case "支付":
-                                    Toast.makeText(mComtext, "你点击了去支付按钮" , Toast.LENGTH_SHORT).show();
+                                case 12:
+                                    Toast.makeText(mContext, "支付功能正在开发中" , Toast.LENGTH_SHORT).show();
                                     break;
                                 default:
                                     break;
@@ -425,114 +363,113 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                 }
                 break;
             default:
-                Toast.makeText(mComtext, "即将查看工单详情" + (position + 1), Toast.LENGTH_SHORT).show();
-                switch (UserLogin.useCode){
-                    case 1:
-                        switch (repairContent.getRepair_status()){
-                            case "待接单":
+                Toast.makeText(mContext, "即将查看工单详情" + (position + 1), Toast.LENGTH_SHORT).show();
+                switch (SPUtils.getInstance().getString("role_code","user_watcher")){
+                    case "user_watcher":
+                        switch (repairContent.getStatus()){
+                            case 1:
                                 Bundle bundle=new Bundle();
-                              //  bundle.putString("order_id",repairContent.getRepair_id());
+                                bundle.putString("order_id",repairContent.getId());
                                 bundle.putString("status_do","1-1");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle);
                                 break;
-                            case "审核不通过":
+                            case 10:
                                 Bundle bundle1=new Bundle();
-                             //   bundle1.putString("order_id",repairContent.getRepair_id());
+                                bundle1.putString("order_id",repairContent.getId());
                                 bundle1.putString("status_do","1-2");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle1);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
-                            case "待评价":
-                               // Bundle bundle2=new Bundle();
-                              //  bundle2.putString("order_id",repairContent.getRepair_id());
+                            case 11:
+                               Bundle bundle2=new Bundle();
+                                bundle2.putString("order_id",repairContent.getId());
                               //  bundle2.putString("status_do","1-3");
-                              //  BaseUtils.getInstence().intent(mComtext,RepairCommentActivity.class,bundle2);
+                              BaseUtils.getInstence().intent(mContext,RepairCommentActivity.class);
                                 break;
-                            case "待验收":
-                                Bundle bundle3=new Bundle();
-                               // bundle3.putString("order_id",repairContent.getRepair_id());
-                                bundle3.putString("status_do","1-3");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle3);
-                                break;
+
                             default:
                                 Bundle bundle0=new Bundle();
-                             //   bundle0.putString("order_id",repairContent.getRepair_id());
+                                bundle0.putString("order_id",repairContent.getId());
                                 bundle0.putString("status_do","no");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle0);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
                                 break;
                         }
                         break;
-                    case 2:
-                        switch (repairContent.getRepair_status()){
-                            case "待接单":
+                    case "fac_service":
+                        switch (repairContent.getStatus()){
+                            case 3:
                                 Bundle bundle=new Bundle();
-                             //   bundle.putString("order_id",repairContent.getRepair_id());
+                                bundle.putString("order_id",repairContent.getId());
                                 bundle.putString("status_do","2-1");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle);
                                 break;
-                            case"服务商待审核备件":
+                            case 8:
                                 Bundle bundle1=new Bundle();
-                             //   bundle1.putString("order_id",repairContent.getRepair_id());
+                                bundle1.putString("order_id",repairContent.getId());
                                 bundle1.putString("status_do","2-2");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle1);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
                             default:
                                 Bundle bundle0=new Bundle();
-                             //   bundle0.putString("order_id",repairContent.getRepair_id());
+                                bundle0.putString("order_id",repairContent.getId());
                                 bundle0.putString("status_do","no");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle0);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
                                 break;
                         }
                         break;
-                    case 3:
-                        switch (repairContent.getRepair_status()){
-                            case "维修工待接单":
+                    case "engineer":
+                        switch (repairContent.getStatus()){
+                            case 4:
                                 Bundle bundle=new Bundle();
-                           //     bundle.putString("order_id",repairContent.getRepair_id());
+                                bundle.putString("order_id",repairContent.getId());
                                 bundle.putString("status_do","3-1");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle);
                                 break;
-                            case "待填方案":
+                            case 5:
                                 Bundle bundle2=new Bundle();
-                          //      bundle2.putString("order_id",repairContent.getRepair_id());
+                                bundle2.putString("order_id",repairContent.getId());
                                 bundle2.putString("status_do","3-2");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle2);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle2);
                                 break;
-                            case "维修中":
+                            case 6:
                                 Bundle bundle1=new Bundle();
-                          //      bundle1.putString("order_id",repairContent.getRepair_id());
+                                bundle1.putString("order_id",repairContent.getId());
                                 bundle1.putString("status_do","3-3");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle1);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
                             default:
                                 Bundle bundle0=new Bundle();
-                          //      bundle0.putString("order_id",repairContent.getRepair_id());
+                                bundle0.putString("order_id",repairContent.getId());
                                 bundle0.putString("status_do","no");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle0);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
                                 break;
                         }
                         break;
-                    case 4:
-                        switch (repairContent.getRepair_status()){
-                            case"计划中":
+                    case "user_leader":
+                        switch (repairContent.getStatus()){
+                            case 2:
                                 Bundle bundle=new Bundle();
-                            //    bundle.putString("order_id",repairContent.getRepair_id());
+                                bundle.putString("order_id",repairContent.getId());
                                 bundle.putString("status_do","4-1");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle);
                                 break;
-                            case "甲方待审核备件":
+                            case 9:
                                 Bundle bundle1=new Bundle();
-                          //      bundle1.putString("order_id",repairContent.getRepair_id());
+                                bundle1.putString("order_id",repairContent.getId());
                                 bundle1.putString("status_do","4-2");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle1);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
-                            case "支付":
+                            case 12:
                                //支付
+                                Bundle bundle3=new Bundle();
+                                bundle3.putString("order_id",repairContent.getId());
+                                bundle3.putString("status_do","no");
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle3);
                                 break;
                             default:
                                 Bundle bundle0=new Bundle();
-                           //     bundle0.putString("order_id",repairContent.getRepair_id());
+                                bundle0.putString("order_id",repairContent.getId());
                                 bundle0.putString("status_do","no");
-                                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle0);
+                                BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
                                 break;
                         }
                         break;

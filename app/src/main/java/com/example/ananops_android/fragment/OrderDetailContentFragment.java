@@ -6,18 +6,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.RepairAdapter;
+import com.example.ananops_android.db.OrderDetailResponse;
 import com.example.ananops_android.entity.RepairContent;
+import com.example.ananops_android.net.Net;
+import com.example.ananops_android.util.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class OrderDetailContentFragment extends Fragment {
     private static String ORDER_ID;
@@ -60,18 +70,44 @@ public class OrderDetailContentFragment extends Fragment {
 
     private void initdata() {
         if(!(getArguments()==null)){
-            ORDER_ID=(String) getArguments().get("order_id");}
-        tv_project_name.setText("测试");
-        tv_repair_listid.setText("测试");
-        tv_repair_person.setText("测试");
-        tv_repair_tel.setText("测试");
-        tv_repair_time.setText("测试");
-        tv_fault_type.setText("测试");
-        tv_fault_addr.setText("测试");
-        tv_repair_address.setText("测试");
-        tv_fault_name.setText("测试");
-        tv_fault_degree.setText("测试");
-        tv_emergency_degree.setText("测试");
-        tv_fault_description.setText("测试");
+            ORDER_ID=(String) getArguments().get("order_id");
+            Net.instance.getOrderDetail(ORDER_ID, SPUtils.getInstance().getString("Token"," "))
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<OrderDetailResponse>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.v("LoginTime", System.currentTimeMillis() + "");
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "网络异常，请检查网络状态fragmentgetDetail", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onNext(OrderDetailResponse orderDetailResponse) {
+                            if (TextUtils.equals(orderDetailResponse.getCode(), "200")) {
+                                tv_project_name.setText(String.valueOf(orderDetailResponse.getResult().getProjectId()));
+                                tv_repair_listid.setText(ORDER_ID);
+                                tv_repair_person.setText(String.valueOf(orderDetailResponse.getResult().getUserId()));
+                                tv_repair_tel.setText(String.valueOf(orderDetailResponse.getResult().getCall()));
+                                tv_repair_time.setText(String.valueOf(orderDetailResponse.getResult().getAppointTime()));
+                                tv_fault_type.setText(String.valueOf(orderDetailResponse.getResult().getAddress_name()));
+                                tv_fault_addr.setText(String.valueOf(orderDetailResponse.getResult().getAddress_name()));
+                                tv_repair_address.setText("北京西站");
+                                tv_fault_name.setText("测试");
+                                tv_fault_degree.setText(String.valueOf(orderDetailResponse.getResult().getLevel()));
+                                tv_emergency_degree.setText(String.valueOf(orderDetailResponse.getResult().getLevel()));
+                                tv_fault_description.setText(String.valueOf(orderDetailResponse.getResult().getSuggestion()));
+                            } else {
+                                Toast.makeText(getContext(),orderDetailResponse.getMessage(),Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+
     }
 }

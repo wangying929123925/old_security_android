@@ -1,31 +1,31 @@
 package com.example.ananops_android.entity;
 
 public class TimeLine {
-    private String orderDirector;
-    private String processStatus;
-    private String processTime;
+    private String lastOperator;
+    private String movement;
+    private String updateTime;
 
-    public String getOrderDirector() {
-        return orderDirector;
+    public String getLastOperator() {
+        return lastOperator;
     }
 
-    public void setOrderDirector(String orderDirector) {
-        this.orderDirector = orderDirector;
+    public void setLastOperator(String lastOperator) {
+        this.lastOperator = lastOperator;
     }
 
-    public String getProcessStatus() {
-        return processStatus;
+    public String getMovement() {
+        return movement;
     }
 
-    public void setProcessStatus(String processStatus) {
-        this.processStatus = processStatus;
+    public void setMovement(String movement) {
+        this.movement = movement;
     }
 
-    public String getProcessTime() {
-        return processTime;
+    public String getUpdateTime() {
+        return updateTime;
     }
 
-    public void setProcessTime(String processTime) {
-        this.processTime = processTime;
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }

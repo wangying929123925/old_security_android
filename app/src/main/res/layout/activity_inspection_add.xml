@@ -61,7 +61,7 @@
                     android:textColor="#353535"
                     android:textSize="16sp" />
                 <TextView
-                    android:id="@+id/et_project_id"
+                    android:id="@+id/et_project_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -101,8 +101,8 @@
                     android:text="巡检名称"
                     android:textColor="#353535"
                     android:textSize="16sp" />
-                <EditText
-                    android:id="@+id/et_check_name"
+                <TextView
+                    android:id="@+id/et_inspection_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -112,6 +112,17 @@
                     android:textColorHint="#DDDDDD"
                     android:textSize="16sp"
                     android:background="@null"/>
+                <TextView
+                    android:id="@+id/choose_fault_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:text="请选择 >"
+                    android:textColor="#1A73C0"
+                    android:textSize="14sp"
+                    />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
@@ -133,7 +144,7 @@
                     android:textColor="#353535"
                     android:textSize="16sp" />
                 <TextView
-                    android:id="@+id/et_device_name"
+                    android:id="@+id/et_inspection_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -141,18 +152,6 @@
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
                     android:textSize="16sp" />
-                <TextView
-                    android:id="@+id/choose_fault_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="请选择 >"
-                    android:textColor="#1A73C0"
-                    android:textSize="14sp"
-                    />
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
@@ -242,7 +241,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/et_check_content"
+                    android:id="@+id/et_inspection_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -272,7 +271,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/et_check_tip"
+                    android:id="@+id/et_inspection_tip"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -303,7 +302,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/et_check_do_result"
+                    android:id="@+id/et_inspection_do_result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -338,23 +337,21 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:text="服务商"
+                    android:text="添加网点"
                     android:textColor="#353535"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/et_check_end_time"
+                    android:id="@+id/add_dot"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:hint="请选择结束时间"
                     android:maxLength="11"
                     android:paddingLeft="90dp"
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
                     android:textSize="16sp" />
                 <TextView
-                    android:id="@+id/choose_fault_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -370,39 +367,17 @@
                     android:layout_alignParentBottom="true"
                     android:background="#dbdbdb" />
             </RelativeLayout>
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/setting_item_selector"
-                android:layout_gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="工作内容"
-                    android:textColor="#353535"
-                    android:textSize="16sp" />
-                <EditText
-                    android:id="@+id/et_check_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:hint="巡检工作描述"
-                    android:paddingLeft="90dp"
-                    android:singleLine="true"
-                    android:textColorHint="#DDDDDD"
-                    android:textSize="16sp"
-                    android:background="@null"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#dbdbdb" />
-            </RelativeLayout>
+                android:layout_height="2dp"
+                android:background="@color/state_pressed"/>
+
+            <ListView
+                android:id="@+id/dot_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
+
     </ScrollView>
     <LinearLayout
         android:layout_width="match_parent"
@@ -412,19 +387,19 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="巡检人"
+            android:text="服务商"
             android:gravity="center"
             android:textColor="@color/black"/>
         <TextView
-            android:id="@+id/choose_check_man"
+            android:id="@+id/choose_service"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:text="请选择巡检人"
+            android:text="请选择服务商"
             android:gravity="center"
             android:textColor="@color/black"/>
         <TextView
-            android:id="@+id/repair_add_confirm"
+            android:id="@+id/inspection_add_confirm"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"

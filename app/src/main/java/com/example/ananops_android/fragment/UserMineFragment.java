@@ -10,7 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ananops_android.R;
+import com.example.ananops_android.activity.LoginActivity;
 import com.example.ananops_android.activity.UerMessageActivity;
+import com.example.ananops_android.util.BaseUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -74,7 +76,7 @@ public class UserMineFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(this.getContext(),"Ops,我的钱包正在开发中",Toast.LENGTH_LONG).show();
                 break;
             case  R.id.mine_my_config:
-                Toast.makeText(this.getContext(),"Ops,我的配置正在开发中",Toast.LENGTH_LONG).show();
+                BaseUtils.getInstence().intent(getContext(), LoginActivity.class);
                 break;
 
     }}

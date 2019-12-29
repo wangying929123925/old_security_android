@@ -1,5 +1,6 @@
 package com.example.ananops_android.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,10 @@ import android.widget.TextView;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.RepairAdapter;
+import com.example.ananops_android.db.OrderRequest;
 import com.example.ananops_android.entity.RepairContent;
+import com.example.ananops_android.util.BaseUtils;
+import com.example.ananops_android.util.SPUtils;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.ArrayList;
@@ -21,7 +25,7 @@ import java.util.List;
 
 public class UserOrderSearchActivitySpinner extends AppCompatActivity implements View.OnClickListener {
     private static final String[] STATUS = {"状态", "计划中", "待接单", "待维修", "待审核", "维修中", "待验收", "待评价"};
-    private static final String[] TIMES = {"状态", "今天", "本周", "一个月", "半年", "一年", "更多"};
+    private static final String[] TIMES = {"时间", "今天", "本周", "一个月", "半年", "一年", "更多"};
     private static final String[] ALL = {"全部", "我申请",};
     private MaterialSpinner spinner;
     private MaterialSpinner spinner1;
@@ -44,11 +48,12 @@ public class UserOrderSearchActivitySpinner extends AppCompatActivity implements
     private TextView search_text;
     private int index;
     private int currentTabIndex = 0;// 当前fragment的index
-
+    private Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_search_spinner);
+        mContext = this;
         spinner = (MaterialSpinner) findViewById(R.id.spinner_status);
         spinner1 = (MaterialSpinner) findViewById(R.id.spinner_time);
         spinner2 = (MaterialSpinner) findViewById(R.id.spinner_all);
@@ -78,6 +83,11 @@ public class UserOrderSearchActivitySpinner extends AppCompatActivity implements
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView = findViewById(R.id.contact_recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        OrderRequest orderRequest=new OrderRequest();
+        orderRequest.setId(SPUtils.getInstance().getString("user_id",""));
+        orderRequest.setStatus(null);
+        orderRequest.setRoleCode(SPUtils.getInstance().getString("role_code",""));
+        repairContents= BaseUtils.getInstence().getRepairList(repairContents,orderRequest,mContext);
        adapter = new RepairAdapter(repairContents);
         mRecyclerView.setAdapter(adapter);
         initDatas();

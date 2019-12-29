@@ -1,7 +1,9 @@
 package com.example.ananops_android.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.ContactAdapter;
 import com.example.ananops_android.entity.Contacts;
+import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.view.EditTextWithDel;
 
 import java.util.ArrayList;
@@ -71,15 +74,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                String name= ((Contacts) adapter.getItem(position)).getContact_name();
-                String depart="第"+((Contacts) adapter.getItem(position)).getDepartment()+"组";
-                Intent intent=new Intent(parent.getContext(),ContactPersonActivity.class);
-                intent.putExtra(ContactPersonActivity.CONTACT_ID,"2019140282");
-                intent.putExtra(ContactPersonActivity.CONTACT_NAME,name);
-                intent.putExtra(ContactPersonActivity.DEPART,depart);
-                intent.putExtra(ContactPersonActivity.CONTACT_NUMBER,"18801161751");
-                startActivity(intent);
-                Toast.makeText(getApplication(),name, Toast.LENGTH_SHORT).show();
+               showExitAlertDialog(view);
             }
         });
 
@@ -104,7 +99,27 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+    public void showExitAlertDialog(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("确定指派该联系人？");
+        builder.setTitle("提示");
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                BaseUtils.getInstence().intent(ContactActivity.this,UserMainActivity.class);
+            }
+        });
 
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
+    }
 
 /**
  * 根据输入框中的值来过滤数据并更新ListView

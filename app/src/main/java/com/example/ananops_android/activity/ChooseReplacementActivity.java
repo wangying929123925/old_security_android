@@ -48,16 +48,16 @@ public class ChooseReplacementActivity extends AppCompatActivity {
         mAdapter=new ListCommonAdapter<Replacement>(getApplicationContext(),R.layout.item_chooese_replacement,replacements) {
             @Override
             protected void convert(ListViewHolder viewHolder, Replacement replacement, int position) {
-               viewHolder.setText(R.id.replacement_name,replacement.getRepalcement_name());
-               viewHolder.setText(R.id.replacement_id,replacement.getRepalcement_id());
-               viewHolder.setText(R.id.replacement_type,replacement.getReplacement_type());
-               viewHolder.setText(R.id.replacement_price,String.valueOf(replacement.getReplacement_price()));
+               viewHolder.setText(R.id.inspection_sub_name,replacement.getRepalcement_name());//名称
+               viewHolder.setText(R.id.inspection_sub_id,replacement.getRepalcement_id());//id
+               viewHolder.setText(R.id.inspection_sub_maintainer,replacement.getReplacement_type());//类型
+               viewHolder.setText(R.id.inspection_sub_time,String.valueOf(replacement.getReplacement_price()));//价格
             }
         };
     lv_choose_replacement.setAdapter(mAdapter);
     }
 
-    private List<Replacement> getReplacementData(List<Replacement> replacements) {
+    public List<Replacement> getReplacementData(List<Replacement> replacements) {
         Replacement replacement=new Replacement();
         replacement.setRepalcement_name("易美吉双头锯-继电器（30*5*1）");
         replacement.setRepalcement_id("1324");

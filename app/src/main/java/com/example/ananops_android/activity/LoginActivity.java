@@ -210,8 +210,12 @@ public class LoginActivity extends AppCompatActivity {
                                 SPUtils.getInstance().putString("user_id", USERID);
                                 if (!userInfo.getResult().getRoles().isEmpty()) {
                                     String roleName = userInfo.getResult().getRoles().get(0).getRoleName();
+                                    Log.v("role_name",roleName);
+                                    Log.v("role_code",userInfo.getResult().getRoles().get(0).getRoleCode());
                                     SPUtils.getInstance().putString("role_name", roleName);
                                     BaseUtils.getInstence().roleStringConvertNum(roleName);
+                                    Log.v("role_num",SPUtils.getInstance().getInt("role_num",1)+"");
+                                    SPUtils.getInstance().putString("role_code",userInfo.getResult().getRoles().get(0).getRoleCode());
                                     Intent intent1 = new Intent(LoginActivity.this, UserMainActivity.class);
                                     startActivity(intent1);
                                     finish();

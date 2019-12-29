@@ -57,117 +57,12 @@ public class InspectionSerchListActivity extends AppCompatActivity implements Vi
         mRecyclerView=findViewById(R.id.contact_recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);
         inspectionAdapter=new InspectionAdapter(inspectionContents);
-        inspectionAdapter.setOnSubViewClickListener(new BaseRecyclerAdapter.OnSubViewClickListener() {
-            @Override
-            public void onSubViewClick(View v, int position) {
-                InspectionContent inspectionContent=inspectionContents.get(position);
-                switch (v.getId()){
-                    case R.id.inspection_item_details:
-                        Toast.makeText(getApplicationContext(), "工单详情" + (position + 1), Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.inspection_item_button2:
-                        Toast.makeText(getApplicationContext(), "你点击了去执行按钮", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        });
         inspectionAdapter.setOnRecyclerViewItemClickListener(new BaseRecyclerAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 InspectionContent inspectionContent=inspectionContents.get(position);
+
                 Toast.makeText(getApplicationContext(), "工单详情" + (position + 1), Toast.LENGTH_SHORT).show();
-                switch (UserLogin.useCode){
-                    case 1:
-                        break;
-                    case 2:
-                        switch (inspectionContent.getInspection_status()){
-                            case "服务商待接单":
-                                //服务商务接单派工
-                                break;
-                            case "服务商已接单":
-                                //巡检工去接单
-                                break;
-                            case "巡检工已接单":
-                                //巡检工接单
-                                break;
-                            case "等待巡检":
-                                //填写方案
-                                break;
-                            case "巡检工巡检中":
-                                //巡检工巡检
-                                break;
-                            case "待支付":
-                                break;
-                            case "待评价":
-                                break;
-                            case "已完成":
-                                break;
-                                default:
-                                    //其他情况
-                                    break;
-                        }
-                        break;
-                    case 3:
-                        switch (inspectionContent.getInspection_status()){
-                            case "服务商待接单":
-                                //服务商务接单派工
-                                break;
-                            case "服务商已接单":
-                                //巡检工去接单
-                                break;
-                            case "巡检工已接单":
-                                //巡检工接单
-                                break;
-                            case "等待巡检":
-                                //巡检工填写方案
-                                break;
-                            case "巡检工巡检中":
-                                //巡检工巡检
-                                break;
-                            case "待支付":
-                                break;
-                            case "待评价":
-                                break;
-                            case "已完成":
-                                break;
-                            default:
-                                //其他情况
-                                break;
-                        }
-                        break;
-                    case 4:
-                        switch (inspectionContent.getInspection_status()){
-                            case "服务商待接单":
-                                //服务商务接单派工
-                                break;
-                            case "服务商已接单":
-                                //巡检工去接单
-                                break;
-                            case "巡检工已接单":
-                                //巡检工接单
-                                break;
-                            case "等待巡检":
-                                //巡检工填写方案
-                                break;
-                            case "巡检工巡检中":
-                                //确认维修工情况
-                                break;
-                            case "待验收":
-                                break;
-                            case "待支付":
-                                break;
-                            case "待评价":
-                                break;
-                            case "已完成":
-                                break;
-                            default:
-                                //其他情况
-                                break;
-                        }
-                        break;
-                        default:
-                            break;
-                }
 
             }
         });

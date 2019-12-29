@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ananops_android.R;
+import com.example.ananops_android.util.BaseUtils;
 
 public class RepairCommentActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView title;
@@ -27,6 +28,7 @@ public class RepairCommentActivity extends AppCompatActivity implements View.OnC
     private float general_comment_mum;
     private float attitude_comment_mum;
     private float quality_comment_mum;
+    private static String ORDER_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,8 @@ public class RepairCommentActivity extends AppCompatActivity implements View.OnC
          showExitAlertDialog(v);
          break;
      case R.id.comment_submit_button:
+         BaseUtils.getInstence().changeStatus(12, ORDER_ID, "提交评价",this);
+         BaseUtils.getInstence().intent(this, UserMainActivity.class);
       Toast.makeText(RepairCommentActivity.this,"提交评论！",Toast.LENGTH_LONG).show();
       break;
      }

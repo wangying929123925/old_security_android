@@ -22,6 +22,7 @@ import com.amap.api.services.help.Tip;
 import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.GridAdapter;
+import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.PostResponse;
 import com.example.ananops_android.db.UserInfo;
 import com.example.ananops_android.entity.RepairAddContent;
@@ -83,7 +84,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = this;
        // List<RepairAddContent.TaskItemDtoListBean>
-        repairAddContent.setTaskItemDtoList(new ArrayList<>(Arrays.asList(new RepairAddContent.TaskItemDtoListBean())));
+        repairAddContent.setMdmcAddTaskItemDtoList(new ArrayList<>(Arrays.asList(new RepairAddContent.MdmcAddTaskItemDtoListBean())));
         initViews();
         initDatas();
         setOnListener();
@@ -95,6 +96,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void setOnListener() {
+        et_project_name.setOnClickListener(this);
         fault_type.setOnClickListener(this);
         fault_addr.setOnClickListener(this);
         fault_name.setOnClickListener(this);
@@ -155,7 +157,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
       //  take_photo=findViewById(R.id.et_fault_photo);
     }
     private void initDatas() {
-        et_repair_person.setText("111");
+        et_repair_person.setText(SPUtils.getInstance().getString("user_id","111"));
         et_repair_tel.setText("18801162442");
     }
     @Override
@@ -186,8 +188,8 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 if (tip.getName() != null) {
                     et_repair_address.setText(tip.getName());
                   //  repairAddContent.getTaskItemDto().setAddress_name(tip.getName());
-                    repairAddContent.getTaskItemDtoList().get(0).setDeviceLongitude(tip.getPoint().getLongitude());
-                    repairAddContent.getTaskItemDtoList().get(0).setDeviceLatitude(tip.getPoint().getLatitude());
+                    repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLongitude(tip.getPoint().getLongitude());
+                    repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLatitude(tip.getPoint().getLatitude());
                     Toast.makeText(RepairAddActivity.this,"经度="+tip.getPoint().getLongitude()+"纬度="+tip.getPoint().getLatitude(),Toast.LENGTH_LONG).show();
                 }
             }
@@ -220,6 +222,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
             case R.id.choose_service:
                 String[] item2={"1", "2", "3"};
                 showChooseDislog(v,choose_service,item2);
+                break;
             case R.id.basicinfo_back:
                 showExitAlertDialog(v);
                 break;
@@ -275,21 +278,6 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                Toast.makeText(RepairAddActivity.this,items[i],Toast.LENGTH_SHORT).show();
                tmp=items[i];
                fault_type.setText(items[i]);
-            }
-        });
-
-        alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                fault_type.setText(tmp);
-                alertFaultType.dismiss();
-            }
-        });
-
-        alertBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                fault_type.setText("");
                 alertFaultType.dismiss();
             }
         });
@@ -305,23 +293,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Toast.makeText(RepairAddActivity.this,items[i],Toast.LENGTH_SHORT).show();
-                tmp=items[i];
                 fault_addr.setText(items[i]);
-            }
-        });
-
-        alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-               fault_addr.setText(tmp);
-                alertFaultAddr.dismiss();
-            }
-        });
-
-        alertBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                fault_addr.setText("");
                 alertFaultAddr.dismiss();
             }
         });
@@ -339,25 +311,10 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
             public void onClick(DialogInterface dialogInterface, int i) {
                 Toast.makeText(RepairAddActivity.this,items[i],Toast.LENGTH_SHORT).show();
                 fault_name.setText(items[i]);
-                tmp=items[i];
-            }
-        });
-
-        alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-               fault_name.setText(tmp);
                 alertFaultName.dismiss();
             }
         });
 
-        alertBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                fault_name.setText("");
-                alertFaultName.dismiss();
-            }
-        });
 
         alertFaultName = alertBuilder.create();
         alertFaultName.show();
@@ -407,34 +364,30 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
 //        repairAddContent.getTaskItemDtoList().get(0).setDeviceId(fault_name.getText().toString().trim());
 //        repairAddContent.getTaskItemDtoList().get(0).setLevel(et_fault_degree.getText().toString().trim());
 //        repairAddContent.getTaskItemDtoList().get(0).setDescription(fault_description.getText().toString().trim());
-        repairAddContent.setAddressName("");
-        repairAddContent.setAppoint_time("");
-        repairAddContent.setContractId("");
-        repairAddContent.setCreated_time("");
-        repairAddContent.setCreator("");
-        repairAddContent.setCreator_call("");
-        repairAddContent.setFacilitatorId("");
-        repairAddContent.setLevel("");
-        repairAddContent.setPayMode(0);
-        repairAddContent.setPrincipalId(2);
-        repairAddContent.setProjectId("");
-        repairAddContent.setStatus(0);
+        repairAddContent.setAppointTime("");
+        repairAddContent.setContractId(1L);
+        repairAddContent.setFacilitatorId(782525013398923265L);
+        repairAddContent.setId(null);
+        repairAddContent.setLevel(Integer.valueOf(et_emergency_degree.getText().toString().trim()));
+        repairAddContent.setPrincipalId(782516789266360321L);
+        repairAddContent.setProjectId(Long.valueOf(et_project_name.getText().toString().trim()));
+        repairAddContent.setResult(0);
+        repairAddContent.setSuggestion("");
         repairAddContent.setTitle("");
-        repairAddContent.setTotalCost(2);
-        repairAddContent.setUserId("");
-        repairAddContent.setUid("");
-        repairAddContent.getTaskItemDtoList().get(0).setDescription("");
-        repairAddContent.getTaskItemDtoList().get(0).setDeviceId("");
-        repairAddContent.getTaskItemDtoList().get(0).setDeviceName("");
-        repairAddContent.getTaskItemDtoList().get(0).setLevel("");
-        repairAddContent.getTaskItemDtoList().get(0).setPhoto_url("");
-        repairAddContent.getTaskItemDtoList().get(0).setTrouble_type("");
-        repairAddContent.getTaskItemDtoList().get(0).setTaskId("");
+        repairAddContent.setTotalCost(2d);
+        repairAddContent.setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id","111")));
+        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDescription(fault_description.getText().toString().trim());
+        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceId(0L);
+        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceType(fault_type.getText().toString().trim());//设备类型
+        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setLevel(et_fault_degree.getText().toString().trim());
+        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setId(null);
+        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTaskId(null);
+        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTroubleType(Integer.valueOf(et_emergency_degree.getText().toString().trim()));//故障类型
        // Net.instance.repairAddPost(repairAddContent, SPUtils.getInstance().getString("Token",""))
-        Net.instance1.repairAddPost(repairAddContent, UserInfo.TOKEN)
+        Net.instance.repairAddPost(repairAddContent,SPUtils.getInstance().getString("Token",""))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<PostResponse>(){
+                .subscribe(new Subscriber<CodeMessageResponse>(){
             @Override
             public void onCompleted() {
 
@@ -447,8 +400,8 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 Toast.makeText(RepairAddActivity.this, "网络异常，请检查网络状态后登陆", Toast.LENGTH_SHORT).show();
             }
             @Override
-            public void onNext(PostResponse postResponse) {
-                if(TextUtils.equals(postResponse.getCode(),"200")){
+            public void onNext(CodeMessageResponse codeMessageResponse) {
+                if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
                 Toast.makeText(RepairAddActivity.this,"提交成功！",Toast.LENGTH_SHORT).show();
                 BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
                 }
@@ -458,4 +411,5 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
             }
         });
     }
+
 }

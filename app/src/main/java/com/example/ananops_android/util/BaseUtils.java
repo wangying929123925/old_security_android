@@ -15,6 +15,11 @@ import android.widget.Toast;
 
 import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
+import com.example.ananops_android.activity.RepairAddActivity;
+import com.example.ananops_android.activity.UserMainActivity;
+import com.example.ananops_android.db.ChangeStatusDto;
+import com.example.ananops_android.db.CodeMessageResponse;
+import com.example.ananops_android.db.OrderDetailResponse;
 import com.example.ananops_android.db.OrderRequest;
 import com.example.ananops_android.db.OrderResponse;
 import com.example.ananops_android.db.UserInfo;
@@ -55,84 +60,136 @@ public class BaseUtils {
     public String statusNumConvertString(int status){
         final String statusString;
         switch (status){
+            case 1:
+                statusString = "工单取消";
+                break;
+            case 2:
+                statusString = "待审核";
+                break;
             case 3:
-                statusString= "待审核";
+                statusString = "服务商待接单";
                 break;
             case 4:
-                statusString= "服务商待接单";
-            break;
+                statusString = "维修工待接单";
+                break;
             case 5:
-                statusString= "维修工待接单";
-            break;
+                statusString = "维修工已结单";
+                break;
             case 6:
-                statusString= "维修中";
-            break;
+                statusString = "待审核备件";
+                break;
             case 7:
-                statusString= "待验收";
-            break;
+                statusString = "维修中";
+                break;
+            case 8:
+                statusString = "服务商待验收";
+                break;
+            case 9:
+                statusString = "待审核账单";
+                break;
+            case 10:
+                statusString = "用户待验收";
+                break;
             case 11:
-                statusString= "待评价";
-            break;
+                statusString = "待评价";
+                 break;
             case 12:
-                statusString= "已完成";
-            break;
+                statusString = "待支付";
+                break;
+            case 13:
+                statusString = "已完成";
+                break;
+            case 14:
+                statusString = "服务商拒单";
+                break;
+            case 15:
+                statusString = "维修工拒单";
+                break;
+            case 16:
+                statusString = "备件审核不通过";
+                break;
+            case 17:
+                statusString = "备件审核不通过";
+                break;
            default:
-                statusString= " ";
-            break;
+               statusString = " ";
+                break;
         }
         return statusString;
     }
     public int statusStringConvertNum(String statusString){
         final int statusInt;
-        switch (statusString){
-            case "待审核":
-                statusInt=3;
-                break;
-            case "服务商待接单":
-                statusInt=4;
-                break;
-            case "维修工待接单":
-                statusInt=5;
-                break;
-            case "维修工":
-                statusInt=6;
-                break;
-            case "待验收":
-                statusInt=7;
-                break;
-            case "待评价":
-                statusInt=11;
-                break;
-            case "已完成":
-                statusInt=12;
-                break;
-              default:
-                  statusInt=0;
-                  break;
+        if (statusString != null) {
+            switch (statusString) {
+                case "值机员待确认":
+                    statusInt = 1;
+                    break;
+                case "待审核":
+                    statusInt = 2;
+                    break;
+                case "服务商待接单":
+                    statusInt = 3;
+                    break;
+                case "维修工待接单":
+                    statusInt = 4;
+                    break;
+                case "维修工已接单":
+                    statusInt = 5;
+                    break;
+                case "待审核备件":
+                    statusInt = 6;
+                    break;
+                case "维修中":
+                    statusInt = 7;
+                    break;
+                case "服务商待验收":
+                    statusInt = 8;
+                    break;
+                case "待审核账单":
+                    statusInt = 9;
+                    break;
+                case "用户待验收":
+                    statusInt = 10;
+                    break;
+                case "待评价":
+                    statusInt = 11;
+                    break;
+                case "待支付":
+                    statusInt = 12;
+                    break;
+                case "已完成":
+                    statusInt = 13;
+                    break;
+                default:
+                    statusInt = 0;
+                    break;
+            }
+        } else {
+            statusInt=1;
         }
         return statusInt;
     }
     public void roleStringConvertNum(String roleName){
         switch (roleName){
-            case "用户管理员":
-                SPUtils.getInstance().putInt("role_code",4);
+            case "用户负责人":
+                SPUtils.getInstance().putInt("role_num",4);
                 break;
             case "用户值机员":
-                SPUtils.getInstance().putInt("role_code",1);
+                SPUtils.getInstance().putInt("role_num",1);
                 break;
             case "维修工程师":
-                SPUtils.getInstance().putInt("role_code",3);
+                SPUtils.getInstance().putInt("role_num",3);
                 break;
-            case"服务商负责人":
-                SPUtils.getInstance().putInt("role_code",2);
+            case "服务商负责人":
+                SPUtils.getInstance().putInt("role_num",2);
                 break;
                  default:
-                 SPUtils.getInstance().putInt("role_code",4);
+                 SPUtils.getInstance().putInt("role_num",1);
 
         }
     }
     public List<RepairContent> getRepairList(final List<RepairContent> repairContents, OrderRequest orderRequest, final Context mContext){
-        Net.instance.getRepairList(orderRequest, UserInfo.TOKEN)
+        Net.instance.getRepairList(orderRequest, SPUtils.getInstance().getString("Token"," "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<OrderResponse>() {
@@ -151,10 +208,11 @@ public class BaseUtils {
                     @Override
                     public void onNext(OrderResponse orderResponse) {
                         if(TextUtils.equals(orderResponse.getCode(),"200")){
+                            repairContents.clear();
                             for (int i = 0; i < orderResponse.getResult().size(); i++) {
                             repairContents.add(orderResponse.getResult().get(i));
                         }
-                        Toast.makeText(mContext,"repairContents"+repairContents.get(0).getRepair_id(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext,"repairContents"+repairContents.get(0).getId(), Toast.LENGTH_SHORT).show();
                     }
                     else{
                         Toast.makeText(mContext, orderResponse.getMessage(), Toast.LENGTH_LONG).show();
@@ -162,107 +220,6 @@ public class BaseUtils {
 
                     }
                 });
-        return repairContents;
-    }
-    public List<RepairContent> initRepairContent(List<RepairContent> repairContents){
-        RepairContent repairContent=new RepairContent();
-        repairContent.setRepair_id("2019140282");
-        repairContent.setCheck_group("第一组");
-        repairContent.setRepair_address("科研楼一楼");
-        repairContent.setRepair_man("李民浩");
-        repairContent.setRepair_time("2019-11-11 18:39");
-        repairContent.setRepair_content("笔记本电脑");
-        repairContent.setRepair_status("待填方案");
-
-        RepairContent repairContent1=new RepairContent();
-        repairContent1.setRepair_id("2019140282");
-        repairContent1.setCheck_group("第一组");
-        repairContent1.setRepair_address("科研楼一楼");
-        repairContent1.setRepair_man("李民浩");
-        repairContent1.setRepair_time("2019-11-11 18:39");
-        repairContent1.setRepair_content("笔记本电脑");
-        repairContent1.setRepair_status("维修中");
-        RepairContent repairContent2=new RepairContent();
-        repairContent2.setRepair_id("2019140282");
-        repairContent2.setCheck_group("第一组");
-        repairContent2.setRepair_address("科研楼一楼");
-        repairContent2.setRepair_man("李民浩");
-        repairContent1.setRepair_time("2019-11-11 18:39");
-        repairContent2.setRepair_content("笔记本电脑");
-        repairContent2.setRepair_status("计划中");
-        RepairContent repairContent3=new RepairContent();
-        repairContent3.setRepair_id("2019140282");
-        repairContent3.setCheck_group("第一组");
-        repairContent3.setRepair_address("科研楼一楼");
-        repairContent3.setRepair_man("李民浩");
-        repairContent3.setRepair_time("2019-11-11 18:39");
-        repairContent3.setRepair_content("笔记本电脑");
-        repairContent3.setRepair_status("维修工待接单");
-        RepairContent repairContent7=new RepairContent();
-        repairContent7.setRepair_id("2019140282");
-        repairContent7.setCheck_group("第一组");
-        repairContent7.setRepair_address("科研楼一楼");
-        repairContent7.setRepair_man("李民浩");
-        repairContent7.setRepair_time("2019-11-11 18:39");
-        repairContent7.setRepair_content("笔记本电脑");
-        repairContent7.setRepair_status("待接单");
-        RepairContent repairContent8=new RepairContent();
-        repairContent8.setRepair_id("2019140282");
-        repairContent8.setCheck_group("第一组");
-        repairContent8.setRepair_address("科研楼一楼");
-        repairContent8.setRepair_man("李民浩");
-        repairContent8.setRepair_time("2019-11-11 18:39");
-        repairContent8.setRepair_content("笔记本电脑");
-        repairContent8.setRepair_status("审核不通过");
-        RepairContent repairContent4=new RepairContent();
-        repairContent4.setRepair_id("2019140282");
-        repairContent4.setCheck_group("第一组");
-        repairContent4.setRepair_address("科研楼一楼");
-        repairContent4.setRepair_man("李民浩");
-        repairContent4.setRepair_time("2019-11-11 18:39");
-        repairContent4.setRepair_content("笔记本电脑");
-        repairContent4.setRepair_status("待验收");
-
-        RepairContent repairContent5=new RepairContent();
-        repairContent5.setRepair_id("2019140282");
-        repairContent5.setCheck_group("第一组");
-        repairContent5.setRepair_address("科研楼一楼");
-        repairContent5.setRepair_man("李民浩");
-        repairContent5.setRepair_time("2019-11-11 18:39");
-        repairContent5.setRepair_content("笔记本电脑");
-        repairContent5.setRepair_status("已完成");
-        RepairContent repairContent6=new RepairContent();
-        repairContent6.setRepair_id("2019140282");
-        repairContent6.setCheck_group("第一组");
-        repairContent6.setRepair_address("科研楼一楼");
-        repairContent6.setRepair_man("李民浩");
-        repairContent6.setRepair_time("2019-11-11 18:39");
-        repairContent6.setRepair_content("笔记本电脑");
-        repairContent6.setRepair_status("待评价");
-
-        repairContents.add(repairContent);
-        repairContents.add(repairContent);
-        repairContents.add(repairContent);
-        repairContents.add(repairContent);
-        repairContents.add(repairContent1);
-        repairContents.add(repairContent1);
-        repairContents.add(repairContent1);
-        repairContents.add(repairContent1);
-        repairContents.add(repairContent1);
-        repairContents.add(repairContent2);
-        repairContents.add(repairContent2);
-        repairContents.add(repairContent3);
-        repairContents.add(repairContent3);
-        repairContents.add(repairContent4);
-        repairContents.add(repairContent4);
-        repairContents.add(repairContent5);
-        repairContents.add(repairContent5);
-        repairContents.add(repairContent6);
-        repairContents.add(repairContent6);
-        repairContents.add(repairContent7);
-        repairContents.add(repairContent7);
-        repairContents.add(repairContent8);
-        repairContents.add(repairContent8);
         return repairContents;
     }
     public List<InspectionContent> initInspectionContent(List<InspectionContent>inspectionContents){
@@ -291,6 +248,43 @@ public class BaseUtils {
         inspectionContents.add(inspectionContent1);
         return inspectionContents;
     }
+/*
+* */
+    public void changeStatus(int status,String orderId,String statusMsg ,final Context mContext){
+        ChangeStatusDto changeStatusDto=new ChangeStatusDto();
+        changeStatusDto.setStatus(status);
+        changeStatusDto.setStatusMsg(statusMsg);
+        changeStatusDto.setTaskId(orderId);
+      Net.instance.changeStatus(changeStatusDto,SPUtils.getInstance().getString("Token"," "))
+              .subscribeOn(Schedulers.newThread())
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(new Subscriber<CodeMessageResponse>() {
+                  @Override
+                  public void onCompleted() {
+
+                  }
+
+                  @Override
+                  public void onError(Throwable e) {
+                      Log.v("LoginTime", System.currentTimeMillis() + "");
+                      e.printStackTrace();
+                      Toast.makeText(mContext, "网络异常，请检查网络状态changeStatus", Toast.LENGTH_SHORT).show();
+                  }
+
+                  @Override
+                  public void onNext(CodeMessageResponse codeMessageResponse) {
+                      if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
+                          Log.v("操作成功", System.currentTimeMillis() + "");
+                          Toast.makeText(mContext,"操作成功！",Toast.LENGTH_SHORT).show();
+                      }
+                      else{
+                          Toast.makeText(mContext,"操作失败！",Toast.LENGTH_SHORT).show();
+                          Log.v("操作成功", codeMessageResponse.getMessage());
+                      }
+                  }
+              });
+    }
+    
     /**
      * 不带参数的跳转
      *

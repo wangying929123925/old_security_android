@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.ananops_android.view.CheckableLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="90dp">
-    <CheckBox
+    <ImageView
         android:id="@+id/inspection_sub_checkBox"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:paddingLeft="10dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_address"
+        android:src="@drawable/ic_workorder"
         android:clickable="false"
         android:focusable="false"
         />
@@ -25,7 +24,7 @@
         android:textColor="@color/black"
         android:layout_toRightOf="@+id/inspection_sub_checkBox"
         android:singleLine="true"
-        tools:text="易美吉双头锯-继电器（30*5*1）"
+        tools:text="子任务名称"
         />
     <TextView
         android:id="@+id/inspection_sub_id"
@@ -45,7 +44,7 @@
         android:layout_toRightOf="@+id/inspection_sub_checkBox"
         android:layout_below="@+id/inspection_sub_id"
         android:textColor="@color/black"
-        tools:text="30*50*1"
+        tools:text="王一"
         />
     <TextView
         android:id="@+id/inspection_sub_time"
@@ -54,7 +53,7 @@
         android:layout_height="20dp"
         android:layout_toRightOf="@+id/inspection_sub_checkBox"
         android:layout_below="@+id/inspection_sub_maintainer"
-        tools:text="20.00"
+        tools:text="2019-12-28T06:54:20.659Z"
         android:textColor="@color/black"
         />
     <View
@@ -62,4 +61,4 @@
         android:layout_height="1dp"
         android:background="@color/state_selected"
         android:layout_alignParentBottom="true" />
-</com.example.ananops_android.view.CheckableLayout>
+</RelativeLayout>

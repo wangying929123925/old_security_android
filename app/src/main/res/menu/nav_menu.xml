@@ -27,9 +27,10 @@
         android:title="Tenants_manage"
         />
     <item
-        android:id="@+id/documents"
+        android:id="@+id/logout"
         android:icon="@drawable/ic_document"
-        android:title="Documents"
+        android:title="logout"
+        android:checkable="true"
         />
 </group>
 </menu>

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Ananops_android</string>
     <!--支付-->
+    <string name="face_book_apiid">8a605283ec7b96f377e9acd6e46091d6</string>
     <string name="pay_result_tip">这个界面用于显示第三方app通过微信支付的结果</string>
     <string name="pay_result_callback_msg" formatted="false">微信支付结果：%s</string>
     <!--登录-->
@@ -48,7 +49,7 @@
     <string name="userManager_main_manage3">故障统计</string>
     <!--维修工-->
     <string name="worker_main_repair1">待确认</string>
-    <string name="worker_main_repair2">维修中</string>
+    <string name="worker_main_repair2">填方案</string>
     <string name="worker_main_repair3">维修中</string>
     <string name="worker_main_inspection1">待巡检</string>
     <string name="worker_main_inspection2">巡检中</string>

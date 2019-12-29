@@ -16,8 +16,11 @@ import android.widget.Toast;
 
 
 import com.example.ananops_android.R;
+import com.example.ananops_android.activity.RepairCommentActivity;
 import com.example.ananops_android.adapter.RepairAdapter;
+import com.example.ananops_android.entity.RepairCommonDetail;
 import com.example.ananops_android.entity.RepairContent;
+import com.example.ananops_android.util.BaseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +52,10 @@ public class OrderDetailAuditFragment extends Fragment {
               ||STATUS_FLAG.equals("4-1")||STATUS_FLAG.equals("4-2")||STATUS_FLAG.equals("2-2")){
                 initDiffDetail();
             }else {
-                tv_order_status.setText("no");
-                tv_audit_suggestion.setText("no");
-                tv_handle_suggestion.setText("no");
-                tv_audit_suggestion.setText("no");
+                tv_order_status.setText(BaseUtils.getInstence().statusNumConvertString(RepairCommonDetail.status));
+                tv_audit_suggestion.setText("无");
+                tv_handle_suggestion.setText("一般");
+                tv_audit_suggestion.setText("通过");
                 tv_handle_suggestion.setEnabled(false);
             }
         tv_audit_man.setText("no");
@@ -60,7 +63,7 @@ public class OrderDetailAuditFragment extends Fragment {
     //待审核
 private void initDiffDetail(){
         if(STATUS_FLAG=="4-1"){
-            tv_order_status.setText("计划中");
+            tv_order_status.setText("用户上级待审核");
         }else if(STATUS_FLAG=="4-2"){
             tv_order_status.setText("甲方待审核备件");
         }else {

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.entity.TimeLine;
+import com.example.ananops_android.util.BaseUtils;
 
 import java.util.List;
 
@@ -64,9 +65,9 @@ public class TimeLineAdapter extends BaseAdapter {
        else {
            viewHolder.rlDone.setVisibility(View.VISIBLE);
            viewHolder.rlDoing.setVisibility(View.GONE);
-           viewHolder.tvDirector.setText(timeLine.getOrderDirector());
-           viewHolder.tvProcess.setText(timeLine.getProcessStatus());
-           viewHolder.tvTime.setText(timeLine.getProcessTime());
+           viewHolder.tvDirector.setText(timeLine.getLastOperator());
+           viewHolder.tvProcess.setText(timeLine.getMovement());
+           viewHolder.tvTime.setText(timeLine.getUpdateTime());
        }
         return view;
     }

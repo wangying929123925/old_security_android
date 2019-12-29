@@ -33,8 +33,8 @@ public class ChooseAdapter extends BaseAdapter {
         if(convertView==null){
             convertView=View.inflate(mContext, R.layout.item_chooese_replacement,null);
             holder=new MyViewHolder();
-            holder.mTextView= (TextView) convertView.findViewById(R.id.replacement_name);
-            holder.mCheckBox= (CheckBox) convertView.findViewById(R.id.replacement_checkBox);
+            holder.mTextView= (TextView) convertView.findViewById(R.id.inspection_sub_name);
+            holder.mCheckBox= (CheckBox) convertView.findViewById(R.id.inspection_sub_checkBox);
       //      holder.replacement_detail=convertView.findViewById(R.id.replacement_detail);
             convertView.setTag(holder);
         }else {

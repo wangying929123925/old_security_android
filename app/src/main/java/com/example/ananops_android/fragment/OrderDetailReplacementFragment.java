@@ -35,10 +35,6 @@ public class OrderDetailReplacementFragment extends Fragment {
     private static String ORDER_ID;
     private TextView tv_whether_replace;
     private TextView tv_replacement_id;
-    private TextView tv_replacement_name;
-    private TextView tv_replacement_price;
-    private TextView tv_replacement_number;
-    private TextView tv_replacement_amount;
     private TextView tv_choose_whether_replace;
     private TextView fragment_order_choose_replacement;
     private String whether_replace="否";
@@ -95,6 +91,25 @@ public class OrderDetailReplacementFragment extends Fragment {
         STATUS_FLAG=(String)getArguments().get("str");}
         if(STATUS_FLAG=="3-2"||STATUS_FLAG.equals("3-2")){
             initDiffDetail();
+        }else {
+            tv_whether_replace.setText("是");
+            fragment_order_choose_replacement.setVisibility(View.INVISIBLE);
+            Replacement replacement=new Replacement();
+            replacement.setRepalcement_name("易美吉双头锯-继电器（30*5*1）");
+            replacement.setRepalcement_id("1324");
+            replacement.setReplacement_type("30*50*1");
+            replacement.setReplacement_price((float) 20.00);
+            replacement.setReplacement_num(1);
+            Replacement replacement1=new Replacement();
+            replacement1.setRepalcement_name("易美吉双头锯-继电器（20*5*1）");
+            replacement1.setRepalcement_id("4321");
+            replacement1.setReplacement_type("20*50*1");
+            replacement1.setReplacement_price((float) 40.00);
+            replacement.setReplacement_num(1);
+            replacementList.add(replacement);
+            // replacements.add(replacement);
+            // replacements.add(replacement1);
+            replacementList.add(replacement1);
         }
         mAdapter=new ListCommonAdapter<Replacement>(getContext(),R.layout.item_replacement_table,replacementList) {
             @Override
@@ -149,7 +164,6 @@ public class OrderDetailReplacementFragment extends Fragment {
             }
             //刷新
             private void refresh(){
-
                mAdapter.notifyDataSetChanged();
             }
 
