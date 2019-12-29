@@ -48,6 +48,7 @@
         <activity android:name=".activity.UserOrderSearchActivitySpinner"/>
         <activity android:name=".activity.InspectionAddActivity"/>
         <activity android:name=".activity.InspectionSerchListActivity"/>
+        <activity android:name=".activity.InspectionDetailActivity"/>
         <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.MainActivity"/>
         <activity android:name=".activity.AddressSearchActivity"/>
