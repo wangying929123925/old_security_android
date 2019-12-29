@@ -9,13 +9,14 @@ import android.widget.TextView;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.entity.InspectionContent;
+import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.UserLogin;
 
 import java.util.List;
 
 public class InspectionAdapter extends BaseRecyclerAdapter {
-    private List<InspectionContent> inspectionContents;
-    public InspectionAdapter(List<InspectionContent> inspectionContents){
+    private List<InspectionInfo> inspectionContents;
+    public InspectionAdapter(List<InspectionInfo> inspectionContents){
         this.inspectionContents=inspectionContents;
     }
     @Override
@@ -52,50 +53,12 @@ public class InspectionAdapter extends BaseRecyclerAdapter {
 
         @Override
         protected void onBind(int position) {
-            InspectionContent inspectionContent = inspectionContents.get(position);
-            inspection_name.setText(inspectionContent.getInspection_name());
-            inspection_id.setText(inspectionContent.getInspection_id());
-            inspection_time.setText(inspectionContent.getInspection_time());
-            inspection_status.setText(inspectionContent.getInspection_status());
-            switch (UserLogin.useCode){
-                case 1:
-                    relativeButton.setVisibility(View.GONE);
-                    break;
-                case 2:
-                    switch (inspectionContent.getInspection_status()){
-                        case "服务商待接单":
-                            //服务商务接单派工
-                            break;
-                        case "服务商已接单":
-                            //巡检工去接单
-                            break;
-                        case "巡检工已接单":
-                            //巡检工接单
-                            break;
-                        case "等待巡检":
-                            //填写方案
-                            break;
-                        case "巡检工巡检中":
-                            //巡检工巡检
-                            break;
-                        case "已完成":
-                            break;
-                    }
-                    relativeButton.setVisibility(View.GONE);
-                    break;
-                case 3:
-                    switch (inspectionContent.getInspection_status()){
-                        case "待执行":
-                            relativeButton.setVisibility(View.VISIBLE);
-                            button2.setText("去执行");
-                            button1.setVisibility(View.INVISIBLE);
-                            break;
-                        case "已完成":
-                            relativeButton.setVisibility(View.GONE);
-                            break;
-                    }
-                    break;
-            }
+            InspectionInfo inspectionContent = inspectionContents.get(position);
+            inspection_name.setText(inspectionContent.getTaskName());
+            inspection_id.setText(String.valueOf(inspectionContent.getId()));
+            inspection_time.setText(String.valueOf(inspectionContent.getCycleTime()));
+            inspection_status.setText(inspectionContent.getTaskType());
+            relativeButton.setVisibility(View.GONE);
         }
 
         @Override

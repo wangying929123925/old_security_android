@@ -1,5 +1,6 @@
 package com.example.ananops_android.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,15 +20,17 @@ import com.example.ananops_android.adapter.BaseViewHolder;
 import com.example.ananops_android.adapter.InspectionAdapter;
 import com.example.ananops_android.adapter.RepairAdapter;
 import com.example.ananops_android.entity.InspectionContent;
+import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.UserLogin;
 import com.example.ananops_android.util.BaseUtils;
+import com.example.ananops_android.util.InspectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InspectionSerchListActivity extends AppCompatActivity implements View.OnClickListener{
     private  String searchContent;
-    private List<InspectionContent> inspectionContents=new ArrayList<>();
+    private List<InspectionInfo> inspectionInfos=new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private TextView title;
@@ -35,11 +38,14 @@ public class InspectionSerchListActivity extends AppCompatActivity implements Vi
     private EditText search_content;
     private TextView search_text;
     private static String TITLE;
+    private static String PROJECT_ID;
     private InspectionAdapter inspectionAdapter;
+    private Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_research_order_list);
+        mContext=this;
         initDatas();
         initViews();
         setOnListener();
@@ -51,25 +57,29 @@ public class InspectionSerchListActivity extends AppCompatActivity implements Vi
         search_content=findViewById(R.id.text_search);
         search_text=findViewById(R.id.search_title_txt);
         Intent intent=getIntent();
-        TITLE=intent.getStringExtra("title");
-        title.setText(TITLE);
+        PROJECT_ID=intent.getStringExtra("project_id");
+        title.setText("巡检列表");
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView=findViewById(R.id.contact_recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        inspectionAdapter=new InspectionAdapter(inspectionContents);
+        inspectionInfos= InspectionUtils.getInstence().getInspectionList(inspectionInfos,Long.valueOf(PROJECT_ID),mContext);
+        inspectionAdapter=new InspectionAdapter(inspectionInfos);
         inspectionAdapter.setOnRecyclerViewItemClickListener(new BaseRecyclerAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                InspectionContent inspectionContent=inspectionContents.get(position);
-
-                Toast.makeText(getApplicationContext(), "工单详情" + (position + 1), Toast.LENGTH_SHORT).show();
+             //   InspectionInfo inspectionInfo=inspectionInfos.get(position);
+                Toast.makeText(getApplicationContext(), "巡检详情" + (position + 1), Toast.LENGTH_SHORT).show();
+                Bundle bundle0=new Bundle();
+                bundle0.putString("inspectionId",String.valueOf(inspectionInfos.get(position).getId()));
+                BaseUtils.getInstence().intent(mContext,InspectionItemListActivity.class,bundle0);
 
             }
         });
         mRecyclerView.setAdapter(inspectionAdapter);
     }
     private void initDatas() {
-     inspectionContents= BaseUtils.getInstence().initInspectionContent(inspectionContents);
+   //  inspectionContents= BaseUtils.getInstence().initInspectionContent(inspectionContents);
+
     }
     private void setOnListener() {
         back_img.setOnClickListener(this);

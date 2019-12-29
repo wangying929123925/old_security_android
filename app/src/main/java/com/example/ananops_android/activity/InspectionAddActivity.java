@@ -23,6 +23,7 @@ import com.example.ananops_android.adapter.ListViewHolder;
 import com.example.ananops_android.db.InspectionItemListResponse;
 import com.example.ananops_android.db.InspectionListResponse;
 import com.example.ananops_android.db.ProjectListResponse;
+import com.example.ananops_android.entity.InspectionAddContent;
 import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.InspectionTaskItem;
 import com.example.ananops_android.entity.ProjectInfo;
@@ -131,8 +132,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
             case R.id.et_inspection_name:
                 showChooseDislog(v,inspectionArray,et_inspection_name,2);
                 if(inspectionInfos.size()>inspectionTemp){
-                getInspectionTaskItems(inspectionTaskItems,inspectionInfos.get(inspectionTemp).getId());
-                refresh();}
+               }
                 break;
             case R.id.do_result:
                 if (do_result.isChecked()) {
@@ -325,6 +325,8 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
                             Log.v("inspectionName", item[which]);
                             inspectionTemp = which;
                             setInspectionInfo(which);
+                            inspectionTaskItems=getInspectionTaskItems(inspectionTaskItems,inspectionInfos.get(inspectionTemp).getId());
+                            refresh();
                         } else {
                             Log.v("serviceName", item[which]);
                         }
@@ -353,11 +355,14 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
     }
     private void submitInspection() {
         //获取选择子项
+        InspectionAddContent inspectionAddContent=new InspectionAddContent();
+        List<InspectionTaskItem> inspectionTaskItemList1=new ArrayList<>();
         SparseBooleanArray checkedArray = recyclerView.getCheckedItemPositions();
         if (checkedArray.size() > 0) {
             for (int i = 0; i < checkedArray.size(); i++) {
                 if (checkedArray.valueAt(i)) {
                     //添加巡检子项
+                inspectionTaskItemList1.add(inspectionTaskItems.get(i));
                 }
             }
         } else {

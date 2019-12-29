@@ -14,8 +14,10 @@ import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.ListCommonAdapter;
 import com.example.ananops_android.adapter.ListViewHolder;
 import com.example.ananops_android.entity.InspectionTaskItem;
+import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.view.EditTextWithDel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InspectionItemListActivity extends AppCompatActivity {
@@ -24,7 +26,7 @@ public class InspectionItemListActivity extends AppCompatActivity {
     private TextView noResult;
     private EditTextWithDel mEtSearchName;
     private ImageView imageBack;
-    private List<InspectionTaskItem> inspectionTaskItems;
+    private List<InspectionTaskItem> inspectionTaskItems=new ArrayList<>();
     private ListCommonAdapter mAdapter;
     private static String inspectionId;
     private Context mComtext;
@@ -39,7 +41,8 @@ public class InspectionItemListActivity extends AppCompatActivity {
         Intent intent=getIntent();
         inspectionId=intent.getStringExtra("inspectionId");
         title.setText("巡检任务子项");
-        mAdapter = new ListCommonAdapter<InspectionTaskItem>(mComtext, R.layout.item_chooese_replacement, inspectionTaskItems) {
+        inspectionTaskItems= InspectionUtils.getInstence().getInspectionTaskItems(inspectionTaskItems,Long.valueOf(inspectionId),mComtext);
+        mAdapter = new ListCommonAdapter<InspectionTaskItem>(mComtext, R.layout.item_project_list, inspectionTaskItems) {
             @Override
             protected void convert(ListViewHolder viewHolder, InspectionTaskItem inspectionTaskItem, int position) {
                 viewHolder.setText(R.id.inspection_sub_name, inspectionTaskItem.getItemName());//名称

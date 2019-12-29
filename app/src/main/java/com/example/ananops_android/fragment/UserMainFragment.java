@@ -18,6 +18,7 @@ import com.example.ananops_android.R;
 import com.example.ananops_android.activity.InspectionAddActivity;
 import com.example.ananops_android.activity.InspectionSerchListActivity;
 import com.example.ananops_android.activity.OrderSearchListActivity;
+import com.example.ananops_android.activity.ProjectListActivity;
 import com.example.ananops_android.activity.RepairAddActivity;
 import com.example.ananops_android.activity.UserOrderSearchActivitySpinner;
 import com.example.ananops_android.adapter.RepairAdapter;
@@ -371,15 +372,15 @@ private void initUserManagerData(){
                        // Toast.makeText(getContext(),"Ops,巡检全部查看正在开发中",Toast.LENGTH_LONG).show();
                         break;
                     case 2://服务商待接单
-                        BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待确认");
+                     //   BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待确认");
                         break;
                     case 3://甲方待确认
-                        BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待确认");
-                        Toast.makeText(getContext(),"Ops,待执行正在开发中",Toast.LENGTH_LONG).show();
+                      //  BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待确认");
+                       // Toast.makeText(getContext(),"Ops,待执行正在开发中",Toast.LENGTH_LONG).show();
                         break;
                     case 4://甲方巡检申请
-                        BaseUtils.getInstence().intent(getContext(), InspectionAddActivity.class);
-                        Toast.makeText(getContext(),"Ops,巡检全部查看正在开发中",Toast.LENGTH_LONG).show();
+                     BaseUtils.getInstence().intent(getContext(), InspectionAddActivity.class);
+                     //   Toast.makeText(getContext(),"Ops,巡检全部查看正在开发中",Toast.LENGTH_LONG).show();
                         break;
 
                 }
@@ -389,12 +390,12 @@ private void initUserManagerData(){
                     case 1://
                         break;
                     case 2://服务商待审核
-                        BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待审核");
-                        Toast.makeText(getContext(),"巡检验收",Toast.LENGTH_LONG).show();
+                      //  BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待审核");
+                      //  Toast.makeText(getContext(),"巡检验收",Toast.LENGTH_LONG).show();
                         break;
                     case 3://维修工巡检中
-                        Toast.makeText(getContext(),"巡检中",Toast.LENGTH_LONG).show();
-                        BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","巡检中");
+                     //   Toast.makeText(getContext(),"巡检中",Toast.LENGTH_LONG).show();
+                      //  BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","巡检中");
                         break;
                     case 4://甲方待确认
                         BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待确认");
@@ -404,13 +405,13 @@ private void initUserManagerData(){
             case R.id.main_inspection_3:
                 switch (SPUtils.getInstance().getInt("role_num",1)){
                     case 2://服务商待审查
-                        BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待审查");
+                       // BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待审查");
                         break;
                     case 3://维修工待通过
-                        BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待通过");
+                       // BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待通过");
                         break;
                     case 4://甲方巡检中
-                        BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","巡检中");
+                      //  BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","巡检中");
                         break;
                 }
                 break;
@@ -419,7 +420,7 @@ private void initUserManagerData(){
                     case 3://
                         break;
                     case 4://甲方待付款
-                        BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待付款");
+                     //   BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待付款");
                       //  Toast.makeText(getContext(),"Ops,数据展示正在开发中",Toast.LENGTH_LONG).show();
                         break;
                 }
@@ -429,13 +430,13 @@ private void initUserManagerData(){
                     case 3://无
                         break;
                     case 4://甲方待评价
-                        BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待评价");
+                       // BaseUtils.getInstence().intent(getContext(),InspectionSerchListActivity.class,"title","待评价");
                         // Toast.makeText(getContext(),"Ops,数据展示正在开发中",Toast.LENGTH_LONG).show();
                         break;
                 }
                 break;
             case R.id.main_inspection_all:
-                Toast.makeText(getContext(),"Ops,查看全部巡检正在开发中",Toast.LENGTH_LONG).show();
+                BaseUtils.getInstence().intent(getContext(), ProjectListActivity.class);
                 break;
                 default:
                     break;

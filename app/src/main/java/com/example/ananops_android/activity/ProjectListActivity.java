@@ -19,6 +19,7 @@ import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.view.EditTextWithDel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectListActivity extends AppCompatActivity {
@@ -27,7 +28,7 @@ public class ProjectListActivity extends AppCompatActivity {
     private TextView noResult;
     private EditTextWithDel mEtSearchName;
     private ImageView imageBack;
-    private List<ProjectInfo> projectInfos;
+    private List<ProjectInfo> projectInfos=new ArrayList<>();
     private ListCommonAdapter mAdapter;
     private static String inspectionId;
     private Context mComtext;
@@ -48,8 +49,8 @@ public class ProjectListActivity extends AppCompatActivity {
     }
     private void initDatas() {
         Intent intent=getIntent();
-        inspectionId=intent.getStringExtra("inspectionId");
-        title.setText("巡检任务子项");
+      //  inspectionId=intent.getStringExtra("inspectionId");
+        title.setText("项目列表");
         projectInfos= InspectionUtils.getInstence().getProjectList(projectInfos,4L,mComtext);
         mAdapter = new ListCommonAdapter<ProjectInfo>(mComtext, R.layout.item_project_list, projectInfos) {
             @Override
@@ -67,8 +68,7 @@ public class ProjectListActivity extends AppCompatActivity {
                 //进入任务子项
                 Bundle bundle0=new Bundle();
                 bundle0.putString("project_id",String.valueOf(projectInfos.get(position).getId()));
-                bundle0.putString("status_do","no");
-                BaseUtils.getInstence().intent(mComtext,OrderDetailActivity.class,bundle0);
+                BaseUtils.getInstence().intent(mComtext,InspectionSerchListActivity.class,bundle0);
             }
         });
         imageBack.setOnClickListener(new View.OnClickListener() {

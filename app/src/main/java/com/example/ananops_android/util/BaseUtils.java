@@ -180,7 +180,7 @@ public class BaseUtils {
             case "维修工程师":
                 SPUtils.getInstance().putInt("role_num",3);
                 break;
-            case "服务商负责人":
+            case "服务商业务员":
                 SPUtils.getInstance().putInt("role_num",2);
                 break;
                  default:
