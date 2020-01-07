@@ -14,6 +14,7 @@ import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.ListCommonAdapter;
 import com.example.ananops_android.adapter.ListViewHolder;
 import com.example.ananops_android.entity.InspectionTaskItem;
+import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.view.EditTextWithDel;
 
@@ -56,7 +57,7 @@ public class InspectionItemListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //进入任务子项
-
+                BaseUtils.getInstence().intent(mComtext,InspectionDetailActivity.class);
             }
         });
         imageBack.setOnClickListener(new View.OnClickListener() {
