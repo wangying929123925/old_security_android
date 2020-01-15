@@ -1,7 +1,5 @@
 package com.example.ananops_android.net;
 
-import com.example.ananops_android.db.AllUnDistributedWorkOrdersRequest;
-import com.example.ananops_android.db.AllUnDistributedWorkOrdersResponse;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.InspectionItemListImcRequest;
@@ -127,6 +125,7 @@ public interface Net {
     //获取巡检进度条
     @POST("/imc/inspectionTask/getTaskLogs")
     Observable<InspectionLogResponse>getInspectionLog(@Body InspectionLogsRequest getTaskLogsByTaskId, @Header("Authorization") String postToken);
+
     //添加巡检
     @POST("/imc/inspectionTask/save")
     Observable<CodeMessageResponse>addInspectionInfo(@Body InspectionAddContent saveInspectionTask,@Header("Authorization") String postToken);
@@ -139,4 +138,10 @@ public interface Net {
     //维修工程师查询未接单子项
     //维修工程师接单
     //修改状态
+    Observable<CodeMessageResponse> addInspectionInfo(@Body InspectionAddContent saveInspectionTask, @Header("Authorization") String postToken);
+
+    //甲方负责人查询未分配工程师的巡检单
+    @POST("/spc/workorder/getAllUnConfirmedWorkOrders")
+    Observable<AllUnDistributedWorkOrdersResponse>getAllUnWorkOrders(@Body AllUnDistributedWorkOrdersRequest WorkOrderStatusQueryDto,@Header("Authorization") String postToken);
+//甲方负责人查询未分配工程师巡检单的详细信息
 }
