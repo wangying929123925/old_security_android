@@ -132,7 +132,7 @@ public interface Net {
     Observable<CodeMessageResponse>addInspectionInfo(@Body InspectionAddContent saveInspectionTask,@Header("Authorization") String postToken);
     //甲方负责人查询未分配工程师的巡检单
     @POST("/spc/workorder/getAllUnConfirmedWorkOrders")
-    Observable<AllUnDistributedWorkOrdersResponse>getAllUnConfirmedWorkOrders(@Body AllUnDistributedWorkOrdersRequest WorkOrderStatusQueryDto,@Header("Authorization") String postToken);
+    Observable<AllUnDistributedWorkOrdersResponse>getAllUnConfirmedOrders(@Body AllUnDistributedWorkOrdersRequest WorkOrderStatusQueryDto,@Header("Authorization") String postToken);
     //甲方负责人查询未分配工程师巡检单的详细信息
 
     //为巡检子项分配工程师
