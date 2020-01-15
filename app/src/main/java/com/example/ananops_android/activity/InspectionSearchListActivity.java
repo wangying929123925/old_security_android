@@ -3,6 +3,7 @@ package com.example.ananops_android.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,7 +63,6 @@ public class InspectionSearchListActivity extends AppCompatActivity implements V
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView=findViewById(R.id.contact_recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        inspectionInfos= InspectionUtils.getInstence().getInspectionListByProjectId(inspectionInfos,Long.valueOf(PROJECT_ID),mContext);
         inspectionAdapter=new InspectionAdapter(inspectionInfos);
         inspectionAdapter.setOnRecyclerViewItemClickListener(new BaseRecyclerAdapter.OnRecyclerViewItemClickListener() {
             @Override
@@ -72,14 +72,17 @@ public class InspectionSearchListActivity extends AppCompatActivity implements V
                 Bundle bundle0=new Bundle();
                 bundle0.putString("inspectionId",String.valueOf(inspectionInfos.get(position).getId()));
                 BaseUtils.getInstence().intent(mContext,InspectionDetailActivity.class,bundle0);
-
             }
         });
         mRecyclerView.setAdapter(inspectionAdapter);
     }
     private void initDatas() {
    //  inspectionContents= BaseUtils.getInstence().initInspectionContent(inspectionContents);
-
+        Bundle bundle = getIntent().getExtras();
+        inspectionInfos = bundle.getParcelableArrayList("result");
+        if (inspectionInfos == null) {
+            inspectionInfos = new ArrayList<>();
+        }
     }
     private void setOnListener() {
         back_img.setOnClickListener(this);

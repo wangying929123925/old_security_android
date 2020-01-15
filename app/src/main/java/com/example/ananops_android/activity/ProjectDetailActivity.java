@@ -18,10 +18,14 @@ import android.widget.Toast;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.MyFragmentPagerAdapter;
+import com.example.ananops_android.db.InspectionListByProjectRequest;
+import com.example.ananops_android.db.InspectionListResponse;
 import com.example.ananops_android.db.ProjectInfoResponse;
+import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.fragment.InspectionItemFragment;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
+import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
 
 import java.util.ArrayList;
@@ -36,6 +40,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
     private ViewPager vp_search_order_pager;  //内容
     private List<Fragment> list_fragment;                                //定义要装fragment的列表
     private List<String> list_title;
+    private ArrayList<InspectionInfo> inspectionInfoList = new ArrayList<>(); //传递给下一个Activity的List
     private TextView title;
     //  private ImageView search_img;
     private ImageView back_img;
@@ -151,9 +156,48 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
                 finish();
                 break;
             case R.id.order_detail_button2:
-                Bundle bundle0=new Bundle();
-                bundle0.putString("project_id",PROJECT_ID);
-                BaseUtils.getInstence().intent(mContext, InspectionSearchListActivity.class,bundle0);
+                Long projectId = Long.valueOf(PROJECT_ID);
+                //查询 获取项目巡检列表
+                if (projectId != null) {
+                    InspectionListByProjectRequest inspectionListByProjectRequest=new InspectionListByProjectRequest();
+                    inspectionListByProjectRequest.setProjectId(projectId);
+                    Net.instance.getInspectionListByProjectId(inspectionListByProjectRequest, SPUtils.getInstance().getString("Token", " "))
+                            .subscribeOn(Schedulers.newThread())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<InspectionListResponse>() {
+                                @Override
+                                public void onCompleted() {
+                                    Bundle bundle0=new Bundle();
+                                    bundle0.putParcelableArrayList("result",inspectionInfoList);
+                                    BaseUtils.getInstence().intent(mContext, InspectionSearchListActivity.class,bundle0);
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Log.v("ErrorGetInspection_pro", System.currentTimeMillis() + "");
+                                    e.printStackTrace();
+                                }
+
+                                @Override
+                                public void onNext(InspectionListResponse inspectionListResponse) {
+                                    if (TextUtils.equals(inspectionListResponse.getCode(), "200")) {
+                                        inspectionInfoList.clear();
+                                        if (inspectionListResponse.getResult().size() > 0) {
+                                            inspectionInfoList.addAll(inspectionListResponse.getResult());
+
+                                            Log.v("巡检列表1", inspectionListResponse.getResult().get(0).getId() + "");
+                                        } else {
+                                            Toast.makeText(mContext, "无巡检列表！", Toast.LENGTH_LONG).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(mContext, inspectionListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                } else {
+                    Toast.makeText(mContext,"请选择项目！", Toast.LENGTH_LONG).show();
+                }
+
                 break;
             default:
                 break;

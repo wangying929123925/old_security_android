@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +24,24 @@ import com.example.ananops_android.activity.ProjectListActivity;
 import com.example.ananops_android.activity.RepairAddActivity;
 import com.example.ananops_android.activity.UserOrderSearchActivitySpinner;
 import com.example.ananops_android.adapter.RepairAdapter;
+import com.example.ananops_android.db.AllUnDistributedWorkOrdersRequest;
+import com.example.ananops_android.db.AllUnauthorizedTaskRequest;
+import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
 import com.example.ananops_android.db.OrderRequest;
+import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.RepairContent;
 import com.example.ananops_android.entity.UnReadNum;
+import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Scheduler;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class UserMainFragment extends Fragment implements View.OnClickListener{
     private LinearLayout main_repair;
@@ -324,7 +336,7 @@ private void initUserManagerData(){
                     case 3://维修工已接单
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","维修工已接单");
                         break;
-                    case 4://甲方待支付
+                    case 4://
                         Toast.makeText(getContext(),"Ops,账单支付正在开发中",Toast.LENGTH_LONG).show();
                 }
                 break;
@@ -371,7 +383,7 @@ private void initUserManagerData(){
                     case 1://
                        // Toast.makeText(getContext(),"Ops,巡检全部查看正在开发中",Toast.LENGTH_LONG).show();
                         break;
-                    case 2://服务商待接单
+                    case 2://服务商待接单//fuwushangchakan
                      //   BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待确认");
                         break;
                     case 3://甲方待确认
@@ -410,7 +422,40 @@ private void initUserManagerData(){
                     case 3://维修工待通过
                        // BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待通过");
                         break;
-                    case 4://甲方巡检中
+                    case 4://甲方巡检中//2chakanshenherenwu
+                        final AllUnauthorizedTaskRequest allUnauthorizedTaskRequest = new AllUnauthorizedTaskRequest();
+                        allUnauthorizedTaskRequest.setPageNum(0);
+                        allUnauthorizedTaskRequest.setPageSize(0);
+                        allUnauthorizedTaskRequest.setUserId(1);
+                        Net.instance.getAllUnauthorizedTask(allUnauthorizedTaskRequest, SPUtils.getInstance().getString("Token", " "))
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<AllUnauthorizedTaskResponse>() {
+                                    @Override
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.v("ErrorGetUnauthorTask", System.currentTimeMillis() + "");
+                                        e.printStackTrace();
+                                        Toast.makeText(mContext, "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onNext(AllUnauthorizedTaskResponse allUnauthorizedTaskResponse) {
+                                        if (TextUtils.equals(allUnauthorizedTaskResponse.getCode(),"200")) {
+                                            ArrayList<InspectionInfo> result = allUnauthorizedTaskResponse.getResult();
+                                            if (result != null) {
+                                                Bundle bundle = new Bundle();
+                                                bundle.putParcelableArrayList("result", result);
+                                                BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle,"title","巡检中");
+                                            }
+                                        }
+                                    }
+                                });
+
                       //  BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","巡检中");
                         break;
                 }
