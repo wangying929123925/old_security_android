@@ -79,9 +79,13 @@ public class InspectionItemFragment extends Fragment {
         }
 
         public MyRecyclerViewAdapter(List<String> mData, List<String> values, Context mContext) {
-            this.mValues = values;
-            this.mData = mData;
-            this.mContext = mContext;
+            if (values.size() == mData.size()) {
+                this.mValues = values;
+                this.mData = mData;
+                this.mContext = mContext;
+            }
+
+
         }
 
         @NonNull

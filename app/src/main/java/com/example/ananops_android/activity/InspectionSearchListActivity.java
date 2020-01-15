@@ -28,7 +28,7 @@ import com.example.ananops_android.util.InspectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InspectionSerchListActivity extends AppCompatActivity implements View.OnClickListener{
+public class InspectionSearchListActivity extends AppCompatActivity implements View.OnClickListener{
     private  String searchContent;
     private List<InspectionInfo> inspectionInfos=new ArrayList<>();
     private RecyclerView mRecyclerView;
