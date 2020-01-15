@@ -49,7 +49,7 @@
         <activity android:name=".activity.UerMessageActivity" />
         <activity android:name=".activity.UserOrderSearchActivitySpinner" />
         <activity android:name=".activity.InspectionAddActivity" />
-        <activity android:name=".activity.InspectionSerchListActivity" />
+        <activity android:name=".activity.InspectionSearchListActivity" />
         <activity android:name=".activity.InspectionItemDetailActivity" />
         <activity android:name=".activity.InspectionDetailActivity"></activity>
         <activity android:name=".activity.LoginActivity" />

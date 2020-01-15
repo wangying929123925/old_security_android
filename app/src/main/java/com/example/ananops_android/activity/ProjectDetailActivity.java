@@ -19,9 +19,7 @@ import android.widget.Toast;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.MyFragmentPagerAdapter;
 import com.example.ananops_android.db.ProjectInfoResponse;
-import com.example.ananops_android.entity.ProjectInfo;
 import com.example.ananops_android.fragment.InspectionItemFragment;
-import com.example.ananops_android.fragment.TimeLineFragment;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
@@ -54,10 +52,6 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
         mContext=this;
         initViews();
         setOnListener();
-        myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list_fragment,list_title);
-        vp_search_order_pager.setAdapter(myFragmentPagerAdapter);
-        vp_search_order_pager.setOffscreenPageLimit(1);
-        tab_search_order_title.setupWithViewPager(vp_search_order_pager);
         initFragment();
     }
 
@@ -69,8 +63,8 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
         if (list_fragment == null) {
             list_fragment = new ArrayList<>();
         }
-        ArrayList<String> list_item1 = new ArrayList<>();
-        ArrayList<String> list_item2 = new ArrayList<>();
+        final ArrayList<String> list_item1 = new ArrayList<>();
+        final ArrayList<String> list_item2 = new ArrayList<>();
         final ArrayList<String> list_value1 = new ArrayList<>();
         final ArrayList<String> list_value2 = new ArrayList<>();
         list_item1.add("项目名");list_item1.add("项目类型");
@@ -111,14 +105,19 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
                             list_value2.add(projectInfoResponse.getResult().getPartyBName());
                             list_value2.add(projectInfoResponse.getResult().getBleaderName());
                             list_value2.add(projectInfoResponse.getResult().getBleaderTel());
+                            list_fragment.add(InspectionItemFragment.newIntance("1",list_item1,list_value1));
+                            list_fragment.add(InspectionItemFragment.newIntance("1",list_item2,list_value2));
+                            myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list_fragment,list_title);
+                            vp_search_order_pager.setAdapter(myFragmentPagerAdapter);
+                            vp_search_order_pager.setOffscreenPageLimit(1);
+                            tab_search_order_title.setupWithViewPager(vp_search_order_pager);
                         }
                         else {
                             Toast.makeText(mContext, projectInfoResponse.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
-        list_fragment.add(InspectionItemFragment.newIntance("1",list_item1,list_value1));
-        list_fragment.add(InspectionItemFragment.newIntance("1",list_item2,list_value2));
+
     }
 
     private void initViews() {
@@ -154,7 +153,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
             case R.id.order_detail_button2:
                 Bundle bundle0=new Bundle();
                 bundle0.putString("project_id",PROJECT_ID);
-                BaseUtils.getInstence().intent(mContext,InspectionSerchListActivity.class,bundle0);
+                BaseUtils.getInstence().intent(mContext, InspectionSearchListActivity.class,bundle0);
                 break;
             default:
                 break;

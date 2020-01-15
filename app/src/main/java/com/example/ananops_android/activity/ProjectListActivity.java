@@ -2,23 +2,34 @@ package com.example.ananops_android.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.ListCommonAdapter;
 import com.example.ananops_android.adapter.ListViewHolder;
+import com.example.ananops_android.db.ProjectListResponse;
 import com.example.ananops_android.entity.ProjectInfo;
+import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
-import com.example.ananops_android.util.InspectionUtils;
+import com.example.ananops_android.util.SPUtils;
 import com.example.ananops_android.view.EditTextWithDel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class ProjectListActivity extends AppCompatActivity {
     private ListView sortListView;
@@ -28,15 +39,64 @@ public class ProjectListActivity extends AppCompatActivity {
     private ImageView imageBack;
     private List<ProjectInfo> projectInfos=new ArrayList<>();
     private ListCommonAdapter mAdapter;
-    private Context mComtext;
+    private Context mContext;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_main);
-        projectInfos= InspectionUtils.getInstence().getProjectList(projectInfos,4L,mComtext);
-        mComtext=this;
-        initDatas();
-        initViews();
+        mContext =this;
+        //获取项目信息
+        Net.instance.getProjectList(4L, SPUtils.getInstance().getString("Token", " "))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ProjectListResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("ErrorGetProjectList", System.currentTimeMillis() + "");
+                        e.printStackTrace();
+                        Toast.makeText(mContext, "网络异常，请检查网络状态changeStatus", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(ProjectListResponse projectListResponse) {
+                        if (TextUtils.equals(projectListResponse.getCode(), "200")) {
+                            projectInfos.clear();
+                            if (projectListResponse.getResult().size() > 0) {
+                                projectInfos.addAll(projectListResponse.getResult());
+                                initDatas();
+                                initViews();
+                                Log.v("项目列表1", projectListResponse.getResult().get(0).getId() + "");
+                            } else {
+                                Toast.makeText(mContext, "无项目列表！", Toast.LENGTH_LONG).show();
+                                Log.v("项目列表0", projectListResponse.getResult().size() + "");
+                            }
+                        } else {
+                            Toast.makeText(mContext, projectListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+
+
 
     }
     private void initViews() {
@@ -65,9 +125,10 @@ public class ProjectListActivity extends AppCompatActivity {
                 //进入任务子项
                 Bundle bundle0=new Bundle();
                 bundle0.putString("project_id",String.valueOf(projectInfos.get(position).getId()));
-                BaseUtils.getInstence().intent(mComtext,InspectionSerchListActivity.class,bundle0);
+                BaseUtils.getInstence().intent(mContext, ProjectDetailActivity.class,bundle0);
             }
         });
+        mAdapter.notifyDataSetInvalidated();
         sortListView.setAdapter(mAdapter);
         imageBack.setOnClickListener(new View.OnClickListener() {
             @Override
