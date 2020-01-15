@@ -69,6 +69,7 @@ public interface Net {
     Observable<UserInformation> getUserInfo(@Path("loginName") String loginName, @Header("Authorization") String postToken);
 
     //获取工单列表
+    @Headers("Content-Type:application/json")
     @POST("/mdmc/mdmcTask/getTaskListByIdAndStatus")
     Observable<OrderResponse> getRepairList(@Body OrderRequest queryDto, @Header("Authorization") String postToken);
 
@@ -127,6 +128,16 @@ public interface Net {
 
     //添加巡检
     @POST("/imc/inspectionTask/save")
+    Observable<CodeMessageResponse>addInspectionInfo(@Body InspectionAddContent saveInspectionTask,@Header("Authorization") String postToken);
+    //甲方负责人查询未分配工程师的巡检单
+    @POST("/spc/workorder/getAllUnConfirmedWorkOrders")
+    Observable<AllUnDistributedWorkOrdersResponse>getAllUnConfirmedWorkOrders(@Body AllUnDistributedWorkOrdersRequest WorkOrderStatusQueryDto,@Header("Authorization") String postToken);
+    //甲方负责人查询未分配工程师巡检单的详细信息
+
+    //为巡检子项分配工程师
+    //维修工程师查询未接单子项
+    //维修工程师接单
+    //修改状态
     Observable<CodeMessageResponse> addInspectionInfo(@Body InspectionAddContent saveInspectionTask, @Header("Authorization") String postToken);
 
     //甲方负责人查询未分配工程师的巡检单
