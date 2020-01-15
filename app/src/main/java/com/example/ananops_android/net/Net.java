@@ -2,8 +2,13 @@ package com.example.ananops_android.net;
 
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
+import com.example.ananops_android.db.InspectionItemListImcRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
+import com.example.ananops_android.db.InspectionListByProjectRequest;
 import com.example.ananops_android.db.InspectionListResponse;
+import com.example.ananops_android.db.InspectionLogResponse;
+import com.example.ananops_android.db.InspectionLogsRequest;
+import com.example.ananops_android.db.ProjectInfoResponse;
 import com.example.ananops_android.db.ProjectListResponse;
 import com.example.ananops_android.db.LoginResponse;
 import com.example.ananops_android.db.OrderDetailResponse;
@@ -13,6 +18,7 @@ import com.example.ananops_android.db.OrderTimelineResponse;
 import com.example.ananops_android.db.PostResponse;
 import com.example.ananops_android.db.RepairChangeDetail;
 import com.example.ananops_android.db.UserInformation;
+import com.example.ananops_android.entity.InspectionAddContent;
 import com.example.ananops_android.entity.RepairAddContent;
 
 import retrofit2.Retrofit;
@@ -101,10 +107,25 @@ public interface Net {
     //获取组织项目列表
     @POST("/pmc/project/getProjectListByGroupId/{groupId}")
     Observable<ProjectListResponse> getProjectList(@Path("groupId") Long groupId, @Header("Authorization") String postToken);
-    //获取根据项目获取巡检列表
+    //新建获取根据项目获取巡检列表
     @POST("/pmc/InspectDevice/getTasksByProjectId/{projectId}")
     Observable<InspectionListResponse>getInspectionList(@Path("projectId")Long projectId, @Header("Authorization") String postToken);
-    //获取巡检ID获取巡检子项
+    //查询 根据项目ID获取巡检列表
+    @POST("/imc/inspectionTask/getTaskByProjectId")
+    Observable<InspectionListResponse>getInspectionListByProjectId(@Body InspectionListByProjectRequest getTaskByProjectId, @Header("Authorization") String postToken);
+    //新建 根据巡检ID获取巡检子项
     @POST("/pmc/inspectDetail/getInspectDetailList/{inspectTaskId}")
     Observable<InspectionItemListResponse>getInspectionItemList(@Path("inspectTaskId")Long inspectTaskId,@Header("Authorization") String postToken);
+    //查询 根据巡检ID获取巡检子项
+    @POST("/imc/inspectionItem/getAllItemByTaskId")
+    Observable<InspectionItemListResponse>getInspectionItemListImc(@Body InspectionItemListImcRequest getAllItemByTaskId, @Header("Authorization") String postToken);
+    //获取项目详情
+    @POST("/pmc/project/getById/{id}")
+    Observable<ProjectInfoResponse> getProjectInfo(@Path("id") Long projectId, @Header("Authorization") String postToken);
+    //获取巡检进度条
+    @POST("/imc/inspectionTask/getTaskLogs")
+    Observable<InspectionLogResponse>getInspectionLog(@Body InspectionLogsRequest getTaskLogsByTaskId, @Header("Authorization") String postToken);
+    //添加巡检
+    @POST("/imc/inspectionTask/save")
+    Observable<CodeMessageResponse>addInspectionInfo(@Body InspectionAddContent saveInspectionTask,@Header("Authorization") String postToken);
 }

@@ -1,46 +1,48 @@
 package com.example.ananops_android.activity;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.ananops_android.R;
+import com.example.ananops_android.adapter.FindTabAdapter;
 import com.example.ananops_android.adapter.MyFragmentPagerAdapter;
 import com.example.ananops_android.db.TestResponse;
-import com.example.ananops_android.fragment.InspectionDetailFragment;
 import com.example.ananops_android.fragment.InspectionItemFragment;
-import com.example.ananops_android.fragment.InspectionTimeLineFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InspectionDetailActivity extends AppCompatActivity {
-
+public class InspectionItemDetailActivity extends AppCompatActivity {
     private TabLayout tab_search_order_title;                            //定义TabLayout
     private ViewPager vp_search_order_pager;  //内容
     private List<Fragment> list_fragment;                                //定义要装fragment的列表
     private List<String> list_title;
+    private FindTabAdapter findTabAdapter;
+    private TextView title;
+    private ImageView back_img;
+    private static String INSPECTION_ID;
+    private Button inspection_detail_button1;
+    private Button inspection_detail_button2;
+    private LinearLayout fragment_inspection_commit;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
     private String STATUS = "1"; //有几个角色就设置几个不同的状态 对应不同fragment数据的显示
-    private static String inspectionId;
-    private TextView title;
-    //  private ImageView search_img;
-    private ImageView back_img;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspection_item_detail);
-        inspectionId = getIntent().getStringExtra("inspectionId");
         initFragment();
         initViews();
         initDatas();
-        setOnListener();
+        INSPECTION_ID = getIntent().getStringExtra("inspectionId");
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list_fragment,list_title);
         //viewPager设置adapter
         vp_search_order_pager.setAdapter(myFragmentPagerAdapter);
@@ -53,8 +55,8 @@ public class InspectionDetailActivity extends AppCompatActivity {
 
         if (list_title == null) {
             list_title = new ArrayList<>();
-            list_title.add("巡检信息");list_title.add("进度条");
-            list_title.add("网点");list_title.add("备品备件");
+            list_title.add("项目信息");list_title.add("设备信息");
+            list_title.add("故障信息");list_title.add("审核信息");
         }
         if (list_fragment == null) {
             list_fragment = new ArrayList<>();
@@ -69,9 +71,9 @@ public class InspectionDetailActivity extends AppCompatActivity {
         ArrayList<String> list_value4 = new ArrayList<>();
         //首先把数据做全量填充
         //the first fragment
-        list_item1.add("巡检名称");list_item1.add("巡检周期");
-        list_item1.add("开始时间");list_item1.add("计划完成时间");list_item1.add("巡检内容");
-        list_item1.add("巡检备注");list_item1.add("服务商");
+        list_item1.add("项目编号");list_item1.add("项目名称");
+        list_item1.add("甲方");list_item1.add("甲方负责人");list_item1.add("联系电话");
+        list_item1.add("乙方");list_item1.add("乙方负责人");list_item1.add("联系电话");
         TestResponse bean = new TestResponse();
         TestResponse.ResultBean result = bean.getResult();
         list_value1.add(String.valueOf(bean.getCode()));
@@ -113,7 +115,7 @@ public class InspectionDetailActivity extends AppCompatActivity {
             case "1":
 
                 /*the first fragment*/
-                //去掉乙方相关信息
+                    //去掉乙方相关信息
                 List<String> subList =new ArrayList<>() ;
                 for (String s:
                         list_item1.subList(0, 5)) {  //保留前五个
@@ -150,10 +152,10 @@ public class InspectionDetailActivity extends AppCompatActivity {
                 break;
 
         }
-        list_fragment.add(InspectionItemFragment.newIntance(inspectionId,list_item1,list_value1));
-        list_fragment.add(InspectionTimeLineFragment.newIntance(inspectionId));
-        list_fragment.add(InspectionDetailFragment.newIntance(inspectionId));
-        list_fragment.add(InspectionItemFragment.newIntance(inspectionId,list_item4,list_value4));
+        list_fragment.add(InspectionItemFragment.newIntance("1",list_item1,list_value1));
+        list_fragment.add(InspectionItemFragment.newIntance("1",list_item2,list_value2));
+        list_fragment.add(InspectionItemFragment.newIntance("1",list_item3,list_value3));
+        list_fragment.add(InspectionItemFragment.newIntance("1",list_item4,list_value4));
     }
 
     private void initViews(){
@@ -171,8 +173,4 @@ public class InspectionDetailActivity extends AppCompatActivity {
             }
         });
     }
-    private void setOnListener(){
-
-    }
-
 }

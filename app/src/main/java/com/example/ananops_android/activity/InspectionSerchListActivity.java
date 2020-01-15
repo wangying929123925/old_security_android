@@ -62,7 +62,7 @@ public class InspectionSerchListActivity extends AppCompatActivity implements Vi
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView=findViewById(R.id.contact_recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        inspectionInfos= InspectionUtils.getInstence().getInspectionList(inspectionInfos,Long.valueOf(PROJECT_ID),mContext);
+        inspectionInfos= InspectionUtils.getInstence().getInspectionListByProjectId(inspectionInfos,Long.valueOf(PROJECT_ID),mContext);
         inspectionAdapter=new InspectionAdapter(inspectionInfos);
         inspectionAdapter.setOnRecyclerViewItemClickListener(new BaseRecyclerAdapter.OnRecyclerViewItemClickListener() {
             @Override
@@ -71,7 +71,7 @@ public class InspectionSerchListActivity extends AppCompatActivity implements Vi
                 Toast.makeText(getApplicationContext(), "巡检详情" + (position + 1), Toast.LENGTH_SHORT).show();
                 Bundle bundle0=new Bundle();
                 bundle0.putString("inspectionId",String.valueOf(inspectionInfos.get(position).getId()));
-                BaseUtils.getInstence().intent(mContext,InspectionItemListActivity.class,bundle0);
+                BaseUtils.getInstence().intent(mContext,InspectionDetailActivity.class,bundle0);
 
             }
         });

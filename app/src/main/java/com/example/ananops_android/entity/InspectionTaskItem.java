@@ -1,6 +1,6 @@
 package com.example.ananops_android.entity;
 
-import java.io.Serializable;
+import com.google.gson.annotations.SerializedName;
 
 public class InspectionTaskItem {
     /**
@@ -48,6 +48,35 @@ public class InspectionTaskItem {
     private int status;
     private String updateTime;
     private int version;
+    /**
+     * id : 799909602912112640
+     * version : null
+     * creatorId : 782515618032134145
+     * lastOperatorId : 782515618032134145
+     * pageNum : null
+     * pageSize : null
+     * orderBy : null
+     * inspectionTaskId : 799909594993266688
+     * scheduledStartTime : 2019-12-19 08:18:48
+     * actualStartTime : null
+     * actualFinishTime : null
+     * days : 90
+     * frequency : 30
+     * itemLatitude : 1
+     * itemLongitude : 1
+     * result : null
+     * maintainerId : 232423423
+     * count : 0
+     */
+
+    private String scheduledStartTime;
+    private String actualStartTime;
+    private String actualFinishTime;
+    private Integer days;
+    private Integer frequency;
+    private Double itemLatitude;
+    private Double itemLongitude;
+    private Float count;
 
     public String getCreatedTime() {
         return createdTime;
@@ -103,6 +132,22 @@ public class InspectionTaskItem {
 
     public void setInspectionTaskName(String inspectionTaskName) {
         this.inspectionTaskName = inspectionTaskName;
+    }
+
+    public String getActualStartTime() {
+        return actualStartTime;
+    }
+
+    public void setActualStartTime(String actualStartTime) {
+        this.actualStartTime = actualStartTime;
+    }
+
+    public String getActualFinishTime() {
+        return actualFinishTime;
+    }
+
+    public void setActualFinishTime(String actualFinishTime) {
+        this.actualFinishTime = actualFinishTime;
     }
 
     public String getItemName() {
@@ -217,4 +262,51 @@ public class InspectionTaskItem {
         this.version = version;
     }
 
+    public String getScheduledStartTime() {
+        return scheduledStartTime;
+    }
+
+    public void setScheduledStartTime(String scheduledStartTime) {
+        this.scheduledStartTime = scheduledStartTime;
+    }
+
+    public Integer getDays() {
+        return days;
+    }
+
+    public void setDays(Integer days) {
+        this.days = days;
+    }
+
+    public Integer getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(Integer frequency) {
+        this.frequency = frequency;
+    }
+
+    public Double getItemLatitude() {
+        return itemLatitude;
+    }
+
+    public void setItemLatitude(Double itemLatitude) {
+        this.itemLatitude = itemLatitude;
+    }
+
+    public Double getItemLongitude() {
+        return itemLongitude;
+    }
+
+    public void setItemLongitude(Double itemLongitude) {
+        this.itemLongitude = itemLongitude;
+    }
+
+    public Float getCount() {
+        return count;
+    }
+
+    public void setCount(Float count) {
+        this.count = count;
+    }
 }

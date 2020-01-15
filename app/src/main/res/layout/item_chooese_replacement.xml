@@ -16,7 +16,7 @@
         android:focusable="false"
         />
     <TextView
-        android:id="@+id/inspection_sub_name"
+        android:id="@+id/replacement_name"
         android:layout_width="match_parent"
         android:paddingLeft="10dp"
         android:layout_marginTop="5dp"
@@ -28,32 +28,32 @@
         tools:text="易美吉双头锯-继电器（30*5*1）"
         />
     <TextView
-        android:id="@+id/inspection_sub_id"
+        android:id="@+id/replacement_id"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_toRightOf="@+id/inspection_sub_checkBox"
-        android:layout_below="@+id/inspection_sub_name"
+        android:layout_below="@+id/replacement_name"
         tools:text="0130"
         android:textColor="@color/black"
         />
     <TextView
-        android:id="@+id/inspection_sub_maintainer"
+        android:id="@+id/replacement_type"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_toRightOf="@+id/inspection_sub_checkBox"
-        android:layout_below="@+id/inspection_sub_id"
+        android:layout_below="@+id/replacement_id"
         android:textColor="@color/black"
         tools:text="30*50*1"
         />
     <TextView
-        android:id="@+id/inspection_sub_time"
+        android:id="@+id/replacement_price"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_toRightOf="@+id/inspection_sub_checkBox"
-        android:layout_below="@+id/inspection_sub_maintainer"
+        android:layout_below="@+id/replacement_type"
         tools:text="20.00"
         android:textColor="@color/black"
         />

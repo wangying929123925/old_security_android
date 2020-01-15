@@ -46,10 +46,10 @@ public class InspectionItemListActivity extends AppCompatActivity {
         mAdapter = new ListCommonAdapter<InspectionTaskItem>(mComtext, R.layout.item_project_list, inspectionTaskItems) {
             @Override
             protected void convert(ListViewHolder viewHolder, InspectionTaskItem inspectionTaskItem, int position) {
-                viewHolder.setText(R.id.inspection_sub_name, inspectionTaskItem.getItemName());//名称
-                viewHolder.setText(R.id.inspection_sub_id, String.valueOf(inspectionTaskItem.getId()));//id
-                viewHolder.setText(R.id.inspection_sub_maintainer, inspectionTaskItem.getMaintainerName());//类型
-                viewHolder.setText(R.id.inspection_sub_time, inspectionTaskItem.getUpdateTime());//价格
+                viewHolder.setText(R.id.Plist_name, inspectionTaskItem.getItemName());//名称
+                viewHolder.setText(R.id.Plist_id, String.valueOf(inspectionTaskItem.getId()));//id
+                viewHolder.setText(R.id.Plist_type, inspectionTaskItem.getMaintainerName());//类型
+                viewHolder.setText(R.id.Plist_price, inspectionTaskItem.getUpdateTime());//价格
             }
         };
         sortListView.setAdapter(mAdapter);
@@ -57,7 +57,7 @@ public class InspectionItemListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //进入任务子项
-                BaseUtils.getInstence().intent(mComtext,InspectionDetailActivity.class);
+                BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class);
             }
         });
         imageBack.setOnClickListener(new View.OnClickListener() {

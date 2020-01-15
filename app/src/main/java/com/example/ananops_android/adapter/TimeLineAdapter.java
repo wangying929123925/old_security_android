@@ -60,6 +60,9 @@ public class TimeLineAdapter extends BaseAdapter {
            viewHolder.tvTime.setTextColor(mContact.getResources().getColor(R.color.blue));
            viewHolder.tvDirector.setTextColor(mContact.getResources().getColor(R.color.blue));
            viewHolder.tvProcess.setTextColor(mContact.getResources().getColor(R.color.blue));
+           viewHolder.tvDirector.setText(timeLine.getLastOperator());
+           viewHolder.tvProcess.setText(timeLine.getMovement());
+           viewHolder.tvTime.setText(timeLine.getUpdateTime());
 
        }
        else {

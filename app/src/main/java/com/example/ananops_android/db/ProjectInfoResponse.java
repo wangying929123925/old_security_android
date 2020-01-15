@@ -1,20 +1,11 @@
 package com.example.ananops_android.db;
 
-import com.example.ananops_android.entity.InspectionTaskItem;
+import com.example.ananops_android.entity.ProjectInfo;
 
-import java.util.List;
-
-public class InspectionItemListResponse {
-
-    /**
-     * code : 200
-     * message : 操作成功
-     * result : []
-     */
-
+public class ProjectInfoResponse {
     private String code;
     private String message;
-    private List<InspectionTaskItem> result;
+    private ProjectInfo result;
 
     public String getCode() {
         return code;
@@ -32,13 +23,11 @@ public class InspectionItemListResponse {
         this.message = message;
     }
 
-    public List<InspectionTaskItem> getResult() {
+    public ProjectInfo getResult() {
         return result;
     }
 
-    public void setResult(List<InspectionTaskItem> result) {
+    public void setResult(ProjectInfo result) {
         this.result = result;
     }
-
-
 }

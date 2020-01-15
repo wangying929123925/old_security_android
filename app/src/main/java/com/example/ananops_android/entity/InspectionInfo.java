@@ -50,6 +50,40 @@ public class InspectionInfo {
     private String taskName;
     private String taskType;
     private String updateTime;
+    /**
+     * id : 799909594993266688
+     * version : null
+     * creatorId : 782515618032134145
+     * lastOperatorId : 782524300140750849
+     * pageNum : null
+     * pageSize : null
+     * orderBy : null
+     * principalId : 1
+     * facilitatorId : 4
+     * projectId : 1
+     * location : null
+     * status : 3
+     * totalCost : 100
+     * maintenanceCost : null
+     * actualFinishTime : null
+     * days : 90
+     * inspectionType : 1
+     * remark : string
+     * frequency : 30
+     */
+
+    private Long principalId;
+    private Long facilitatorId;
+    private Object location;
+    private Integer status;
+    private Float totalCost;
+    private Object maintenanceCost;
+    private Object actualFinishTime;
+    private Integer days;
+    private Integer inspectionType;
+    private String remark;
+    private Integer frequency;
+
 
     public String getCreatedTime() {
         return createdTime;
@@ -217,5 +251,93 @@ public class InspectionInfo {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Long getPrincipalId() {
+        return principalId;
+    }
+
+    public void setPrincipalId(Long principalId) {
+        this.principalId = principalId;
+    }
+
+    public Long getFacilitatorId() {
+        return facilitatorId;
+    }
+
+    public void setFacilitatorId(Long facilitatorId) {
+        this.facilitatorId = facilitatorId;
+    }
+
+    public Object getLocation() {
+        return location;
+    }
+
+    public void setLocation(Object location) {
+        this.location = location;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Float getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(Float totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public Object getMaintenanceCost() {
+        return maintenanceCost;
+    }
+
+    public void setMaintenanceCost(Object maintenanceCost) {
+        this.maintenanceCost = maintenanceCost;
+    }
+
+    public Object getActualFinishTime() {
+        return actualFinishTime;
+    }
+
+    public void setActualFinishTime(Object actualFinishTime) {
+        this.actualFinishTime = actualFinishTime;
+    }
+
+    public Integer getDays() {
+        return days;
+    }
+
+    public void setDays(Integer days) {
+        this.days = days;
+    }
+
+    public Integer getInspectionType() {
+        return inspectionType;
+    }
+
+    public void setInspectionType(Integer inspectionType) {
+        this.inspectionType = inspectionType;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Integer getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(Integer frequency) {
+        this.frequency = frequency;
     }
 }

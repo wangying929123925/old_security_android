@@ -86,8 +86,8 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
         holder.order_item_contract.setText(String.valueOf(repairContent.getContractId()));
         holder.order_item_time.setText(repairContent.getAppointTime());
        holder.order_item_status.setText(BaseUtils.getInstence().statusNumConvertString(repairContent.getStatus()));
-        switch (SPUtils.getInstance().getString("role_code","user_watcher")){
-            case "user_watcher":
+        switch (SPUtils.getInstance().getInt("role_num",1)){
+            case 1:
                 switch (repairContent.getStatus()){
                     case 1:
                         holder.relative_button.setVisibility(View.VISIBLE);
@@ -109,7 +109,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                             break;
                 }
                 break;
-            case "fac_service":
+            case 2:
                 switch (repairContent.getStatus()){
                     case 3:
                         holder.relative_button.setVisibility(View.VISIBLE);
@@ -126,7 +126,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         break;
                 }
                 break;
-            case "engineer":
+            case 3:
                 switch (repairContent.getStatus()){
                     case 4:
                         holder.relative_button.setVisibility(View.VISIBLE);
@@ -148,7 +148,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         break;
                 }
                 break;
-            case "user_leader":
+            case 4:
                 switch (repairContent.getStatus()){
             case 2:
                 holder.relative_button.setVisibility(View.VISIBLE);
@@ -214,8 +214,8 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
               //  mContext.startActivity(intent1);
                 break;
             case R.id.order_item_button1:
-                switch (SPUtils.getInstance().getString("role_code","user_watcher")){
-                    case "user_watcher":
+                switch (SPUtils.getInstance().getInt("role_num",1)){
+                    case 1:
                         switch (repairContent.getStatus()){
                             case 10:
                                 Toast.makeText(mContext, "你点击了合格按钮" , Toast.LENGTH_SHORT).show();
@@ -230,7 +230,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 break;
                         }
                         break;
-                    case "fac_service":
+                    case 2:
                         switch (repairContent.getStatus()){
                             case 3:
                                 Toast.makeText(mContext, "接单派工" , Toast.LENGTH_SHORT).show();
@@ -246,7 +246,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 break;
                         }
                         break;
-                    case "engineer":
+                    case 3:
                         switch (repairContent.getStatus()){
                             case 4:
                                 Toast.makeText(mContext, "你点击了去接单按钮" , Toast.LENGTH_SHORT).show();
@@ -256,7 +256,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                             default:
                                 break;
                         }
-                    case "user_leader":
+                    case 4:
                         switch (repairContent.getStatus()){
                             case 2:
                                 Toast.makeText(mContext, "你点击了通过按钮" , Toast.LENGTH_SHORT).show();
@@ -276,8 +276,8 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                 }
                 break;
             case R.id.order_item_button2:
-                switch (SPUtils.getInstance().getString("role_code","user_watcher")){
-                        case "user_watcher":
+                switch (SPUtils.getInstance().getInt("role_num",1)){
+                        case 1:
                             switch (repairContent.getStatus()){
                                 case 10:
                                     Toast.makeText(mContext, "你点击了不合格按钮" , Toast.LENGTH_SHORT).show();
@@ -301,7 +301,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     break;
                             }
                             break;
-                        case "fac_service":
+                        case 2:
                             switch (repairContent.getStatus()){
                                 case 3:
                                     Toast.makeText(mContext, "你点击了不接单按钮" , Toast.LENGTH_SHORT).show();
@@ -317,7 +317,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     break;
                             }
                             break;
-                        case "engineer":
+                        case 3:
                             switch (repairContent.getStatus()){
                                 case 4:
                                     Toast.makeText(mContext, "你点击了去不接单按钮" , Toast.LENGTH_SHORT).show();
@@ -341,7 +341,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 default:
                                     break;
                             }
-                        case "user_leader":
+                        case 4:
                             switch (repairContent.getStatus()){
                                 case 2:
                                     Toast.makeText(mContext, "你点击了不合格按钮" , Toast.LENGTH_SHORT).show();
@@ -364,8 +364,8 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                 break;
             default:
                 Toast.makeText(mContext, "即将查看工单详情" + (position + 1), Toast.LENGTH_SHORT).show();
-                switch (SPUtils.getInstance().getString("role_code","user_watcher")){
-                    case "user_watcher":
+                switch (SPUtils.getInstance().getInt("role_num",1)){
+                    case 1:
                         switch (repairContent.getStatus()){
                             case 1:
                                 Bundle bundle=new Bundle();
@@ -394,7 +394,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 break;
                         }
                         break;
-                    case "fac_service":
+                    case 2:
                         switch (repairContent.getStatus()){
                             case 3:
                                 Bundle bundle=new Bundle();
@@ -416,7 +416,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 break;
                         }
                         break;
-                    case "engineer":
+                    case 3:
                         switch (repairContent.getStatus()){
                             case 4:
                                 Bundle bundle=new Bundle();
@@ -444,7 +444,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 break;
                         }
                         break;
-                    case "user_leader":
+                    case 4:
                         switch (repairContent.getStatus()){
                             case 2:
                                 Bundle bundle=new Bundle();

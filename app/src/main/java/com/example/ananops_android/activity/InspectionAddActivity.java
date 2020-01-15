@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -27,8 +26,8 @@ import com.example.ananops_android.entity.InspectionAddContent;
 import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.InspectionTaskItem;
 import com.example.ananops_android.entity.ProjectInfo;
-import com.example.ananops_android.entity.Replacement;
 import com.example.ananops_android.net.Net;
+import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
 
 import java.util.ArrayList;
@@ -101,10 +100,10 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
         mAdapter = new ListCommonAdapter<InspectionTaskItem>(getApplicationContext(), R.layout.item_inspection_sublist, inspectionTaskItems) {
             @Override
             protected void convert(ListViewHolder viewHolder, InspectionTaskItem inspectionTaskItem, int position) {
-                viewHolder.setText(R.id.inspection_sub_name, inspectionTaskItem.getItemName());//名称
-                viewHolder.setText(R.id.inspection_sub_id, String.valueOf(inspectionTaskItem.getId()));//id
-                viewHolder.setText(R.id.inspection_sub_maintainer, inspectionTaskItem.getMaintainerName());//类型
-                viewHolder.setText(R.id.inspection_sub_time, inspectionTaskItem.getUpdateTime());//价格
+                viewHolder.setText(R.id.inspection_name, inspectionTaskItem.getItemName());//名称
+                viewHolder.setText(R.id.inspection_id, String.valueOf(inspectionTaskItem.getId()));//id
+                viewHolder.setText(R.id.inspection_maintainername, inspectionTaskItem.getMaintainerName());//类型
+                viewHolder.setText(R.id.inspection_updateTime, inspectionTaskItem.getUpdateTime());//价格
             }
         };
         recyclerView.setAdapter(mAdapter);
@@ -126,8 +125,10 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
         switch (v.getId()) {
             case R.id.et_project_name:
                 showChooseDislog(v,projectArray,et_project_name,1);
-                if(projectInfos.size()>projectTemp){
-                inspectionInfos=getInspectionList(inspectionInfos,projectInfos.get(projectTemp).getId());}
+                Log.d("projectTemp",projectTemp+"");
+                if(projectInfos.size()>projectTemp) {
+                    //  inspectionInfos=getInspectionList(inspectionInfos,projectInfos.get(projectTemp).getId());}
+                }
                 break;
             case R.id.et_inspection_name:
                 showChooseDislog(v,inspectionArray,et_inspection_name,2);
@@ -150,6 +151,11 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
             case R.id.basicinfo_back:
                 showExitAlertDialog(v);
                 break;
+            case R.id.inspection_add_confirm:
+                submitInspection();
+                break;
+                default:
+                    break;
         }
     }
 
@@ -242,11 +248,18 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
                                 inspectionInfoList.clear();
                                 if (inspectionListResponse.getResult().size() > 0) {
                                     inspectionArray = new String[inspectionListResponse.getResult().size()];
+                                    Log.v("巡检列表数",inspectionArray.length+"");
                                     for (int i = 0; i < inspectionListResponse.getResult().size(); i++) {
                                         inspectionInfoList.add(inspectionListResponse.getResult().get(i));
-                                        inspectionArray[i] = inspectionListResponse.getResult().get(i).getTaskName();
+                                        if(inspectionListResponse.getResult().get(i).getTaskName()!=null){
+                                        inspectionArray[i] = inspectionListResponse.getResult().get(i).getTaskName();}
+                                        else {
+                                            inspectionArray[i]="null" ;
+                                        }
+                                        Log.v("巡检列表名", inspectionListResponse.getResult().get(i).getTaskName() + "");
                                     }
                                     Log.v("巡检列表1", inspectionListResponse.getResult().get(0).getId() + "");
+                                    Log.v("inspectionArray[1]",inspectionArray[0]+ "");
                                 } else {
                                     Toast.makeText(mContext, "无巡检列表！", Toast.LENGTH_LONG).show();
                                 }
@@ -321,6 +334,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
                         if (type == 1) {
                             Log.v("projectName", item[which]);
                             projectTemp = which;
+                            inspectionInfos=getInspectionList(inspectionInfos,projectInfos.get(projectTemp).getId());
                         } else if (type == 2) {
                             Log.v("inspectionName", item[which]);
                             inspectionTemp = which;
@@ -339,9 +353,10 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
     private void setInspectionInfo(int i){
         Log.v("巡检列表N",i+"");
         if(inspectionInfos.size()>i){
-        et_inspection_time.setText(String.valueOf(inspectionInfos.get(i).getCycleTime()));
-        et_start_time.setText(inspectionInfos.get(i).getScheduledStartTime());
-        et_plan_time.setText(inspectionInfos.get(i).getScheduledFinishTime());
+            if(inspectionInfos.get(i).getCycleTime()!=null){
+        et_inspection_time.setText(String.valueOf(inspectionInfos.get(i).getCycleTime()));}
+            et_start_time.setText(inspectionInfos.get(i).getScheduledStartTime());
+            et_plan_time.setText(inspectionInfos.get(i).getScheduledFinishTime());
         et_inspection_content.setText(inspectionInfos.get(i).getInspectionContent());
         et_inspection_tip.setText(inspectionInfos.get(i).getInspectionCondition());
         }
@@ -367,6 +382,19 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
             }
         } else {
             Toast.makeText(mContext, "请选择巡检子项！", Toast.LENGTH_SHORT).show();
+            return;
         }
+        inspectionAddContent.setImcAddInspectionItemDtoList(inspectionTaskItemList1);
+        inspectionAddContent.setLoginAuthDto(new InspectionAddContent.LoginAuthDtoBean());
+        inspectionAddContent.setProjectId(projectInfos.get(projectTemp).getId());
+        inspectionAddContent.setFacilitatorGroupId(1L);
+        inspectionAddContent.setFacilitatorId(1L);
+        inspectionAddContent.setFacilitatorManagerId(1L);
+        inspectionAddContent.setPrincipalId(1L);
+        inspectionAddContent.setFrequency(inspectionInfos.get(inspectionTemp).getCycleTime());
+        inspectionAddContent.setInspectionType(1);
+        inspectionAddContent.setUserId(1L);
+        InspectionUtils.getInstence().addInspection(inspectionAddContent,mContext);
     }
+
 }

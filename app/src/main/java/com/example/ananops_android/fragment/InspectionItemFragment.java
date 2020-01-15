@@ -21,20 +21,22 @@ import com.example.ananops_android.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InspectionFragment extends Fragment {
+public class InspectionItemFragment extends Fragment {
     private RecyclerView myRV;
     private List<String> names = new ArrayList<>();
     private List<String> values = new ArrayList<>();
+    private static String inspectionId;
 
     //Fragment中构造方法中不能传递参数
     //通过下面的方式 能将参数传进InspectionFragment中
-    public static InspectionFragment newIntance(ArrayList<String> names,ArrayList<String> values) {
-        InspectionFragment inspectionFragment = new InspectionFragment();
+    public static InspectionItemFragment newIntance(String id,ArrayList<String> names, ArrayList<String> values) {
+        InspectionItemFragment inspectionItemFragment = new InspectionItemFragment();
         Bundle bundle = new Bundle();
+        bundle.putString("id",id);
         bundle.putStringArrayList("data", names);
         bundle.putStringArrayList("value", values);
-        inspectionFragment.setArguments(bundle);
-        return inspectionFragment;
+        inspectionItemFragment.setArguments(bundle);
+        return inspectionItemFragment;
     }
 
     @Nullable
@@ -42,6 +44,7 @@ public class InspectionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_show, container, false);
         Bundle bundle = getArguments();
+        inspectionId = bundle.getString("id");
         names = bundle.getStringArrayList("data");
         values = bundle.getStringArrayList("value");
         myRV = view.findViewById(R.id.rv_inspection);

@@ -132,7 +132,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private void initViews() {
         et_project_name=findViewById(R.id.et_project_name);//项目名
         et_repair_person=findViewById(R.id.et_repair_person);//报修人
-        repair_listid=findViewById(R.id.et_repair_listid);
+        repair_listid=findViewById(R.id.et_repair_facname);
         et_repair_tel=findViewById(R.id.et_repair_tel);
         repair_time=findViewById(R.id.et_repair_time);
         fault_type=findViewById(R.id.et_fault_type);

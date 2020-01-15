@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mR2"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="90dp">
     <ImageView
-        android:id="@+id/inspection_sub_checkBox"
+        android:id="@+id/inspection_sub"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:paddingLeft="10dp"
@@ -15,44 +16,44 @@
         android:focusable="false"
         />
     <TextView
-        android:id="@+id/inspection_sub_name"
+        android:id="@+id/Plist_name"
         android:layout_width="match_parent"
         android:paddingLeft="10dp"
         android:layout_marginTop="5dp"
         android:layout_height="20dp"
         android:textSize="14dp"
         android:textColor="@color/black"
-        android:layout_toRightOf="@+id/inspection_sub_checkBox"
+        android:layout_toRightOf="@+id/inspection_sub"
         android:singleLine="true"
         tools:text="子任务名称"
         />
     <TextView
-        android:id="@+id/inspection_sub_id"
+        android:id="@+id/Plist_id"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_toRightOf="@+id/inspection_sub_checkBox"
-        android:layout_below="@+id/inspection_sub_name"
+        android:layout_toRightOf="@+id/inspection_sub"
+        android:layout_below="@+id/Plist_name"
         tools:text="0130"
         android:textColor="@color/black"
         />
     <TextView
-        android:id="@+id/inspection_sub_maintainer"
+        android:id="@+id/Plist_type"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_toRightOf="@+id/inspection_sub_checkBox"
-        android:layout_below="@+id/inspection_sub_id"
+        android:layout_toRightOf="@+id/inspection_sub"
+        android:layout_below="@+id/Plist_id"
         android:textColor="@color/black"
         tools:text="王一"
         />
     <TextView
-        android:id="@+id/inspection_sub_time"
+        android:id="@+id/Plist_price"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_toRightOf="@+id/inspection_sub_checkBox"
-        android:layout_below="@+id/inspection_sub_maintainer"
+        android:layout_toRightOf="@+id/inspection_sub"
+        android:layout_below="@+id/Plist_type"
         tools:text="2019-12-28T06:54:20.659Z"
         android:textColor="@color/black"
         />

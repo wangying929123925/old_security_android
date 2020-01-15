@@ -1,20 +1,14 @@
 package com.example.ananops_android.db;
 
 import com.example.ananops_android.entity.InspectionTaskItem;
+import com.example.ananops_android.entity.InspectionTaskLog;
 
 import java.util.List;
 
-public class InspectionItemListResponse {
-
-    /**
-     * code : 200
-     * message : 操作成功
-     * result : []
-     */
-
+public class InspectionLogResponse {
     private String code;
     private String message;
-    private List<InspectionTaskItem> result;
+    private List<InspectionTaskLog> result;
 
     public String getCode() {
         return code;
@@ -32,13 +26,11 @@ public class InspectionItemListResponse {
         this.message = message;
     }
 
-    public List<InspectionTaskItem> getResult() {
+    public List<InspectionTaskLog> getResult() {
         return result;
     }
 
-    public void setResult(List<InspectionTaskItem> result) {
+    public void setResult(List<InspectionTaskLog> result) {
         this.result = result;
     }
-
-
 }

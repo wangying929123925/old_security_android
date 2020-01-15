@@ -76,7 +76,7 @@ public class TestResponse {
         //使用虚假数据，用Retrofit时，将不用虚拟赋值
         private String actualFinishTime = "2020-01-06T10:41:12.475Z";
         private String createdTime = "2020-01-06T10:41:12.475Z";
-        private String creator = "邢家营";
+        private String creator = "王二";
         private long creatorId = 0;
         private int days = 0;
         private long facilitatorId = 0;
