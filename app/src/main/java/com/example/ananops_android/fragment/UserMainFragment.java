@@ -450,7 +450,7 @@ private void initUserManagerData(){
                                             if (result != null) {
                                                 Bundle bundle = new Bundle();
                                                 bundle.putParcelableArrayList("result", result);
-                                                BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle,"title","巡检中");
+                                                BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle,"title","4-2");
                                             }
                                         }
                                     }

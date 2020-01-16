@@ -38,7 +38,8 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
             </RelativeLayout>
-            <include layout="@layout/fragment_user_main_nav"/>
+
+            <include layout="@layout/fragment_user_main_nav" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
