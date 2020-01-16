@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.activity.InspectionAddActivity;
+import com.example.ananops_android.activity.InspectionItemListActivity;
 import com.example.ananops_android.activity.InspectionSearchListActivity;
 import com.example.ananops_android.activity.OrderSearchListActivity;
 import com.example.ananops_android.activity.ProjectListActivity;
@@ -25,6 +26,7 @@ import com.example.ananops_android.activity.RepairAddActivity;
 import com.example.ananops_android.activity.UserOrderSearchActivitySpinner;
 import com.example.ananops_android.adapter.RepairAdapter;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersRequest;
+import com.example.ananops_android.db.AllUnDistributedWorkOrdersResponse;
 import com.example.ananops_android.db.AllUnauthorizedTaskRequest;
 import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
 import com.example.ananops_android.db.OrderRequest;
@@ -386,9 +388,10 @@ private void initUserManagerData(){
                     case 2://服务商待接单//fuwushangchakan
                      //   BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待确认");
                         break;
-                    case 3://甲方待确认
+                    case 3://维修工待接单
                       //  BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待确认");
                        // Toast.makeText(getContext(),"Ops,待执行正在开发中",Toast.LENGTH_LONG).show();
+                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,"title","3");
                         break;
                     case 4://甲方巡检申请
                      BaseUtils.getInstence().intent(getContext(), InspectionAddActivity.class);
@@ -401,9 +404,36 @@ private void initUserManagerData(){
                 switch (SPUtils.getInstance().getInt("role_num",1)){
                     case 1://
                         break;
-                    case 2://服务商待审核
-                      //  BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待审核");
-                      //  Toast.makeText(getContext(),"巡检验收",Toast.LENGTH_LONG).show();
+                    case 2://服务商待分配工程师
+                        final AllUnDistributedWorkOrdersRequest allUnDistributedWorkOrdersRequest = new AllUnDistributedWorkOrdersRequest();
+                       allUnDistributedWorkOrdersRequest.setType("inspection");
+                        Net.instance.getAllUnDistributedWorkOrder(allUnDistributedWorkOrdersRequest, SPUtils.getInstance().getString("Token", " "))
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<AllUnDistributedWorkOrdersResponse>() {
+                                    @Override
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.v("ErrorGetUnauthorTask", System.currentTimeMillis() + "");
+                                        e.printStackTrace();
+                                    }
+
+                                    @Override
+                                    public void onNext(AllUnDistributedWorkOrdersResponse allUnDistributedWorkOrdersResponse) {
+                                        if (TextUtils.equals(allUnDistributedWorkOrdersResponse.getCode(),"200")) {
+                                            ArrayList<InspectionInfo> result = allUnDistributedWorkOrdersResponse.getResult().getList();
+                                            if (result != null) {
+                                                Bundle bundle = new Bundle();
+                                                bundle.putParcelableArrayList("result", result);
+                                                BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle,"title","2-2");
+                                            }
+                                        }
+                                    }
+                                });
                         break;
                     case 3://维修工巡检中
                      //   Toast.makeText(getContext(),"巡检中",Toast.LENGTH_LONG).show();

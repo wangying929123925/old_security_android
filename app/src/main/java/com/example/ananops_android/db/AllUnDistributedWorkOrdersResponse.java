@@ -2,6 +2,7 @@ package com.example.ananops_android.db;
 
 import com.example.ananops_android.entity.InspectionInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AllUnDistributedWorkOrdersResponse {
@@ -12,15 +13,15 @@ public class AllUnDistributedWorkOrdersResponse {
      * result : {"pageNum":1,"pageSize":0,"size":0,"startRow":0,"endRow":0,"total":"0","pages":0,"list":[],"prePage":0,"nextPage":0,"isFirstPage":true,"isLastPage":true,"hasPreviousPage":false,"hasNextPage":false,"navigatePages":8,"navigatepageNums":[],"navigateFirstPage":0,"navigateLastPage":0,"firstPage":0,"lastPage":0}
      */
 
-    private int code;
+    private String code;
     private String message;
     private ResultBean result;
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -70,7 +71,7 @@ public class AllUnDistributedWorkOrdersResponse {
         private Integer startRow;
         private Integer endRow;
         private Float total;
-        private List<InspectionInfo> list;
+        private ArrayList<InspectionInfo> list;
 
         public Integer getPageNum() {
             return pageNum;
@@ -120,11 +121,11 @@ public class AllUnDistributedWorkOrdersResponse {
             this.total = total;
         }
 
-        public List<?> getList() {
+        public ArrayList<InspectionInfo> getList() {
             return list;
         }
 
-        public void setList(List<InspectionInfo> list) {
+        public void setList(ArrayList<InspectionInfo> list) {
             this.list = list;
         }
 

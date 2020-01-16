@@ -109,7 +109,6 @@ public class ProjectListActivity extends AppCompatActivity {
         noResult=findViewById(R.id.no_result_text);
         imageBack=findViewById(R.id.img_back);
         title.setText("项目列表");
-
         mAdapter = new ListCommonAdapter<ProjectInfo>(getApplicationContext(), R.layout.item_project_list, projectInfos) {
             @Override
             protected void convert(ListViewHolder viewHolder,ProjectInfo projectInfo, int position) {

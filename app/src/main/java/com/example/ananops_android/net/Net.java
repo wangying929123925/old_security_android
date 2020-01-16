@@ -1,17 +1,21 @@
 package com.example.ananops_android.net;
 
+import com.example.ananops_android.db.AcceptInspectionItemRequest;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersRequest;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersResponse;
 import com.example.ananops_android.db.AllUnauthorizedTaskRequest;
 import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
+import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
+import com.example.ananops_android.db.InspectionEngineerDistributeRequest;
 import com.example.ananops_android.db.InspectionItemListImcRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
 import com.example.ananops_android.db.InspectionListByProjectRequest;
 import com.example.ananops_android.db.InspectionListResponse;
 import com.example.ananops_android.db.InspectionLogResponse;
 import com.example.ananops_android.db.InspectionLogsRequest;
+import com.example.ananops_android.db.InspectionQueryByStatusAndIdRequest;
 import com.example.ananops_android.db.ProjectInfoResponse;
 import com.example.ananops_android.db.ProjectListResponse;
 import com.example.ananops_android.db.LoginResponse;
@@ -135,7 +139,7 @@ public interface Net {
     //添加巡检
     @POST("/imc/inspectionTask/save")
     Observable<CodeMessageResponse>addInspectionInfo(@Body InspectionAddContent saveInspectionTask,@Header("Authorization") String postToken);
-    //甲方负责人查询未分配工程师的巡检单
+    //服务商查询未分配工程师的巡检单
     @POST("spc/workorder/getAllUnDistributedWorkOrder")
     Observable<AllUnDistributedWorkOrdersResponse>getAllUnDistributedWorkOrder(@Body AllUnDistributedWorkOrdersRequest WorkOrderStatusQueryDto, @Header("Authorization") String postToken);
 
@@ -143,14 +147,20 @@ public interface Net {
     @POST("/imc/inspectionTask/getAllUnauthorizedTask")
     Observable<AllUnauthorizedTaskResponse> getAllUnauthorizedTask(@Body AllUnauthorizedTaskRequest allUnauthorizedTaskRequest, @Header("Authorization") String postToken);
 
-
-  //甲方负责人查询未分配工程师巡检单的详细信息
+  //服务商查询未分配工程师巡检单的详细信息
     @POST("/spc/workorder/getSpcWorkOrderById")
     Observable<UnDistrbutedInspectionDetailResponse>getSpcWorkOrderById(@Body UnDistrbutedInspectionDetailRequest WorkOrderStatusQueryDto,@Header("Authorization") String postToken);
-    //为巡检子项分配工程师
-    //维修工程师查询未接单子项
+    //服务商为巡检子项分配工程师
+    @POST("/spc/workorder/distributeEngineerWithMdmcOrder")
+    Observable<CodeMessageResponse>inspectionDistributeEngineer(@Body InspectionEngineerDistributeRequest engineerDistributeDto,@Header("Authorization") String postToken);
+    //维修工程师查询未接单子项,状态2//g根据状态和ID查询单据
+    @POST("/imc/inspectionItem/getItemByMaintainerIdAndStatus")
+    Observable<InspectionItemListResponse>getInspectionItemByMaintainerIdAndStatus(@Body InspectionQueryByStatusAndIdRequest getItemByMaintainerIdAndStatus,@Header("Authorization") String postToken);
+
     //维修工程师接单
+    @POST("/imc/inspectionItem/acceptItemByMaintainer")
+    Observable<CodeMessageResponse> acceptItemByMaintainer(@Body AcceptInspectionItemRequest confirmImcItemDto, @Header("Authorization") String postToken);
     //修改状态
-
-
+    @POST("/imc/inspectionItem/modifyItemStatusByItemId")
+    Observable<CodeMessageResponse>modifyItemStatusByItemId(@Body ChangeInspectionItemStatusRequest modifyItemStatus);
 }

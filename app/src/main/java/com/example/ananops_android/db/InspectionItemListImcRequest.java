@@ -43,7 +43,7 @@ public class InspectionItemListImcRequest {
     }
 
     public void setOrderBy(String orderBy) {
-        this.orderBy = orderBy;
+        this.orderBy = "string";
     }
 
     public int getPageNum() {
@@ -83,6 +83,6 @@ public class InspectionItemListImcRequest {
     }
 
     public void setUserId(int userId) {
-        this.userId = userId;
+        this.userId = 0;
     }
 }
