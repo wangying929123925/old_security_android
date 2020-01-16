@@ -85,46 +85,8 @@ public List<InspectionInfo> getInspectionList(final List<InspectionInfo> inspect
     return inspectionInfoList;
 }
 
-//查询 获取项目巡检列表
-    public List<InspectionInfo> getInspectionListByProjectId(final List<InspectionInfo> inspectionInfoList,Long projectId,final Context mContext){
-    if (projectId != null) {
-        InspectionListByProjectRequest inspectionListByProjectRequest=new InspectionListByProjectRequest();
-        inspectionListByProjectRequest.setProjectId(projectId);
-        Net.instance.getInspectionListByProjectId(inspectionListByProjectRequest, SPUtils.getInstance().getString("Token", " "))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<InspectionListResponse>() {
-                    @Override
-                    public void onCompleted() {
 
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.v("ErrorGetInspection_pro", System.currentTimeMillis() + "");
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(InspectionListResponse inspectionListResponse) {
-                        if (TextUtils.equals(inspectionListResponse.getCode(), "200")) {
-                            inspectionInfoList.clear();
-                            if (inspectionListResponse.getResult().size() > 0) {
-                                inspectionInfoList.addAll(inspectionListResponse.getResult());
-                                Log.v("巡检列表1", inspectionListResponse.getResult().get(0).getId() + "");
-                            } else {
-                                Toast.makeText(mContext, "无巡检列表！", Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Toast.makeText(mContext, inspectionListResponse.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-    } else {
-        Toast.makeText(mContext,"请选择项目！", Toast.LENGTH_LONG).show();
-    }
-    return inspectionInfoList;
-}
 //获取巡检详情
 
     //获取巡检子项

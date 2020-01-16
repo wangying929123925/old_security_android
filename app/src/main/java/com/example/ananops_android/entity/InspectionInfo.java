@@ -1,6 +1,9 @@
 package com.example.ananops_android.entity;
 
-public class InspectionInfo {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class InspectionInfo implements Parcelable {
 
     /**
      * createdTime : 2019-12-28T01:42:04.527Z
@@ -32,7 +35,7 @@ public class InspectionInfo {
     private String createdTime;
     private String creator;
     private Long creatorId;
-    private Integer cycleTime;
+    private int cycleTime;
     private String deadlineTime;
     private String dealResult;
     private String description;
@@ -74,15 +77,15 @@ public class InspectionInfo {
 
     private Long principalId;
     private Long facilitatorId;
-    private Object location;
-    private Integer status;
-    private Float totalCost;
-    private Object maintenanceCost;
-    private Object actualFinishTime;
-    private Integer days;
-    private Integer inspectionType;
+    private String location;
+    private int status;
+    private float totalCost;
+    private float maintenanceCost;
+    private String actualFinishTime;
+    private int days;
+    private int inspectionType;
     private String remark;
-    private Integer frequency;
+    private int frequency;
 
 
     public String getCreatedTime() {
@@ -109,11 +112,11 @@ public class InspectionInfo {
         this.creatorId = creatorId;
     }
 
-    public Integer getCycleTime() {
+    public int getCycleTime() {
         return cycleTime;
     }
 
-    public void setCycleTime(Integer cycleTime) {
+    public void setCycleTime(int cycleTime) {
         this.cycleTime = cycleTime;
     }
 
@@ -269,59 +272,59 @@ public class InspectionInfo {
         this.facilitatorId = facilitatorId;
     }
 
-    public Object getLocation() {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation(Object location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
-    public Integer getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
-    public Float getTotalCost() {
+    public float getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(Float totalCost) {
+    public void setTotalCost(float totalCost) {
         this.totalCost = totalCost;
     }
 
-    public Object getMaintenanceCost() {
+    public float getMaintenanceCost() {
         return maintenanceCost;
     }
 
-    public void setMaintenanceCost(Object maintenanceCost) {
+    public void setMaintenanceCost(float maintenanceCost) {
         this.maintenanceCost = maintenanceCost;
     }
 
-    public Object getActualFinishTime() {
+    public String getActualFinishTime() {
         return actualFinishTime;
     }
 
-    public void setActualFinishTime(Object actualFinishTime) {
+    public void setActualFinishTime(String actualFinishTime) {
         this.actualFinishTime = actualFinishTime;
     }
 
-    public Integer getDays() {
+    public int getDays() {
         return days;
     }
 
-    public void setDays(Integer days) {
+    public void setDays(int days) {
         this.days = days;
     }
 
-    public Integer getInspectionType() {
+    public int getInspectionType() {
         return inspectionType;
     }
 
-    public void setInspectionType(Integer inspectionType) {
+    public void setInspectionType(int inspectionType) {
         this.inspectionType = inspectionType;
     }
 
@@ -333,11 +336,99 @@ public class InspectionInfo {
         this.remark = remark;
     }
 
-    public Integer getFrequency() {
+    public int getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(Integer frequency) {
+    public void setFrequency(int frequency) {
         this.frequency = frequency;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(createdTime);
+        dest.writeString(creator);
+        dest.writeLong(creatorId);
+        dest.writeInt(cycleTime);
+        dest.writeString(deadlineTime);
+        dest.writeString(dealResult);
+        dest.writeString(description);
+        dest.writeLong(id);
+        dest.writeString(inspectionCondition);
+        dest.writeString(inspectionContent);
+        dest.writeInt(isNow);
+        dest.writeString(lastOperator);
+        dest.writeLong(lastOperatorId);
+        dest.writeString(orderBy);
+        dest.writeLong(projectId);
+        dest.writeString(projectName) ;
+        dest.writeString(scheduledFinishTime);
+        dest.writeString(scheduledStartTime);
+        dest.writeString(taskName);
+        dest.writeString(taskType);
+        dest.writeString(updateTime);
+        dest.writeLong(principalId);
+        dest.writeLong(facilitatorId);
+        dest.writeString(location);
+        dest.writeInt( status);
+        dest.writeFloat(totalCost);
+        dest.writeFloat(maintenanceCost);
+        dest.writeString(actualFinishTime);
+        dest.writeInt(days);
+        dest.writeInt(inspectionType);
+        dest.writeString(remark);
+        dest.writeInt(frequency);
+    }
+
+    public static final Parcelable.Creator<InspectionInfo> CREATOR = new Creator<InspectionInfo>() {
+        @Override
+        public InspectionInfo createFromParcel(Parcel source) {
+            InspectionInfo inspectionInfo = new InspectionInfo();
+            inspectionInfo.setCreatedTime(source.readString());
+            inspectionInfo.setCreator(source.readString());
+            inspectionInfo.setCreatorId(source.readLong());
+            inspectionInfo.setCycleTime(source.readInt());
+            inspectionInfo.setDeadlineTime(source.readString());
+            inspectionInfo.setDealResult(source.readString());
+            inspectionInfo.setDescription(source.readString());
+            inspectionInfo.setId(source.readLong());
+            inspectionInfo.setInspectionCondition(source.readString());
+            inspectionInfo.setInspectionContent(source.readString());
+            inspectionInfo.setIsNow(source.readInt());
+            inspectionInfo.setLastOperator(source.readString());
+            inspectionInfo.setLastOperatorId(source.readLong());
+            inspectionInfo.setOrderBy(source.readString());
+            inspectionInfo.setProjectId(source.readLong());
+            inspectionInfo.setProjectName(source.readString()) ;
+            inspectionInfo.setScheduledFinishTime(source.readString());
+            inspectionInfo.setScheduledStartTime(source.readString());
+            inspectionInfo.setTaskName(source.readString());
+            inspectionInfo.setTaskType(source.readString());
+            inspectionInfo.setUpdateTime(source.readString());
+            inspectionInfo.setPrincipalId(source.readLong());
+            inspectionInfo.setFacilitatorId(source.readLong());
+            inspectionInfo.setLocation(source.readString());
+            inspectionInfo.setStatus(source.readInt());
+            inspectionInfo.setTotalCost(source.readFloat());
+            inspectionInfo.setMaintenanceCost(source.readFloat());
+            inspectionInfo.setActualFinishTime(source.readString());
+            inspectionInfo.setDays(source.readInt());
+            inspectionInfo.setInspectionType(source.readInt());
+            inspectionInfo.setRemark(source.readString());
+            inspectionInfo.setFrequency(source.readInt());
+            return inspectionInfo;
+        }
+
+        @Override
+        public InspectionInfo[] newArray(int size) {
+            return new InspectionInfo[size];
+        }
+    };
 }
+
+

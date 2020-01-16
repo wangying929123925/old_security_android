@@ -308,6 +308,13 @@ public class BaseUtils {
         intent.putExtra(dataName,data);
         fromContext.startActivity(intent);
     }
+
+    public void intent(Context fromContext, Class<?> cls,Bundle bundle,String dataName, String data) {
+        Intent intent = new Intent(fromContext, cls);
+        intent.putExtra(dataName,data);
+        intent.putExtras(bundle);
+        fromContext.startActivity(intent);
+    }
     /**
      * 带参数的跳转
      *

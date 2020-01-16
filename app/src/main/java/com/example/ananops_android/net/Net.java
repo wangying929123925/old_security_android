@@ -2,6 +2,8 @@ package com.example.ananops_android.net;
 
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersRequest;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersResponse;
+import com.example.ananops_android.db.AllUnauthorizedTaskRequest;
+import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.InspectionItemListImcRequest;
@@ -136,11 +138,16 @@ public interface Net {
     //甲方负责人查询未分配工程师的巡检单
     @POST("spc/workorder/getAllUnDistributedWorkOrder")
     Observable<AllUnDistributedWorkOrdersResponse>getAllUnDistributedWorkOrder(@Body AllUnDistributedWorkOrdersRequest WorkOrderStatusQueryDto, @Header("Authorization") String postToken);
-    //甲方负责人查询未分配工程师巡检单的详细信息
+
+    //甲方负责人查看未审核任务
+    @POST("/imc/inspectionTask/getAllUnauthorizedTask")
+    Observable<AllUnauthorizedTaskResponse> getAllUnauthorizedTask(@Body AllUnauthorizedTaskRequest allUnauthorizedTaskRequest, @Header("Authorization") String postToken);
+
+
+  //甲方负责人查询未分配工程师巡检单的详细信息
     @POST("/spc/workorder/getSpcWorkOrderById")
     Observable<UnDistrbutedInspectionDetailResponse>getSpcWorkOrderById(@Body UnDistrbutedInspectionDetailRequest WorkOrderStatusQueryDto,@Header("Authorization") String postToken);
     //为巡检子项分配工程师
-
     //维修工程师查询未接单子项
     //维修工程师接单
     //修改状态
