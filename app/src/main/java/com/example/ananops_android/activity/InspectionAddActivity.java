@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ananops_android.R;
+import com.example.ananops_android.adapter.DialogItemAdapter;
 import com.example.ananops_android.adapter.ListCommonAdapter;
 import com.example.ananops_android.adapter.ListViewHolder;
 import com.example.ananops_android.db.InspectionItemListResponse;
@@ -64,6 +66,9 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
     private static int projectTemp=0;
     private static int inspectionTemp=0;
     private static int inspectionItemTemp=0;
+    private SparseBooleanArray checkedArray;
+    private ListView itemList;
+    private List<InspectionTaskItem> inspectionTaskItemList1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +127,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.et_project_name:
                 showChooseDislog(v,projectArray,et_project_name,1);
@@ -144,6 +149,61 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
                 }
                 break;
             case R.id.add_dot:
+                 ListCommonAdapter mListAdapter = new ListCommonAdapter<InspectionTaskItem>(getApplicationContext(), R.layout.item_inspection_sublist, inspectionTaskItems) {
+                    @Override
+                    protected void convert(ListViewHolder viewHolder, InspectionTaskItem inspectionTaskItem, int position) {
+                        viewHolder.setText(R.id.inspection_name, inspectionTaskItem.getItemName());//名称
+                        viewHolder.setText(R.id.inspection_id, String.valueOf(inspectionTaskItem.getId()));//id
+                        viewHolder.setText(R.id.inspection_maintainername, inspectionTaskItem.getMaintainerName());//类型
+                        viewHolder.setText(R.id.inspection_updateTime, inspectionTaskItem.getUpdateTime());//价格
+                    }
+                };
+                itemList =new ListView(mContext);
+                itemList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+//                itemList.setAdapter(new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_multiple_choice, inspectionTaskItems));
+                itemList.setAdapter(mListAdapter);
+                new AlertDialog.Builder(mContext)
+                        .setTitle("多选框")
+                        .setView(itemList)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                checkedArray = itemList.getCheckedItemPositions();
+                                List<InspectionTaskItem> items = packageCheckedSub();
+                                mAdapter = new ListCommonAdapter<InspectionTaskItem>(getApplicationContext(), R.layout.item_inspection_sublist, items) {
+                                    @Override
+                                    protected void convert(ListViewHolder viewHolder, InspectionTaskItem inspectionTaskItem, int position) {
+                                        CheckBox checkBox = viewHolder.getView(R.id.inspection_sub_checkBox1);
+                                        checkBox.setChecked(true);
+                                        viewHolder.setText(R.id.inspection_name, inspectionTaskItem.getItemName());//名称
+                                        viewHolder.setText(R.id.inspection_id, String.valueOf(inspectionTaskItem.getId()));//id
+                                        viewHolder.setText(R.id.inspection_maintainername, inspectionTaskItem.getMaintainerName());//类型
+                                        viewHolder.setText(R.id.inspection_updateTime, inspectionTaskItem.getUpdateTime());//价格
+                                    }
+                                };
+                                recyclerView.setAdapter(mAdapter);
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
+//                DialogItemAdapter adapter = new DialogItemAdapter(mContext, inspectionTaskItems);
+//                AlertDialog alertDialog = new AlertDialog
+//                        .Builder(mContext)
+//                        .setAdapter(adapter, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//
+//                            }
+//                        })
+//                        .setSingleChoiceItems(adapter, 0, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                Toast.makeText(mContext, "选择了" + which, Toast.LENGTH_SHORT).show();
+//
+//                            }
+//                        }).create();
+//                alertDialog.show();
+
                 break;
             case R.id.choose_service:
                 String[]services={"1","2","3"};
@@ -286,16 +346,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
                     .subscribe(new Subscriber<InspectionItemListResponse>() {
                         @Override
                         public void onCompleted() {
-                            mAdapter = new ListCommonAdapter<InspectionTaskItem>(getApplicationContext(), R.layout.item_inspection_sublist, inspectionTaskItems) {
-                                @Override
-                                protected void convert(ListViewHolder viewHolder, InspectionTaskItem inspectionTaskItem, int position) {
-                                    viewHolder.setText(R.id.inspection_name, inspectionTaskItem.getItemName());//名称
-                                    viewHolder.setText(R.id.inspection_id, String.valueOf(inspectionTaskItem.getId()));//id
-                                    viewHolder.setText(R.id.inspection_maintainername, inspectionTaskItem.getMaintainerName());//类型
-                                    viewHolder.setText(R.id.inspection_updateTime, inspectionTaskItem.getUpdateTime());//价格
-                                }
-                            };
-                            recyclerView.setAdapter(mAdapter);
+
 //                            mAdapter.notifyDataSetChanged();
                         }
 
@@ -380,21 +431,27 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
             et_inspection_tip.setText("");
         }
     }
-    private void submitInspection() {
-        //获取选择子项
-        InspectionAddContent inspectionAddContent=new InspectionAddContent();
-        List<InspectionTaskItem> inspectionTaskItemList1=new ArrayList<>();
-        SparseBooleanArray checkedArray = recyclerView.getCheckedItemPositions();
+    private List<InspectionTaskItem> packageCheckedSub(){
+        inspectionTaskItemList1 = new ArrayList<>();
+//        checkedArray = recyclerView.getCheckedItemPositions();
         if (checkedArray.size() > 0) {
             for (int i = 0; i < checkedArray.size(); i++) {
                 if (checkedArray.valueAt(i)) {
                     //添加巡检子项
-                inspectionTaskItemList1.add(inspectionTaskItems.get(i));
+                    inspectionTaskItemList1.add(inspectionTaskItems.get(i));
                 }
             }
+            return inspectionTaskItemList1;
         } else {
             Toast.makeText(mContext, "请选择巡检子项！", Toast.LENGTH_SHORT).show();
-            return;
+            return null;
+        }
+    }
+    private void submitInspection() {
+        //获取选择子项
+        InspectionAddContent inspectionAddContent=new InspectionAddContent();
+        if (inspectionTaskItemList1 == null) {
+            Toast.makeText(mContext, "请添加网点", Toast.LENGTH_SHORT).show();
         }
         inspectionAddContent.setImcAddInspectionItemDtoList(inspectionTaskItemList1);
         inspectionAddContent.setLoginAuthDto(new InspectionAddContent.LoginAuthDtoBean());

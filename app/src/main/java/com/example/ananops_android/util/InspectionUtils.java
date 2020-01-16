@@ -224,6 +224,7 @@ public List<InspectionTaskItem> getInspectionTaskItemsImc(final List<InspectionT
                     @Override
                     public void onError(Throwable e) {
                         Log.v("ErrorAddInspection", System.currentTimeMillis() + "");
+                        Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
 
