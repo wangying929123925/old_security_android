@@ -97,16 +97,17 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
         inspection_add_confirm = findViewById(R.id.inspection_add_confirm);//确认
         basicinfo_back = findViewById(R.id.basicinfo_back);
         recyclerView = findViewById(R.id.dot_recycler_view);
-        mAdapter = new ListCommonAdapter<InspectionTaskItem>(getApplicationContext(), R.layout.item_inspection_sublist, inspectionTaskItems) {
-            @Override
-            protected void convert(ListViewHolder viewHolder, InspectionTaskItem inspectionTaskItem, int position) {
-                viewHolder.setText(R.id.inspection_name, inspectionTaskItem.getItemName());//名称
-                viewHolder.setText(R.id.inspection_id, String.valueOf(inspectionTaskItem.getId()));//id
-                viewHolder.setText(R.id.inspection_maintainername, inspectionTaskItem.getMaintainerName());//类型
-                viewHolder.setText(R.id.inspection_updateTime, inspectionTaskItem.getUpdateTime());//价格
-            }
-        };
-        recyclerView.setAdapter(mAdapter);
+//        mAdapter = new ListCommonAdapter<InspectionTaskItem>(getApplicationContext(), R.layout.item_inspection_sublist, inspectionTaskItems) {
+//            @Override
+//            protected void convert(ListViewHolder viewHolder, InspectionTaskItem inspectionTaskItem, int position) {
+//                viewHolder.setText(R.id.inspection_name, inspectionTaskItem.getItemName());//名称
+//                viewHolder.setText(R.id.inspection_id, String.valueOf(inspectionTaskItem.getId()));//id
+//                viewHolder.setText(R.id.inspection_maintainername, inspectionTaskItem.getMaintainerName());//类型
+//                viewHolder.setText(R.id.inspection_updateTime, inspectionTaskItem.getUpdateTime());//价格
+//            }
+//        };
+
+//        recyclerView.setAdapter(mAdapter);
         projectInfos=getProjectList(projectInfos);
     }
 
@@ -190,6 +191,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
                 .subscribe(new Subscriber<ProjectListResponse>() {
                     @Override
                     public void onCompleted() {
+
                     }
 
                     @Override
@@ -284,7 +286,17 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
                     .subscribe(new Subscriber<InspectionItemListResponse>() {
                         @Override
                         public void onCompleted() {
-
+                            mAdapter = new ListCommonAdapter<InspectionTaskItem>(getApplicationContext(), R.layout.item_inspection_sublist, inspectionTaskItems) {
+                                @Override
+                                protected void convert(ListViewHolder viewHolder, InspectionTaskItem inspectionTaskItem, int position) {
+                                    viewHolder.setText(R.id.inspection_name, inspectionTaskItem.getItemName());//名称
+                                    viewHolder.setText(R.id.inspection_id, String.valueOf(inspectionTaskItem.getId()));//id
+                                    viewHolder.setText(R.id.inspection_maintainername, inspectionTaskItem.getMaintainerName());//类型
+                                    viewHolder.setText(R.id.inspection_updateTime, inspectionTaskItem.getUpdateTime());//价格
+                                }
+                            };
+                            recyclerView.setAdapter(mAdapter);
+//                            mAdapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -340,7 +352,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
                             inspectionTemp = which;
                             setInspectionInfo(which);
                             inspectionTaskItems=getInspectionTaskItems(inspectionTaskItems,inspectionInfos.get(inspectionTemp).getId());
-                            refresh();
+//                            refresh();
                         } else {
                             Log.v("serviceName", item[which]);
                         }

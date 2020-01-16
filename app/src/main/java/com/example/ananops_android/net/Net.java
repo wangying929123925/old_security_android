@@ -19,6 +19,8 @@ import com.example.ananops_android.db.OrderResponse;
 import com.example.ananops_android.db.OrderTimelineResponse;
 import com.example.ananops_android.db.PostResponse;
 import com.example.ananops_android.db.RepairChangeDetail;
+import com.example.ananops_android.db.UnDistrbutedInspectionDetailRequest;
+import com.example.ananops_android.db.UnDistrbutedInspectionDetailResponse;
 import com.example.ananops_android.db.UserInformation;
 import com.example.ananops_android.entity.InspectionAddContent;
 import com.example.ananops_android.entity.RepairAddContent;
@@ -132,11 +134,13 @@ public interface Net {
     @POST("/imc/inspectionTask/save")
     Observable<CodeMessageResponse>addInspectionInfo(@Body InspectionAddContent saveInspectionTask,@Header("Authorization") String postToken);
     //甲方负责人查询未分配工程师的巡检单
-    @POST("/spc/workorder/getAllUnConfirmedWorkOrders")
-    Observable<AllUnDistributedWorkOrdersResponse>getAllUnConfirmedWorkOrders(@Body AllUnDistributedWorkOrdersRequest WorkOrderStatusQueryDto, @Header("Authorization") String postToken);
+    @POST("spc/workorder/getAllUnDistributedWorkOrder")
+    Observable<AllUnDistributedWorkOrdersResponse>getAllUnDistributedWorkOrder(@Body AllUnDistributedWorkOrdersRequest WorkOrderStatusQueryDto, @Header("Authorization") String postToken);
     //甲方负责人查询未分配工程师巡检单的详细信息
-
+    @POST("/spc/workorder/getSpcWorkOrderById")
+    Observable<UnDistrbutedInspectionDetailResponse>getSpcWorkOrderById(@Body UnDistrbutedInspectionDetailRequest WorkOrderStatusQueryDto,@Header("Authorization") String postToken);
     //为巡检子项分配工程师
+
     //维修工程师查询未接单子项
     //维修工程师接单
     //修改状态

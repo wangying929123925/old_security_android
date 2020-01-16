@@ -31,7 +31,7 @@ public class CheckableLayout extends RelativeLayout implements Checkable {
 
     @Override
     public boolean isChecked() {
-        return false;
+        return mChecked;
     }
 
     @Override
