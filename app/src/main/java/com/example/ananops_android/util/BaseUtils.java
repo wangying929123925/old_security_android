@@ -70,46 +70,37 @@ public class BaseUtils {
                 statusString = "服务商待接单";
                 break;
             case 4:
-                statusString = "维修工待接单";
+                statusString = "服务商待分配工程师";
                 break;
             case 5:
-                statusString = "维修工已结单";
+                statusString = "维修工待接单";
                 break;
             case 6:
-                statusString = "待审核备件";
+                statusString = "维修工已结单";
                 break;
             case 7:
-                statusString = "维修中";
+                statusString = "待审核备件";
                 break;
             case 8:
-                statusString = "服务商待验收";
+                statusString = "管理员待审核备件";
                 break;
             case 9:
-                statusString = "待审核账单";
+                statusString = "维修中";
                 break;
             case 10:
                 statusString = "用户待验收";
                 break;
             case 11:
-                statusString = "待评价";
-                 break;
+                statusString = "管理员待确认账单";
+                break;
             case 12:
                 statusString = "待支付";
                 break;
             case 13:
-                statusString = "已完成";
-                break;
+                statusString = "待评价";
+                 break;
             case 14:
-                statusString = "服务商拒单";
-                break;
-            case 15:
-                statusString = "维修工拒单";
-                break;
-            case 16:
-                statusString = "备件审核不通过";
-                break;
-            case 17:
-                statusString = "备件审核不通过";
+                statusString = "已完成";
                 break;
            default:
                statusString = " ";
@@ -180,7 +171,7 @@ public class BaseUtils {
             case "维修工程师":
                 SPUtils.getInstance().putInt("role_num",3);
                 break;
-            case "服务商业务员":
+            case "服务商负责人":
                 SPUtils.getInstance().putInt("role_num",2);
                 break;
                  default:
@@ -212,7 +203,7 @@ public class BaseUtils {
                             for (int i = 0; i < orderResponse.getResult().size(); i++) {
                             repairContents.add(orderResponse.getResult().get(i));
                         }
-                        Toast.makeText(mContext,"repairContents"+repairContents.get(0).getId(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext,"repairContents", Toast.LENGTH_SHORT).show();
                     }
                     else{
                         Toast.makeText(mContext, orderResponse.getMessage(), Toast.LENGTH_LONG).show();

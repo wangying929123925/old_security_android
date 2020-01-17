@@ -24,7 +24,9 @@ import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.GridAdapter;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.PostResponse;
+import com.example.ananops_android.db.ProjectListResponse;
 import com.example.ananops_android.db.UserInfo;
+import com.example.ananops_android.entity.ProjectInfo;
 import com.example.ananops_android.entity.RepairAddContent;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.photopicker.PhotoPickerActivity;
@@ -33,6 +35,7 @@ import com.example.ananops_android.photopicker.SelectModel;
 import com.example.ananops_android.photopicker.intent.PhotoPickerIntent;
 import com.example.ananops_android.photopicker.intent.PhotoPreviewIntent;
 import com.example.ananops_android.util.BaseUtils;
+import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
 
 import org.json.JSONArray;
@@ -73,9 +76,13 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private static final int REQUEST_CAMERA_CODE = 10;
     private static final int REQUEST_PREVIEW_CODE = 20;
     private ArrayList<String> imagePaths = new ArrayList<>();//图片
+    private int projectTmp=0;
     private String tmp="";
     private String[] result = new String[4];
+    private List<ProjectInfo> projectInfos = new ArrayList<>();
+    private String[] projectArray;
     private Context mContext;
+
     private static final int REQUEST_PLACE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +166,41 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private void initDatas() {
         et_repair_person.setText(SPUtils.getInstance().getString("user_id","111"));
         et_repair_tel.setText("18801162442");
+        Net.instance.getProjectList(4L, SPUtils.getInstance().getString("Token", " "))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ProjectListResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("ErrorGetProjectList", System.currentTimeMillis() + "");
+                        e.printStackTrace();
+                        Toast.makeText(mContext, "网络异常，请检查网络状态changeStatus", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(ProjectListResponse projectListResponse) {
+                        if (TextUtils.equals(projectListResponse.getCode(), "200")) {
+                            projectInfos.clear();
+                            if (projectListResponse.getResult().size() > 0) {
+                                projectArray = new String[projectListResponse.getResult().size()];
+                                for (int i = 0; i < projectListResponse.getResult().size(); i++) {
+                                    projectInfos.add(projectListResponse.getResult().get(i));
+                                    projectArray[i] = projectListResponse.getResult().get(i).getProjectName();
+                                }
+                                Log.v("项目列表1", projectListResponse.getResult().get(0).getId() + "");
+                            } else {
+                                Toast.makeText(mContext, "无项目列表！", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(mContext, projectListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
     @Override
     protected void onResume() {
@@ -199,8 +241,8 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.et_project_name:
-                String[] item_project={"1", "2", "3"};
-                showChooseDislog(v,et_project_name,item_project);
+               // String[] item_project={"1", "2", "3"};
+                showChooseDislog1(v,projectArray,et_project_name);
                 break;
             case R.id.et_fault_type:
                 showFaultTypeAlertDialog(v) ;
@@ -332,6 +374,33 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 .create()
                 .show();
     }
+    public void showChooseDislog1(View view, final String[] item, final TextView textView) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("请选择")
+                .setSingleChoiceItems(item, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        textView.setText(item[which]);
+                        Log.v("projectName", item[which]);
+                        projectTmp = which;
+                        if(projectInfos.size()>projectTmp){
+                                repair_listid.setText(projectInfos.get(projectTmp).getPartyAName());
+                            et_repair_person.setText(projectInfos.get(projectTmp).getAleaderName());
+                            et_repair_tel.setText(projectInfos.get(projectTmp).getAleaderTel());
+                        }
+                        else {
+                            repair_listid.setText("");
+                            et_repair_person.setText("");
+                            et_repair_tel.setText("");
+                        }
+                        et_project_name.setText(projectInfos.get(projectTmp).getProjectName());
+                        dialog.dismiss();
+                    }
+                })
+                .create()
+                .show();
+    }
+
     public void showExitAlertDialog(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("未填完工单，确认退出吗？");
@@ -366,15 +435,16 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
 //        repairAddContent.getTaskItemDtoList().get(0).setDescription(fault_description.getText().toString().trim());
         repairAddContent.setAppointTime("");
         repairAddContent.setContractId(1L);
+        repairAddContent.setAddressName(et_repair_address.getText().toString().trim());
         repairAddContent.setFacilitatorId(782525013398923265L);
         repairAddContent.setId(null);
         repairAddContent.setLevel(Integer.valueOf(et_emergency_degree.getText().toString().trim()));
         repairAddContent.setPrincipalId(782516789266360321L);
-        repairAddContent.setProjectId(Long.valueOf(et_project_name.getText().toString().trim()));
+        repairAddContent.setProjectId(projectInfos.get(projectTmp).getId());
         repairAddContent.setResult(0);
         repairAddContent.setSuggestion("");
         repairAddContent.setTitle("");
-        repairAddContent.setTotalCost(2d);
+        repairAddContent.setTotalCost(2);
         repairAddContent.setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id","111")));
         repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDescription(fault_description.getText().toString().trim());
         repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceId(0L);
@@ -398,6 +468,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 Log.v("LoginTime", System.currentTimeMillis() + "");
                 e.printStackTrace();
                 Toast.makeText(RepairAddActivity.this, "网络异常，请检查网络状态后登陆", Toast.LENGTH_SHORT).show();
+                BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
             }
             @Override
             public void onNext(CodeMessageResponse codeMessageResponse) {
@@ -406,7 +477,8 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
                 }
                 else{
-                    Toast.makeText(RepairAddActivity.this,"提交失败！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RepairAddActivity.this,"服务器故障！",Toast.LENGTH_SHORT).show();
+                    BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
                 }
             }
         });

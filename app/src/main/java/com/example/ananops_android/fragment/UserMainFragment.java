@@ -316,27 +316,27 @@ private void initUserManagerData(){
                         BaseUtils.getInstence().intent(getContext(),RepairAddActivity.class);
                         break;
                     case 2://待接单
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","服务商待接单");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","3");
                         break;
                     case 3://维修工待接单
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","维修工待接单");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","5");
                         break;
                     case 4://甲方待审核
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","待审核");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","2");
                         break;
                 }
                 break;
             case R.id.main_repair_2:
                 switch (SPUtils.getInstance().getInt("role_num",1)){
                     case 1://待确认
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","值机员待确认");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","10");
                         break;
                     case 2://服务商待审核
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","待审核备件");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","7");
                         Toast.makeText(getContext(),"Ops,审核备件正在开发中",Toast.LENGTH_LONG).show();
                         break;
                     case 3://维修工已接单
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","维修工已接单");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","6");
                         break;
                     case 4://
                         Toast.makeText(getContext(),"Ops,账单支付正在开发中",Toast.LENGTH_LONG).show();
@@ -345,17 +345,17 @@ private void initUserManagerData(){
             case R.id.main_repair_3:
                 switch (SPUtils.getInstance().getInt("role_num",1)){
                     case 1://维修中
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","维修中");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","9");
                         break;
                     case 3://维修工维修中
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","维修中");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","9");
                         break;
                 }
                 break;
             case R.id.main_repair_4:
                 switch (SPUtils.getInstance().getInt("role_num",1)){
                     case 1://待验收
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","用户待验收");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","13");
                        // BaseUtils.getInstence().intent(getContext(),ContactActivity.class);
                         break;
                     case 4://
@@ -367,8 +367,8 @@ private void initUserManagerData(){
             case R.id.main_repair_5:
                 switch (SPUtils.getInstance().getInt("role_num",1)){
                     case 1://待评价
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","待评价");
-                        Toast.makeText(getContext(),"Ops,设备管理正在开发中",Toast.LENGTH_LONG).show();
+                       // BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","待评价");
+                       // Toast.makeText(getContext(),"Ops,设备管理正在开发中",Toast.LENGTH_LONG).show();
                         break;
                     case 4://
                        // Toast.makeText(getContext(),"Ops,设备管理正在开发中",Toast.LENGTH_LONG).show();
@@ -389,9 +389,7 @@ private void initUserManagerData(){
                      //   BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待确认");
                         break;
                     case 3://维修工待接单
-                      //  BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待确认");
-                       // Toast.makeText(getContext(),"Ops,待执行正在开发中",Toast.LENGTH_LONG).show();
-                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,"title","3");
+                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,"title","2");
                         break;
                     case 4://甲方巡检申请
                      BaseUtils.getInstence().intent(getContext(), InspectionAddActivity.class);
@@ -405,37 +403,39 @@ private void initUserManagerData(){
                     case 1://
                         break;
                     case 2://服务商待分配工程师
-                        final AllUnDistributedWorkOrdersRequest allUnDistributedWorkOrdersRequest = new AllUnDistributedWorkOrdersRequest();
-                       allUnDistributedWorkOrdersRequest.setType("inspection");
-                        Net.instance.getAllUnDistributedWorkOrder(allUnDistributedWorkOrdersRequest, SPUtils.getInstance().getString("Token", " "))
-                                .subscribeOn(Schedulers.newThread())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Subscriber<AllUnDistributedWorkOrdersResponse>() {
-                                    @Override
-                                    public void onCompleted() {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        Log.v("ErrorGetUnauthorTask", System.currentTimeMillis() + "");
-                                        e.printStackTrace();
-                                    }
-
-                                    @Override
-                                    public void onNext(AllUnDistributedWorkOrdersResponse allUnDistributedWorkOrdersResponse) {
-                                        if (TextUtils.equals(allUnDistributedWorkOrdersResponse.getCode(),"200")) {
-                                            ArrayList<InspectionInfo> result = allUnDistributedWorkOrdersResponse.getResult().getList();
-                                            if (result != null) {
-                                                Bundle bundle = new Bundle();
-                                                bundle.putParcelableArrayList("result", result);
-                                                BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle,"title","2-2");
-                                            }
-                                        }
-                                    }
-                                });
+                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,"title","1");
+//                        final AllUnDistributedWorkOrdersRequest allUnDistributedWorkOrdersRequest = new AllUnDistributedWorkOrdersRequest();
+//                       allUnDistributedWorkOrdersRequest.setType("inspection");
+//                        Net.instance.getAllUnDistributedWorkOrder(allUnDistributedWorkOrdersRequest, SPUtils.getInstance().getString("Token", " "))
+//                                .subscribeOn(Schedulers.newThread())
+//                                .observeOn(AndroidSchedulers.mainThread())
+//                                .subscribe(new Subscriber<AllUnDistributedWorkOrdersResponse>() {
+//                                    @Override
+//                                    public void onCompleted() {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onError(Throwable e) {
+//                                        Log.v("ErrorGetUnauthorTask", System.currentTimeMillis() + "");
+//                                        e.printStackTrace();
+//                                    }
+//
+//                                    @Override
+//                                    public void onNext(AllUnDistributedWorkOrdersResponse allUnDistributedWorkOrdersResponse) {
+//                                        if (TextUtils.equals(allUnDistributedWorkOrdersResponse.getCode(),"200")) {
+//                                            ArrayList<InspectionInfo> result = allUnDistributedWorkOrdersResponse.getResult().getList();
+//                                            if (result != null) {
+//                                                Bundle bundle = new Bundle();
+//                                                bundle.putParcelableArrayList("result", result);
+//                                                BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle,"title","2-2");
+//                                            }
+//                                        }
+//                                    }
+//                                });
                         break;
                     case 3://维修工巡检中
+                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,"title","3");
                      //   Toast.makeText(getContext(),"巡检中",Toast.LENGTH_LONG).show();
                       //  BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","巡检中");
                         break;

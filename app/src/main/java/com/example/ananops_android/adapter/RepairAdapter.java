@@ -99,7 +99,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         holder.order_item_button1.setText("合格");
                         holder.order_item_button2.setText("不合格");
                         break;
-                    case 11:
+                    case 13:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button2.setText("去评价");
                         holder.order_item_button1.setVisibility(View.INVISIBLE);
@@ -116,7 +116,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         holder.order_item_button1.setText("接单派工");
                         holder.order_item_button2.setText("不接单");
                         break;
-                    case 6:
+                    case 7:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button1.setText("通过");
                         holder.order_item_button2.setText("不通过");
@@ -128,17 +128,17 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                 break;
             case 3:
                 switch (repairContent.getStatus()){
-                    case 4:
+                    case 5:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button1.setText("去接单");
                         holder.order_item_button2.setText("不接单");
                         break;
-                    case 5:
+                    case 6:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button1.setVisibility(View.INVISIBLE);
                         holder.order_item_button2.setText("去填方案");
                         break;
-                    case 7:
+                    case 9:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button1.setVisibility(View.INVISIBLE);
                         holder.order_item_button2.setText("进入维修");
@@ -155,12 +155,12 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                 holder.order_item_button1.setText("通过");
                 holder.order_item_button2.setText("不通过");
                 break;
-            case 9:
+            case 8:
                 holder.relative_button.setVisibility(View.VISIBLE);
                 holder.order_item_button1.setText("通过");
                 holder.order_item_button2.setText("不通过");
                 break;
-            case 12:
+            case 13:
                 holder.relative_button.setVisibility(View.VISIBLE);
                 holder.order_item_button1.setVisibility(View.INVISIBLE);
                 holder.order_item_button2.setText("去支付");
@@ -219,7 +219,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         switch (repairContent.getStatus()){
                             case 10:
                                 Toast.makeText(mContext, "你点击了合格按钮" , Toast.LENGTH_SHORT).show();
-                                BaseUtils.getInstence().changeStatus(11, repairContent.getId(), "验收通过", mContext);
+                                BaseUtils.getInstence().changeStatus(12, repairContent.getId(), "验收通过", mContext);
                                 BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
                             case 1:
@@ -237,7 +237,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 BaseUtils.getInstence().changeStatus(4, repairContent.getId(), "服务商接单", mContext);
                                 BaseUtils.getInstence().intent(mContext, ContactActivity.class);
                                 break;
-                            case 6:
+                            case 8:
                                 Toast.makeText(mContext, "你点击了通过按钮" , Toast.LENGTH_SHORT).show();
                                 BaseUtils.getInstence().changeStatus(9, repairContent.getId(), "服务商审核通过", mContext);
                                 BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
@@ -248,9 +248,9 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         break;
                     case 3:
                         switch (repairContent.getStatus()){
-                            case 4:
+                            case 5:
                                 Toast.makeText(mContext, "你点击了去接单按钮" , Toast.LENGTH_SHORT).show();
-                                BaseUtils.getInstence().changeStatus(5, repairContent.getId(), "维修工接单", mContext);
+                                BaseUtils.getInstence().changeStatus(6, repairContent.getId(), "维修工接单", mContext);
                                 BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
                             default:
@@ -263,9 +263,9 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 BaseUtils.getInstence().changeStatus(3, repairContent.getId(), "提交方案", mContext);
                                 BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
-                            case 9:
+                            case 8:
                                 Toast.makeText(mContext, "你点击了合格按钮" , Toast.LENGTH_SHORT).show();
-                                BaseUtils.getInstence().changeStatus(10, repairContent.getId(), "提交方案", mContext);
+                                BaseUtils.getInstence().changeStatus(9, repairContent.getId(), "提交方案", mContext);
                                 BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
                             default:
@@ -308,7 +308,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     BaseUtils.getInstence().changeStatus(14, repairContent.getId(), "服务商不接单", mContext);
                                     BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     break;
-                                case 8:
+                                case 7:
                                     Toast.makeText(mContext, "你点击了不通过按钮" , Toast.LENGTH_SHORT).show();
                                     BaseUtils.getInstence().changeStatus(16, repairContent.getId(), "服务商不接单", mContext);
                                     BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
@@ -319,19 +319,19 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                             break;
                         case 3:
                             switch (repairContent.getStatus()){
-                                case 4:
+                                case 5:
                                     Toast.makeText(mContext, "你点击了去不接单按钮" , Toast.LENGTH_SHORT).show();
                                     BaseUtils.getInstence().changeStatus(15, repairContent.getId(), "服务商审核通过", mContext);
                                     BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     break;
-                                case 5:
+                                case 6:
                                     Toast.makeText(mContext, "你点击了填方案按钮" , Toast.LENGTH_SHORT).show();
                                     Bundle bundle0=new Bundle();
                                     bundle0.putString("order_id",repairContent.getId());
                                     bundle0.putString("status_do","3-2");
                                     BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
                                     break;
-                                case 7:
+                                case 9:
                                     Toast.makeText(mContext, "你点击了进入维修按钮" , Toast.LENGTH_SHORT).show();
                                     Bundle bundle1=new Bundle();
                                     bundle1.putString("order_id",repairContent.getId());
@@ -348,7 +348,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     BaseUtils.getInstence().changeStatus(16, repairContent.getId(), "提交方案", mContext);
                                     BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     break;
-                                case 9:
+                                case 7:
                                     Toast.makeText(mContext, "你点击了不通过按钮" , Toast.LENGTH_SHORT).show();
                                     BaseUtils.getInstence().changeStatus(17, repairContent.getId(), "提交方案", mContext);
                                     BaseUtils.getInstence().intent(mContext, UserMainActivity.class);

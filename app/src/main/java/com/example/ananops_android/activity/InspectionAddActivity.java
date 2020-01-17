@@ -417,11 +417,11 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
         Log.v("巡检列表N",i+"");
         if(inspectionInfos.size()>i){
             if(inspectionInfos.get(i).getCycleTime()!=0){
-        et_inspection_time.setText(String.valueOf(inspectionInfos.get(i).getCycleTime()));}
+                et_inspection_time.setText(String.valueOf(inspectionInfos.get(i).getCycleTime()));}
             et_start_time.setText(inspectionInfos.get(i).getScheduledStartTime());
             et_plan_time.setText(inspectionInfos.get(i).getScheduledFinishTime());
-        et_inspection_content.setText(inspectionInfos.get(i).getInspectionContent());
-        et_inspection_tip.setText(inspectionInfos.get(i).getInspectionCondition());
+            et_inspection_content.setText(inspectionInfos.get(i).getInspectionContent());
+            et_inspection_tip.setText(inspectionInfos.get(i).getInspectionCondition());
         }
         else {
             et_inspection_time.setText("");

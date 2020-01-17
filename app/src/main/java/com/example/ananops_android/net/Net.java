@@ -173,5 +173,5 @@ public interface Net {
     Observable<CodeMessageResponse> acceptItemByMaintainer(@Body AcceptInspectionItemRequest confirmImcItemDto, @Header("Authorization") String postToken);
     //修改状态
     @POST("/imc/inspectionItem/modifyItemStatusByItemId")
-    Observable<CodeMessageResponse>modifyItemStatusByItemId(@Body ChangeInspectionItemStatusRequest modifyItemStatus);
+    Observable<CodeMessageResponse>modifyItemStatusByItemId(@Body ChangeInspectionItemStatusRequest modifyItemStatus, @Header("Authorization") String postToken);
 }

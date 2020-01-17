@@ -57,8 +57,8 @@ public class OrderSearchListActivity extends AppCompatActivity implements View.O
         searchType="项目类型";
         Intent intent=getIntent();
         TITLE=intent.getStringExtra("title");
-        title.setText(TITLE);
-        int status=BaseUtils.getInstence().statusStringConvertNum(TITLE);
+        title.setText("维修列表");
+        int status= Integer.parseInt(TITLE);
         Log.v("Status",String.valueOf(status));
         OrderRequest orderRequest=new OrderRequest();
         orderRequest.setId(SPUtils.getInstance().getString("user_id",""));

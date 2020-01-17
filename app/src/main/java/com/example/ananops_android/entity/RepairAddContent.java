@@ -1,38 +1,70 @@
 package com.example.ananops_android.entity;
 
-import java.util.Date;
 import java.util.List;
 
 public class RepairAddContent {
+
     /**
-     * appointTime : 2019-12-23T09:13:51.064Z
+     * addressName : string
+     * appointTime : 2020-01-16T22:38:17.128Z
+     * call : string
      * contractId : 0
+     * deadline : 2020-01-16T22:38:17.128Z
      * facilitatorId : 0
-     * id : null
+     * id : 0
      * level : 0
-     * mdmcAddTaskItemDtoList : [{"description":"string","deviceId":0,"deviceLatitude":0,"deviceLongitude":0,"deviceType":"string","id":0,"level":"string","taskId":0,"troubleType":0}]
+     * maintainerId : 0
+     * mdmcAddTaskItemDtoList : [{"description":"string","deviceId":0,"deviceLatitude":0,"deviceLongitude":0,"deviceName":"string","deviceType":"string","id":0,"level":"string","taskId":0,"troubleType":0}]
+     * note : string
+     * objectId : 0
+     * objectType : 0
      * principalId : 0
      * projectId : 0
+     * requestLatitude : 0
+     * requestLongitude : 0
      * result : 0
+     * scheduledFinishTime : 2020-01-16T22:38:17.128Z
+     * scheduledStartTime : 2020-01-16T22:38:17.128Z
+     * status : 0
      * suggestion : string
      * title : string
      * totalCost : 0
      * userId : 0
      */
 
+    private String addressName;
     private String appointTime;
+    private String call;
     private Long contractId;
+    private String deadline;
     private Long facilitatorId;
     private Long id;
-    private Integer level;
+    private int level;
+    private Long maintainerId;
+    private String note;
+    private Long objectId;
+    private int objectType;
     private Long principalId;
     private Long projectId;
-    private Integer result;
+    private Double requestLatitude;
+    private Double requestLongitude;
+    private int result;
+    private String scheduledFinishTime;
+    private String scheduledStartTime;
+    private int status;
     private String suggestion;
     private String title;
-    private Double totalCost;
+    private int totalCost;
     private Long userId;
     private List<MdmcAddTaskItemDtoListBean> mdmcAddTaskItemDtoList;
+
+    public String getAddressName() {
+        return addressName;
+    }
+
+    public void setAddressName(String addressName) {
+        this.addressName = addressName;
+    }
 
     public String getAppointTime() {
         return appointTime;
@@ -42,36 +74,12 @@ public class RepairAddContent {
         this.appointTime = appointTime;
     }
 
-    public Integer getLevel() {
-        return level;
+    public String getCall() {
+        return call;
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public Integer getResult() {
-        return result;
-    }
-
-    public void setResult(Integer result) {
-        this.result = result;
-    }
-
-    public String getSuggestion() {
-        return suggestion;
-    }
-
-    public void setSuggestion(String suggestion) {
-        this.suggestion = suggestion;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void setCall(String call) {
+        this.call = call;
     }
 
     public Long getContractId() {
@@ -80,6 +88,14 @@ public class RepairAddContent {
 
     public void setContractId(Long contractId) {
         this.contractId = contractId;
+    }
+
+    public String getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
     }
 
     public Long getFacilitatorId() {
@@ -98,6 +114,46 @@ public class RepairAddContent {
         this.id = id;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public Long getMaintainerId() {
+        return maintainerId;
+    }
+
+    public void setMaintainerId(Long maintainerId) {
+        this.maintainerId = maintainerId;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Long getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(Long objectId) {
+        this.objectId = objectId;
+    }
+
+    public int getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(int objectType) {
+        this.objectType = objectType;
+    }
+
     public Long getPrincipalId() {
         return principalId;
     }
@@ -114,11 +170,75 @@ public class RepairAddContent {
         this.projectId = projectId;
     }
 
-    public Double getTotalCost() {
+    public Double getRequestLatitude() {
+        return requestLatitude;
+    }
+
+    public void setRequestLatitude(Double requestLatitude) {
+        this.requestLatitude = requestLatitude;
+    }
+
+    public Double getRequestLongitude() {
+        return requestLongitude;
+    }
+
+    public void setRequestLongitude(Double requestLongitude) {
+        this.requestLongitude = requestLongitude;
+    }
+
+    public int getResult() {
+        return result;
+    }
+
+    public void setResult(int result) {
+        this.result = result;
+    }
+
+    public String getScheduledFinishTime() {
+        return scheduledFinishTime;
+    }
+
+    public void setScheduledFinishTime(String scheduledFinishTime) {
+        this.scheduledFinishTime = scheduledFinishTime;
+    }
+
+    public String getScheduledStartTime() {
+        return scheduledStartTime;
+    }
+
+    public void setScheduledStartTime(String scheduledStartTime) {
+        this.scheduledStartTime = scheduledStartTime;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getSuggestion() {
+        return suggestion;
+    }
+
+    public void setSuggestion(String suggestion) {
+        this.suggestion = suggestion;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(Double totalCost) {
+    public void setTotalCost(int totalCost) {
         this.totalCost = totalCost;
     }
 
@@ -144,6 +264,7 @@ public class RepairAddContent {
          * deviceId : 0
          * deviceLatitude : 0
          * deviceLongitude : 0
+         * deviceName : string
          * deviceType : string
          * id : 0
          * level : string
@@ -155,11 +276,12 @@ public class RepairAddContent {
         private Long deviceId;
         private Double deviceLatitude;
         private Double deviceLongitude;
+        private String deviceName;
         private String deviceType;
         private Long id;
         private String level;
         private Long taskId;
-        private Integer troubleType;
+        private int troubleType;
 
         public String getDescription() {
             return description;
@@ -167,6 +289,14 @@ public class RepairAddContent {
 
         public void setDescription(String description) {
             this.description = description;
+        }
+
+        public Long getDeviceId() {
+            return deviceId;
+        }
+
+        public void setDeviceId(Long deviceId) {
+            this.deviceId = deviceId;
         }
 
         public Double getDeviceLatitude() {
@@ -185,29 +315,20 @@ public class RepairAddContent {
             this.deviceLongitude = deviceLongitude;
         }
 
+        public String getDeviceName() {
+            return deviceName;
+        }
+
+        public void setDeviceName(String deviceName) {
+            this.deviceName = deviceName;
+        }
+
         public String getDeviceType() {
             return deviceType;
         }
 
         public void setDeviceType(String deviceType) {
             this.deviceType = deviceType;
-        }
-
-
-        public String getLevel() {
-            return level;
-        }
-
-        public void setLevel(String level) {
-            this.level = level;
-        }
-
-        public Long getDeviceId() {
-            return deviceId;
-        }
-
-        public void setDeviceId(Long deviceId) {
-            this.deviceId = deviceId;
         }
 
         public Long getId() {
@@ -218,6 +339,14 @@ public class RepairAddContent {
             this.id = id;
         }
 
+        public String getLevel() {
+            return level;
+        }
+
+        public void setLevel(String level) {
+            this.level = level;
+        }
+
         public Long getTaskId() {
             return taskId;
         }
@@ -226,29 +355,12 @@ public class RepairAddContent {
             this.taskId = taskId;
         }
 
-        public Integer getTroubleType() {
+        public int getTroubleType() {
             return troubleType;
         }
 
-        public void setTroubleType(Integer troubleType) {
+        public void setTroubleType(int troubleType) {
             this.troubleType = troubleType;
         }
     }
-
-    /**
-     * appointTime : 2019-12-23T09:13:51.064Z
-     * contractId : 0
-     * facilitatorId : 0
-     * id : 0
-     * level : 0
-     * mdmcAddTaskItemDtoList : [{"description":"string","deviceId":0,"deviceLatitude":0,"deviceLongitude":0,"deviceType":"string","id":0,"level":"string","taskId":0,"troubleType":0}]
-     * principalId : 0
-     * projectId : 0
-     * result : 0
-     * suggestion : string
-     * title : string
-     * totalCost : 0
-     * userId : 0
-     */
-
 }

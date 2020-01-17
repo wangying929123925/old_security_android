@@ -123,7 +123,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                     public void onClick(View v) {
                  //通过
                   Toast.makeText(mContext, "通过", Toast.LENGTH_SHORT).show();
-                        BaseUtils.getInstence().changeStatus(11, ORDER_ID, "验收通过", mContext);
+                        BaseUtils.getInstence().changeStatus(12, ORDER_ID, "验收通过", mContext);
                         BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                     }
                 });
@@ -149,7 +149,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                     public void onClick(View v) {
                         //接单派工
                         Toast.makeText(mContext, "接单派工", Toast.LENGTH_SHORT).show();
-                        BaseUtils.getInstence().changeStatus(4, ORDER_ID, "服务商接单", mContext);
+                        BaseUtils.getInstence().changeStatus(5, ORDER_ID, "服务商接单", mContext);
                         BaseUtils.getInstence().intent(mContext, ContactActivity.class);
                     }
                 });
@@ -174,7 +174,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                     public void onClick(View v) {
                         //确认审核
                         Toast.makeText(mContext, "确认提交", Toast.LENGTH_SHORT).show();
-                        BaseUtils.getInstence().changeStatus(9, ORDER_ID, "服务商审核通过", mContext);
+                        BaseUtils.getInstence().changeStatus(8, ORDER_ID, "服务商审核通过", mContext);
                         BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                     }
                 });
@@ -191,7 +191,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                     public void onClick(View v) {
                         //维修工接单
                         Toast.makeText(mContext, "接单", Toast.LENGTH_SHORT).show();
-                        BaseUtils.getInstence().changeStatus(5, ORDER_ID, "维修工接单", mContext);
+                        BaseUtils.getInstence().changeStatus(6, ORDER_ID, "维修工接单", mContext);
                         BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                     }
                 });
@@ -216,7 +216,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void onClick(View v) {
                         //维修提交
-                        BaseUtils.getInstence().changeStatus(6, ORDER_ID, "提交方案", mContext);
+                        BaseUtils.getInstence().changeStatus(7, ORDER_ID, "提交方案", mContext);
                         postChangeRepair();
                         Toast.makeText(mContext, "确认提交", Toast.LENGTH_SHORT).show();
                         BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
@@ -234,7 +234,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                     public void onClick(View v) {
                         //维修提交
                         Toast.makeText(mContext, "确认提交", Toast.LENGTH_SHORT).show();
-                        BaseUtils.getInstence().changeStatus(9, ORDER_ID, "提交方案", mContext);
+                        BaseUtils.getInstence().changeStatus(10, ORDER_ID, "提交方案", mContext);
                         BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                     }
                 });
@@ -265,7 +265,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void onClick(View v) {
                         //确认审核
-                        BaseUtils.getInstence().changeStatus(10, ORDER_ID, "提交方案", mContext);
+                        BaseUtils.getInstence().changeStatus(9, ORDER_ID, "提交方案", mContext);
                         BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                     }
                 });

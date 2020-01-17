@@ -390,7 +390,8 @@
             android:layout_weight="1"
             android:text="服务商"
             android:gravity="center"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+           />
         <TextView
             android:id="@+id/choose_service"
             android:layout_width="0dp"
@@ -398,7 +399,8 @@
             android:layout_weight="3"
             android:text="请选择服务商"
             android:gravity="center"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            />
         <TextView
             android:id="@+id/inspection_add_confirm"
             android:layout_width="0dp"

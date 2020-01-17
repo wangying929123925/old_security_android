@@ -83,9 +83,9 @@ public class RepairCommentActivity extends AppCompatActivity implements View.OnC
          showExitAlertDialog(v);
          break;
      case R.id.comment_submit_button:
-         BaseUtils.getInstence().changeStatus(12, ORDER_ID, "提交评价",this);
+         Toast.makeText(RepairCommentActivity.this,"提交评论！",Toast.LENGTH_LONG).show();
+         BaseUtils.getInstence().changeStatus(14, ORDER_ID, "提交评价",this);
          BaseUtils.getInstence().intent(this, UserMainActivity.class);
-      Toast.makeText(RepairCommentActivity.this,"提交评论！",Toast.LENGTH_LONG).show();
       break;
      }
     }
