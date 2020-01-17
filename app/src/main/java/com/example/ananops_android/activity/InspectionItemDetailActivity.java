@@ -10,12 +10,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.FindTabAdapter;
 import com.example.ananops_android.adapter.MyFragmentPagerAdapter;
+import com.example.ananops_android.db.AcceptInspectionItemRequest;
+import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
+import com.example.ananops_android.db.InspectionEngineerDistributeRequest;
 import com.example.ananops_android.db.TestResponse;
 import com.example.ananops_android.fragment.InspectionItemFragment;
+import com.example.ananops_android.util.BaseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +39,6 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
     private LinearLayout fragment_inspection_commit;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
     private String STATUS = "1"; //有几个角色就设置几个不同的状态 对应不同fragment数据的显示
-
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -42,7 +46,8 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
         initFragment();
         initViews();
         initDatas();
-        INSPECTION_ID = getIntent().getStringExtra("inspectionId");
+        INSPECTION_ID = getIntent().getStringExtra("inspectionItemId");
+        STATUS=getIntent().getStringExtra("status");
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list_fragment,list_title);
         //viewPager设置adapter
         vp_search_order_pager.setAdapter(myFragmentPagerAdapter);
@@ -113,9 +118,8 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
         switch (STATUS) {
             //根据不同的用户权限 做小量调整
             case "1":
-
                 /*the first fragment*/
-                    //去掉乙方相关信息
+                //去掉乙方相关信息
                 List<String> subList =new ArrayList<>() ;
                 for (String s:
                         list_item1.subList(0, 5)) {  //保留前五个
@@ -166,6 +170,60 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
         title = findViewById(R.id.txt_title);//标题
         back_img=findViewById(R.id.img_back);
         title.setText("项目详情");
+        inspection_detail_button1=findViewById(R.id.order_detail_button1);
+        inspection_detail_button2=findViewById(R.id.order_detail_button2);
+        fragment_inspection_commit=findViewById(R.id.fragment_order_commit);
+        switch (STATUS){
+            case "2-2"://e
+                fragment_inspection_commit.setVisibility(View.VISIBLE);
+                inspection_detail_button1.setVisibility(View.GONE);
+                inspection_detail_button2.setVisibility(View.VISIBLE);
+                inspection_detail_button2.setText("分配工程师");
+                inspection_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //分配工程师
+                        InspectionEngineerDistributeRequest inspectionEngineerDistributeRequest = new InspectionEngineerDistributeRequest();
+                        inspectionEngineerDistributeRequest.setTaskId(Long.valueOf(INSPECTION_ID));
+                        inspectionEngineerDistributeRequest.setEngineerId(782526720958801921L);
+                         }
+                });
+                break;
+            case"3-1"://工程师接单
+                fragment_inspection_commit.setVisibility(View.VISIBLE);
+                inspection_detail_button1.setVisibility(View.GONE);
+                inspection_detail_button2.setVisibility(View.VISIBLE);
+                inspection_detail_button2.setText("接单");
+                inspection_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //确认接单
+                        AcceptInspectionItemRequest acceptInspectionItemRequest=new AcceptInspectionItemRequest();
+                        acceptInspectionItemRequest.setItemId(Long.valueOf(INSPECTION_ID)); }
+                });
+                break;
+            case "3-2"://完成改变状态
+                fragment_inspection_commit.setVisibility(View.VISIBLE);
+                inspection_detail_button1.setVisibility(View.GONE);
+                inspection_detail_button2.setVisibility(View.VISIBLE);
+                inspection_detail_button2.setText("接单");
+                inspection_detail_button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //改变状态
+                        ChangeInspectionItemStatusRequest changeInspectionItemStatusRequest = new ChangeInspectionItemStatusRequest();
+                        changeInspectionItemStatusRequest.setStatus(4);
+                        changeInspectionItemStatusRequest.setItemId(Long.valueOf(INSPECTION_ID));
+
+                    }
+                });
+                break;
+                default:
+                    fragment_inspection_commit.setVisibility(View.GONE);
+                    inspection_detail_button1.setVisibility(View.GONE);
+                    inspection_detail_button2.setVisibility(View.GONE);
+                    break;
+        }
         back_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
