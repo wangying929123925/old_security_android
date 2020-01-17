@@ -171,7 +171,7 @@ public class BaseUtils {
     }
     public void roleStringConvertNum(String roleName){
         switch (roleName){
-            case "用户管理员":
+            case "用户负责人":
                 SPUtils.getInstance().putInt("role_num",4);
                 break;
             case "用户值机员":
@@ -180,7 +180,7 @@ public class BaseUtils {
             case "维修工程师":
                 SPUtils.getInstance().putInt("role_num",3);
                 break;
-            case "服务商业务员":
+            case "服务商负责人":
                 SPUtils.getInstance().putInt("role_num",2);
                 break;
                  default:

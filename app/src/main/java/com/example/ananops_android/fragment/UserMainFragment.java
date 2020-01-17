@@ -27,6 +27,8 @@ import com.example.ananops_android.adapter.RepairAdapter;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersRequest;
 import com.example.ananops_android.db.AllUnauthorizedTaskRequest;
 import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
+import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersRequset;
+import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersResponse;
 import com.example.ananops_android.db.OrderRequest;
 import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.RepairContent;
@@ -38,6 +40,7 @@ import com.example.ananops_android.util.SPUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observer;
 import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -384,6 +387,39 @@ private void initUserManagerData(){
                        // Toast.makeText(getContext(),"Ops,巡检全部查看正在开发中",Toast.LENGTH_LONG).show();
                         break;
                     case 2://服务商待接单//fuwushangchakan
+                        GetAllUnConfirmedWorkOrdersRequset requset = new GetAllUnConfirmedWorkOrdersRequset();
+                        requset.setPageNum(0);
+                        requset.setPageSize(0);
+                        Net.instance.getAllUnConfirmedWorkOrders(requset, SPUtils.getInstance().getString("Token", " "))
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<GetAllUnConfirmedWorkOrdersResponse>() {
+                                    @Override
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+
+                                        Log.v("ErrorGetUnauthorWork", System.currentTimeMillis() + "");
+                                        e.printStackTrace();
+                                        Toast.makeText(mContext, "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                    @Override
+                                    public void onNext(GetAllUnConfirmedWorkOrdersResponse response) {
+                                        if (TextUtils.equals(response.getCode(), "200")) {
+                                            ArrayList<InspectionInfo> result = (ArrayList<InspectionInfo>) response.getResult().getList();
+                                            if (result != null) {
+                                                Bundle bundle = new Bundle();
+                                                bundle.putParcelableArrayList("result", result);
+                                                BaseUtils.getInstence().intent(getContext(), InspectionSearchListActivity.class, bundle, "title", "4-2");
+                                            }
+                                        }
+                                    }
+                                });
                      //   BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待确认");
                         break;
                     case 3://甲方待确认
