@@ -9,6 +9,7 @@ import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
 import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
+import com.example.ananops_android.db.ConfirmWorkOrderRequest;
 import com.example.ananops_android.db.InspectionEngineerDistributeRequest;
 import com.example.ananops_android.db.InspectionItemListImcRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
@@ -29,6 +30,8 @@ import com.example.ananops_android.db.RepairChangeDetail;
 import com.example.ananops_android.db.UnDistrbutedInspectionDetailRequest;
 import com.example.ananops_android.db.UnDistrbutedInspectionDetailResponse;
 import com.example.ananops_android.db.UserInformation;
+import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersRequset;
+import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersResponse;
 import com.example.ananops_android.entity.InspectionAddContent;
 import com.example.ananops_android.entity.RepairAddContent;
 
@@ -148,7 +151,6 @@ public interface Net {
     @POST("/imc/inspectionTask/getAllUnauthorizedTask")
     Observable<AllUnauthorizedTaskResponse> getAllUnauthorizedTask(@Body AllUnauthorizedTaskRequest allUnauthorizedTaskRequest, @Header("Authorization") String postToken);
 
-
     //甲方负责人通过审核
     @POST("/imc/inspectionTask/acceptImcTaskByPrincipal")
     Observable<CodeMessageResponse> acceptImcTaskByPrincipal(@Body AcceptImcTaskByPrincipalRequest acceptImcTaskByPrincipalRequest, @Header("Authorization") String postToken);
@@ -157,6 +159,13 @@ public interface Net {
     @POST("/imc/inspectionTask/denyImcTaskByPrincipal")
     Observable<CodeMessageResponse> denyImcTaskByPrincipal(@Body AcceptImcTaskByPrincipalRequest acceptImcTaskByPrincipalRequest, @Header("Authorization") String postToken);
 
+    //服务商查看未审批工单
+    @POST("/spc/workorder/getAllUnConfirmedWorkOrders")
+    Observable<GetAllUnConfirmedWorkOrdersResponse> getAllUnConfirmedWorkOrders(@Body GetAllUnConfirmedWorkOrdersRequset getAllUnConfirmedWorkOrdersRequest, @Header("Authorization") String postToken);
+
+    //服务商通过审核
+    @POST("/spc/workorder/confirmWorkOrder")
+    Observable<CodeMessageResponse> confirmWorkOrder(@Body ConfirmWorkOrderRequest acceptImcTaskByPrincipalRequest, @Header("Authorization") String postToken);
 
     ////服务商查询未分配工程师巡检单的详细信息
     @POST("/spc/workorder/getSpcWorkOrderById")

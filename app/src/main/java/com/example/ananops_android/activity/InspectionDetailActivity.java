@@ -19,6 +19,7 @@ import com.example.ananops_android.adapter.MyFragmentPagerAdapter;
 import com.example.ananops_android.db.AcceptImcTaskByPrincipalRequest;
 import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
 import com.example.ananops_android.db.CodeMessageResponse;
+import com.example.ananops_android.db.ConfirmWorkOrderRequest;
 import com.example.ananops_android.db.TestResponse;
 import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.fragment.InspectionDetailFragment;
@@ -271,6 +272,58 @@ public class InspectionDetailActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
+                        }
+                    });
+                    break;
+                case "2-1"://服务商审核通过or不通过:
+                    b1.setText("通过");
+                    b1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ConfirmWorkOrderRequest request = new ConfirmWorkOrderRequest();
+                            request.setDecision(1);
+                            ConfirmWorkOrderRequest.WorkOrderQueryDtoBean inner = new ConfirmWorkOrderRequest.WorkOrderQueryDtoBean();
+                            inner.setId(Long.parseLong(inspectionId));
+                            inner.setPageNum(0);
+                            inner.setPageSize(0);
+                            inner.setType("inspection");
+                            request.setWorkOrderQueryDto(inner);
+                            Net.instance.confirmWorkOrder(request, SPUtils.getInstance().getString("Token", " "))
+                                    .subscribeOn(Schedulers.newThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Subscriber<CodeMessageResponse>() {
+                                        @Override
+                                        public void onCompleted() {
+
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            Log.v("ErrorAcceptImcTaskBy", System.currentTimeMillis() + "");
+                                            Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
+                                            e.printStackTrace();
+                                        }
+
+                                        @Override
+                                        public void onNext(CodeMessageResponse codeMessageResponse) {
+                                            if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
+                                                Toast.makeText(mContext, "甲方负责人审核通过", Toast.LENGTH_SHORT).show();
+                                                try {
+                                                    Thread.sleep(500);
+                                                } catch (InterruptedException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                                            }
+                                        }
+                                    });
+                        }
+                    });
+                    b2.setText("不通过");
+                    b2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(mContext, "后台暂未提供接口", Toast.LENGTH_SHORT).show();
                         }
                     });
                     break;
