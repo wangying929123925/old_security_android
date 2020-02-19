@@ -48,7 +48,7 @@ public class AddressSearchActivity extends AppCompatActivity implements
     }
     private void initViews() {
        // search_content=findViewById(R.id.et_search_address);
-        back_img=findViewById(R.id.img_back);
+        back_img = findViewById(R.id.img_back);
         title=findViewById(R.id.txt_title);
         mEtSearchAdress=(EditTextWithDel)findViewById(R.id.et_search_address);
         listView=findViewById(R.id.address_list);

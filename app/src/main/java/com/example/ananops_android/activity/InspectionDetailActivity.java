@@ -323,7 +323,7 @@ public class InspectionDetailActivity extends AppCompatActivity {
                     b2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(mContext, "后台暂未提供接口", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "不通过", Toast.LENGTH_SHORT).show();
                         }
                     });
                     break;
@@ -337,7 +337,7 @@ public class InspectionDetailActivity extends AppCompatActivity {
     private void initDatas() {
         title = findViewById(R.id.txt_title);//标题
         back_img = findViewById(R.id.img_back);
-        title.setText("项目详情");
+        title.setText("巡检详情");
         back_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

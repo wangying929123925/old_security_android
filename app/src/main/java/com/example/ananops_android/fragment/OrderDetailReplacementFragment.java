@@ -9,10 +9,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,14 +24,22 @@ import android.widget.Toast;
 import com.example.ananops_android.R;
 import com.example.ananops_android.activity.ChooseReplacementActivity;
 import com.example.ananops_android.activity.RepairAddActivity;
+import com.example.ananops_android.activity.UserMainActivity;
 import com.example.ananops_android.adapter.ListCommonAdapter;
 import com.example.ananops_android.adapter.ListViewHolder;
-import com.example.ananops_android.entity.RepairContent;
+import com.example.ananops_android.db.CodeMessageResponse;
+import com.example.ananops_android.db.ReplacementOrderCreateRequest;
 import com.example.ananops_android.entity.Replacement;
+import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
+import com.example.ananops_android.util.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class OrderDetailReplacementFragment extends Fragment {
     private static String STATUS_FLAG;
@@ -37,20 +48,22 @@ public class OrderDetailReplacementFragment extends Fragment {
     private TextView tv_replacement_id;
     private TextView tv_choose_whether_replace;
     private TextView fragment_order_choose_replacement;
-    private String whether_replace="否";
+    private Button replacement_submit;
+    private String whether_replace = "否";
     private Context mContext;
-    private List<Replacement> replacementList=new ArrayList<>();
+    private List<Replacement> replacementList = new ArrayList<>();
     private ListView lv_replacement;
     private ListCommonAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_order_detail_replacement,container,false);
-        tv_whether_replace=view.findViewById(R.id.tv_whether_replace);
-        tv_replacement_id=view.findViewById(R.id.tv_replacement_id);
-        tv_choose_whether_replace=view.findViewById(R.id.tv_choose_whether_replace);
-        fragment_order_choose_replacement=view.findViewById(R.id.fragment_order_choose_replacement);
-        lv_replacement=view.findViewById(R.id.lv_replacement);
+        View view = inflater.inflate(R.layout.fragment_order_detail_replacement, container, false);
+        tv_whether_replace = view.findViewById(R.id.tv_whether_replace);
+        tv_replacement_id = view.findViewById(R.id.tv_replacement_id);
+        tv_choose_whether_replace = view.findViewById(R.id.tv_choose_whether_replace);
+        fragment_order_choose_replacement = view.findViewById(R.id.fragment_order_choose_replacement);
+        lv_replacement = view.findViewById(R.id.lv_replacement);
+        replacement_submit=view.findViewById(R.id.choose_replacement_button);
         tv_choose_whether_replace.setVisibility(View.INVISIBLE);
         fragment_order_choose_replacement.setVisibility(View.INVISIBLE);
         initView();
@@ -88,24 +101,26 @@ public class OrderDetailReplacementFragment extends Fragment {
     
     private void initData() {
         if(!(getArguments()==null)){
-        STATUS_FLAG=(String)getArguments().get("str");}
+            ORDER_ID = (String) getArguments().get("order_id");
+            STATUS_FLAG = (String) getArguments().get("str");}
         if(STATUS_FLAG=="3-2"||STATUS_FLAG.equals("3-2")){
             initDiffDetail();
         }else {
             tv_whether_replace.setText("是");
             fragment_order_choose_replacement.setVisibility(View.INVISIBLE);
-            Replacement replacement=new Replacement();
-            replacement.setRepalcement_name("易美吉双头锯-继电器（30*5*1）");
-            replacement.setRepalcement_id("1324");
-            replacement.setReplacement_type("30*50*1");
-            replacement.setReplacement_price((float) 20.00);
-            replacement.setReplacement_num(1);
+            replacement_submit.setVisibility(View.GONE);
+            Replacement replacement = new Replacement();
+            replacement.setName("易美吉双头锯-继电器（30*5*1）");
+            replacement.setId("1324");
+            replacement.setType("30*50*1");
+            replacement.setPrice((float) 20.00);
+            replacement.setCount(1);
             Replacement replacement1=new Replacement();
-            replacement1.setRepalcement_name("易美吉双头锯-继电器（20*5*1）");
-            replacement1.setRepalcement_id("4321");
-            replacement1.setReplacement_type("20*50*1");
-            replacement1.setReplacement_price((float) 40.00);
-            replacement.setReplacement_num(1);
+            replacement1.setName("易美吉双头锯-继电器（20*5*1）");
+            replacement1.setId("4321");
+            replacement1.setType("20*50*1");
+            replacement1.setPrice((float) 40.00);
+            replacement.setCount(1);
             replacementList.add(replacement);
             // replacements.add(replacement);
             // replacements.add(replacement1);
@@ -114,12 +129,12 @@ public class OrderDetailReplacementFragment extends Fragment {
         mAdapter=new ListCommonAdapter<Replacement>(getContext(),R.layout.item_replacement_table,replacementList) {
             @Override
             protected void convert(final ListViewHolder viewHolder, final Replacement replacement, final int position) {
-                viewHolder.setText(R.id.replacement_table_name,replacement.getRepalcement_name());
-                viewHolder.setText(R.id.replacement_table_id,replacement.getRepalcement_id());
-                viewHolder.setText(R.id.replacement_table_num,String.valueOf(replacement.getReplacement_num()));
-                viewHolder.setText(R.id.replacement_table_price,String.valueOf(replacement.getReplacement_price()));
-                replacementList.get(position).setReplacement_totalPricce(replacement.getReplacement_num()*replacement.getReplacement_price());
-                viewHolder.setText(R.id.replacement_table_money,String.valueOf(replacement.getReplacement_num()*replacement.getReplacement_price()));
+                viewHolder.setText(R.id.replacement_table_name,replacement.getName());
+                viewHolder.setText(R.id.replacement_table_id,replacement.getId());
+                viewHolder.setText(R.id.replacement_table_num,String.valueOf(replacement.getCount()));
+                viewHolder.setText(R.id.replacement_table_price,String.valueOf(replacement.getPrice()));
+                replacementList.get(position).setReplacement_totalPricce(replacement.getCount()*replacement.getPrice());
+                viewHolder.setText(R.id.replacement_table_money,String.valueOf(replacement.getCount()*replacement.getPrice()));
                // final int value1=viewHolder.getItemPosition();
                 viewHolder.setOnClickListener(R.id.replacement_table_num, new View.OnClickListener() {
                     @Override
@@ -138,8 +153,8 @@ public class OrderDetailReplacementFragment extends Fragment {
                                         try{
                                          num=(Integer.parseInt(et.getText().toString()));}
                                         catch (Exception e){e.printStackTrace();}
-                                        replacementList.get(value).setReplacement_num(num);
-                                        replacementList.get(value).setReplacement_totalPricce(replacementList.get(value).getReplacement_price()*num);
+                                        replacementList.get(value).setCount(num);
+                                        replacementList.get(value).setReplacement_totalPricce(replacementList.get(value).getPrice()*num);
                                         notifyDataSetChanged();
                                     }
                                 })
@@ -154,13 +169,49 @@ public class OrderDetailReplacementFragment extends Fragment {
     //维修工待接单,填写方案，提交备件选择
     private void initDiffDetail(){
         tv_choose_whether_replace.setVisibility(View.VISIBLE);
+        replacement_submit.setVisibility(View.VISIBLE);
+        replacement_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //提交备品备件申请
+                ReplacementOrderCreateRequest replacementOrderCreateRequest = new ReplacementOrderCreateRequest();
+                replacementOrderCreateRequest.setObjectId(Long.valueOf(ORDER_ID));
+                replacementOrderCreateRequest.setItems(replacementList);
+                Net.instance.ReplacementOrderCreate(replacementOrderCreateRequest, SPUtils.getInstance().getString("Token", " "))
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<CodeMessageResponse>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.v("replacementAddTime", System.currentTimeMillis() + "");
+                                e.printStackTrace();
+                                Toast.makeText(mContext, "提交失败", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onNext(CodeMessageResponse codeMessageResponse) {
+                                if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
+                                    Toast.makeText(mContext,"提交成功！",Toast.LENGTH_SHORT).show();
+                                    BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                                }
+                                else{
+                                    Toast.makeText(mContext,"服务器故障！",Toast.LENGTH_SHORT).show();
+                                    BaseUtils.getInstence().intent(getActivity(),UserMainActivity.class);
+                                }
+                            }
+                        });
+            }
+        });
         tv_whether_replace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDialog(v);
             }});
-          //  switch (whether_replace){
-
             }
             //刷新
             private void refresh(){

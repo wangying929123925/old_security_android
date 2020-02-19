@@ -58,7 +58,7 @@ public class ContactAdapter extends BaseAdapter {
         } else {
             viewHolder.tvTitle.setVisibility(View.GONE);
         }
-        viewHolder.tvName.setText(this.list.get(position).getContact_name());
+        viewHolder.tvName.setText(this.list.get(position).getName());
         return view;
     }
     final static class ViewHolder {

@@ -289,7 +289,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     BaseUtils.getInstence().changeStatus(15,repairContent.getId(), "放弃填单", mContext);
                                     BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
                                     break;
-                                case 11:
+                                case 13:
                                  //   BaseUtils.getInstence().intent(mContext, RepairCommentActivity.class,"order_id",repairContent.getRepair_id());
                                     BaseUtils.getInstence().intent(mContext, RepairCommentActivity.class);
                                     break;
@@ -379,7 +379,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 bundle1.putString("status_do","1-2");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
-                            case 11:
+                            case 13:
                                Bundle bundle2=new Bundle();
                                 bundle2.putString("order_id",repairContent.getId());
                               //  bundle2.putString("status_do","1-3");

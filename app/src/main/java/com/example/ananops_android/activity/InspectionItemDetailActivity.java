@@ -181,7 +181,7 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
     private void initDatas(){
         title = findViewById(R.id.txt_title);//标题
         back_img=findViewById(R.id.img_back);
-        title.setText("项目详情");
+        title.setText("巡检子项详情");
         inspection_detail_button1=findViewById(R.id.inspection_detail_button1);
         inspection_detail_button2=findViewById(R.id.inspection_detail_button2);
         fragment_inspection_commit=findViewById(R.id.fragment_inspection_commit);

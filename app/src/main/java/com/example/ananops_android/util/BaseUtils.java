@@ -260,6 +260,7 @@ public class BaseUtils {
                       Log.v("LoginTime", System.currentTimeMillis() + "");
                       e.printStackTrace();
                       Toast.makeText(mContext, "网络异常，请检查网络状态changeStatus", Toast.LENGTH_SHORT).show();
+                      BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                   }
 
                   @Override
@@ -267,6 +268,7 @@ public class BaseUtils {
                       if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
                           Log.v("操作成功", System.currentTimeMillis() + "");
                           Toast.makeText(mContext,"操作成功！",Toast.LENGTH_SHORT).show();
+                          BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                       }
                       else{
                           Toast.makeText(mContext,"操作失败！",Toast.LENGTH_SHORT).show();
@@ -275,7 +277,6 @@ public class BaseUtils {
                   }
               });
     }
-    
     /**
      * 不带参数的跳转
      *

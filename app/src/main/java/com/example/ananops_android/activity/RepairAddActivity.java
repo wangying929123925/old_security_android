@@ -465,9 +465,9 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
 
             @Override
             public void onError(Throwable e) {
-                Log.v("LoginTime", System.currentTimeMillis() + "");
+                Log.v("LoginAddTime", System.currentTimeMillis() + "");
                 e.printStackTrace();
-                Toast.makeText(RepairAddActivity.this, "网络异常，请检查网络状态后登陆", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RepairAddActivity.this, "提交失败", Toast.LENGTH_SHORT).show();
                 BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
             }
             @Override

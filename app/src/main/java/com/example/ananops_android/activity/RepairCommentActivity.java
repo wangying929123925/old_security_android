@@ -40,6 +40,7 @@ public class RepairCommentActivity extends AppCompatActivity implements View.OnC
 
     private void initView(){
         title=findViewById(R.id.txt_title);//标题
+        title.setText("评价");
         back_img=findViewById(R.id.img_back);
         repair_commit_button=findViewById(R.id.comment_submit_button);
         comment_repair_name=findViewById(R.id.comment_repair_name);

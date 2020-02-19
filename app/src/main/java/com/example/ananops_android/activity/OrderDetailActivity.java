@@ -208,7 +208,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 break;
             case "3-2":
                 //天方案
-                fragment_order_commit.setVisibility(View.VISIBLE);
+                fragment_order_commit.setVisibility(View.GONE);
                 order_detail_button1.setVisibility(View.GONE);
                 order_detail_button2.setVisibility(View.VISIBLE);
                 order_detail_button2.setText("提交方案");

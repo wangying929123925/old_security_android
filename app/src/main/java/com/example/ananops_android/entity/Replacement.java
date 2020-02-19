@@ -3,60 +3,61 @@ package com.example.ananops_android.entity;
 import java.io.Serializable;
 
 public class Replacement implements Serializable {
-   private String repalcement_name;
-   private String repalcement_id;
-   private String replacement_type;
-   private int replacement_num;
-   private int replacement_inventory;
-   private float replacement_price;
+   private String name;
+   private String id;
+   private String type;
+   private int count;
+   private int store;
+   private float price;
    private float replacement_totalPricce;
+   private String manufacture;
 
-   public String getRepalcement_name() {
-      return repalcement_name;
+   public String getName() {
+      return name;
    }
 
-   public void setRepalcement_name(String repalcement_name) {
-      this.repalcement_name = repalcement_name;
+   public void setName(String name) {
+      this.name = name;
    }
 
-   public String getRepalcement_id() {
-      return repalcement_id;
+   public String getId() {
+      return id;
    }
 
-   public void setRepalcement_id(String repalcement_id) {
-      this.repalcement_id = repalcement_id;
+   public void setId(String id) {
+      this.id = id;
    }
 
-   public String getReplacement_type() {
-      return replacement_type;
+   public String getType() {
+      return type;
    }
 
-   public void setReplacement_type(String replacement_type) {
-      this.replacement_type = replacement_type;
+   public void setType(String type) {
+      this.type = type;
    }
 
-   public int getReplacement_num() {
-      return replacement_num;
+   public int getCount() {
+      return count;
    }
 
-   public void setReplacement_num(int replacement_num) {
-      this.replacement_num = replacement_num;
+   public void setCount(int count) {
+      this.count = count;
    }
 
-   public int getReplacement_inventory() {
-      return replacement_inventory;
+   public int getStore() {
+      return store;
    }
 
-   public void setReplacement_inventory(int replacement_inventory) {
-      this.replacement_inventory = replacement_inventory;
+   public void setStore(int store) {
+      this.store = store;
    }
 
-   public float getReplacement_price() {
-      return replacement_price;
+   public float getPrice() {
+      return price;
    }
 
-   public void setReplacement_price(float replacement_price) {
-      this.replacement_price = replacement_price;
+   public void setPrice(float price) {
+      this.price = price;
    }
 
    public float getReplacement_totalPricce() {
@@ -65,5 +66,13 @@ public class Replacement implements Serializable {
 
    public void setReplacement_totalPricce(float replacement_totalPricce) {
       this.replacement_totalPricce = replacement_totalPricce;
+   }
+
+   public String getManufacture() {
+      return manufacture;
+   }
+
+   public void setManufacture(String manufacture) {
+      this.manufacture = manufacture;
    }
 }

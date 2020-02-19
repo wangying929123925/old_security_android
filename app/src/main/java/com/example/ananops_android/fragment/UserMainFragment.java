@@ -247,6 +247,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
     private void initUserData() {
         user_Type.setText(getResources().getString(R.string.USER));//用户
         main_inspection.setVisibility(View.GONE);
+        main_repair_5.setVisibility(View.GONE);//1.3为空
         main_repair_img1.setImageResource(R.drawable.ic_workorder);
         main_repair_img2.setImageResource(R.drawable.ic_workorder);
         main_repair_img3.setImageResource(R.drawable.ic_workorder);
@@ -370,7 +371,7 @@ private void initUserManagerData(){
             case R.id.main_repair_5:
                 switch (SPUtils.getInstance().getInt("role_num",1)){
                     case 1://待评价
-                       // BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","待评价");
+                      //  BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","13");
                        // Toast.makeText(getContext(),"Ops,设备管理正在开发中",Toast.LENGTH_LONG).show();
                         break;
                     case 4://

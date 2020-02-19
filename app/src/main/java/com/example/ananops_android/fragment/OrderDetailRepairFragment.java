@@ -49,18 +49,18 @@ public class OrderDetailRepairFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_order_detail_repair,container,false);
-        tv_repair_start_time=view.findViewById(R.id.tv_repair_start_time);
-        tv_repair_end_time=view.findViewById(R.id.tv_repair_end_time);
-       tv_repair_money=view.findViewById(R.id.tv_repair_money);
-        tv_repair_status=view.findViewById(R.id.tv_repair_status);
-        tv_repair_group=view.findViewById(R.id.tv_repair_group);
-        tv_repair_man=view.findViewById(R.id.tv_repair_man);
-        tv_repair_degree=view.findViewById(R.id.tv_repair_degree);
-       tv_emergency_degree=view.findViewById(R.id.tv_emergency_degree);
-        tv_repair_description=view.findViewById(R.id.tv_repair_description);
-        bt_order_start_time=view.findViewById(R.id.bt_order_start_time);
-        bt_order_end_time=view.findViewById(R.id.bt_order_end_time);
-        bt_repair_save=view.findViewById(R.id.bt_repair_save);
+        tv_repair_start_time = view.findViewById(R.id.tv_repair_start_time);
+        tv_repair_end_time = view.findViewById(R.id.tv_repair_end_time);
+        tv_repair_money = view.findViewById(R.id.tv_repair_money);
+        tv_repair_status = view.findViewById(R.id.tv_repair_status);
+        tv_repair_group = view.findViewById(R.id.tv_repair_group);
+        tv_repair_man = view.findViewById(R.id.tv_repair_man);
+        tv_repair_degree = view.findViewById(R.id.tv_repair_degree);
+        tv_emergency_degree = view.findViewById(R.id.tv_emergency_degree);
+        tv_repair_description = view.findViewById(R.id.tv_repair_description);
+        bt_order_start_time = view.findViewById(R.id.bt_order_start_time);
+        bt_order_end_time = view.findViewById(R.id.bt_order_end_time);
+        bt_repair_save = view.findViewById(R.id.bt_repair_save);
         initdata();
 
         return view;
