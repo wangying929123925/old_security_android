@@ -26,6 +26,7 @@ import com.example.ananops_android.fragment.InspectionDetailFragment;
 import com.example.ananops_android.fragment.InspectionItemFragment;
 import com.example.ananops_android.fragment.InspectionTimeLineFragment;
 import com.example.ananops_android.net.Net;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
@@ -57,6 +58,7 @@ public class InspectionDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspection_item_detail);
         mContext = this;
+        ActivityManager.getInstance().addActivity(this);
         inspectionId = getIntent().getStringExtra("inspectionId");
         initFragment();
         initViews();

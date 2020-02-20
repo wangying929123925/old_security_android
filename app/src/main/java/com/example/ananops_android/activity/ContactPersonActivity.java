@@ -17,6 +17,7 @@ import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.FindTabAdapter;
 import com.example.ananops_android.fragment.ContactDetailFragment;
 import com.example.ananops_android.fragment.TimeLineFragment;
+import com.example.ananops_android.util.ActivityManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class ContactPersonActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_contacts_person);
         initViews();
         initDatas();

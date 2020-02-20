@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 
 import com.example.ananops_android.R;
+import com.example.ananops_android.util.ActivityManager;
 
 
 public class LoadingActivity extends AppCompatActivity {
@@ -20,6 +21,7 @@ public class LoadingActivity extends AppCompatActivity {
     @Override
     protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_loading);
         setTransparentStatusBar();
         welcomeImg=findViewById(R.id.welcome_img);

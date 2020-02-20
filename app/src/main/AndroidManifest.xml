@@ -60,6 +60,8 @@
         <activity android:name=".activity.InspectionItemListActivity" />
         <activity android:name=".activity.ProjectDetailActivity" />
         <activity android:name=".activity.ProjectListActivity" />
+        <activity android:name=".activity.ReplacementOrderOperationActivity"/>
+        <activity android:name=".activity.ReplacementOrderListActivity"/>
         <activity android:name=".activity.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

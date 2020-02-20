@@ -34,6 +34,7 @@ import com.example.ananops_android.photopicker.PhotoPreviewActivity;
 import com.example.ananops_android.photopicker.SelectModel;
 import com.example.ananops_android.photopicker.intent.PhotoPickerIntent;
 import com.example.ananops_android.photopicker.intent.PhotoPreviewIntent;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
@@ -90,6 +91,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_repair_add);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = this;
+        ActivityManager.getInstance().addActivity(this);
        // List<RepairAddContent.TaskItemDtoListBean>
         repairAddContent.setMdmcAddTaskItemDtoList(new ArrayList<>(Arrays.asList(new RepairAddContent.MdmcAddTaskItemDtoListBean())));
         initViews();

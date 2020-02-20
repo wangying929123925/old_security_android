@@ -31,6 +31,7 @@ import com.example.ananops_android.fragment.OrderDetailRepairFragment;
 import com.example.ananops_android.fragment.OrderDetailReplacementFragment;
 import com.example.ananops_android.fragment.TimeLineFragment;
 import com.example.ananops_android.net.Net;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
@@ -66,6 +67,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState){
           super.onCreate(savedInstanceState);
           setContentView(R.layout.activity_order_detail);
+          ActivityManager.getInstance().addActivity(this);
           mContext=this;
           initViews();
           initDatas();
@@ -77,14 +79,15 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         vp_search_order_pager=findViewById(R.id.vp_search_order_pager);
         title=findViewById(R.id.txt_title);//标题
       //  search_img=findViewById(R.id.img_search);
-        order_detail_button1=findViewById(R.id.order_detail_button1);
-        order_detail_button2=findViewById(R.id.order_detail_button2);
-        fragment_order_commit=findViewById(R.id.fragment_order_commit);
-        Intent intent=getIntent();
-        Bundle bundle=intent.getExtras();
-        if(bundle!=null){
-        ACTIVITY_STATUS=bundle.getString("status_do");
-            ORDER_ID=bundle.getString("order_id");}
+        order_detail_button1 = findViewById(R.id.order_detail_button1);
+        order_detail_button2 = findViewById(R.id.order_detail_button2);
+        fragment_order_commit = findViewById(R.id.fragment_order_commit);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            ACTIVITY_STATUS = bundle.getString("status_do");
+            ORDER_ID = bundle.getString("order_id");
+        }
         switch (ACTIVITY_STATUS){
             case "1-1":
                 //审核不通过
@@ -99,7 +102,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                         //重新填单
                         Toast.makeText(mContext, "重新填单", Toast.LENGTH_SHORT).show();
                         BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class);
-
                     }
                 });
                 order_detail_button2.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +151,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                     public void onClick(View v) {
                         //接单派工
                         Toast.makeText(mContext, "接单派工", Toast.LENGTH_SHORT).show();
-                        BaseUtils.getInstence().changeStatus(5, ORDER_ID, "服务商接单", mContext);
+                        //BaseUtils.getInstence().changeStatus(5, ORDER_ID, "服务商接单", mContext);
                         BaseUtils.getInstence().intent(mContext, ContactActivity.class);
                     }
                 });
@@ -174,8 +176,8 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                     public void onClick(View v) {
                         //确认审核
                         Toast.makeText(mContext, "确认提交", Toast.LENGTH_SHORT).show();
-                        BaseUtils.getInstence().changeStatus(8, ORDER_ID, "服务商审核通过", mContext);
-                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                      //  BaseUtils.getInstence().changeStatus(8, ORDER_ID, "服务商审核通过", mContext);
+                        BaseUtils.getInstence().intent(mContext, ReplacementOrderListActivity.class);
                     }
                 });
                 break;
@@ -212,16 +214,16 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 order_detail_button1.setVisibility(View.GONE);
                 order_detail_button2.setVisibility(View.VISIBLE);
                 order_detail_button2.setText("提交方案");
-                order_detail_button2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //维修提交
-                        BaseUtils.getInstence().changeStatus(7, ORDER_ID, "提交方案", mContext);
-                        postChangeRepair();
-                        Toast.makeText(mContext, "确认提交", Toast.LENGTH_SHORT).show();
-                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
-                    }
-                });
+//                order_detail_button2.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        //维修提交
+//                        BaseUtils.getInstence().changeStatus(7, ORDER_ID, "提交方案", mContext);
+//                        postChangeRepair();
+//                        Toast.makeText(mContext, "确认提交", Toast.LENGTH_SHORT).show();
+//                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+//                    }
+//                });
                 break;
             case "3-3":
                 //维修中
@@ -240,11 +242,20 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 });
                 break;
             case "4-1":
-                //计划中
+                //审核申请
                 fragment_order_commit.setVisibility(View.VISIBLE);
-                order_detail_button1.setVisibility(View.GONE);
+                order_detail_button1.setVisibility(View.VISIBLE);
                 order_detail_button2.setVisibility(View.VISIBLE);
-                order_detail_button2.setText("确认提交");
+                order_detail_button1.setText("拒绝");
+                order_detail_button2.setText("通过");
+                order_detail_button1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mContext, "确认提交", Toast.LENGTH_SHORT).show();
+                        BaseUtils.getInstence().changeStatus(15, ORDER_ID, "提交方案", mContext);
+                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                    }
+                });
                 order_detail_button2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -260,7 +271,16 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 fragment_order_commit.setVisibility(View.VISIBLE);
                 order_detail_button1.setVisibility(View.GONE);
                 order_detail_button2.setVisibility(View.VISIBLE);
-                order_detail_button2.setText("确认提交");
+                order_detail_button1.setText("拒绝");
+                order_detail_button2.setText("通过");
+                order_detail_button1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mContext, "确认提交", Toast.LENGTH_SHORT).show();
+                        BaseUtils.getInstence().changeStatus(16, ORDER_ID, "提交方案", mContext);
+                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                    }
+                });
                 order_detail_button2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -286,18 +306,18 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         list_title.add("备品备件");
         list_title.add("审核详情");
         list_title.add("附件信息");
-        list_fragment=new ArrayList<>();
-       unDoFragment=new TimeLineFragment();//维修记录
-        servicingOrderFragment=new OrderDetailRepairFragment();//xiangqing
-        myOrderFragment=new OrderDetailContentFragment();//weixiu
-       orderDetailReplacementFragment=new OrderDetailReplacementFragment();//备件
-        orderDetailAuditFragment=new OrderDetailAuditFragment();//审核
-        orderDetailAppendix=new OrderDetailAppendix();//附件
+        list_fragment = new ArrayList<>();
+        unDoFragment = new TimeLineFragment();//维修记录
+        servicingOrderFragment = new OrderDetailRepairFragment();//xiangqing
+        myOrderFragment = new OrderDetailContentFragment();//weixiu
+        orderDetailReplacementFragment = new OrderDetailReplacementFragment();//备件
+        orderDetailAuditFragment = new OrderDetailAuditFragment();//审核
+        orderDetailAppendix = new OrderDetailAppendix();//附件
         //传值
-        if(ACTIVITY_STATUS!=null||!ACTIVITY_STATUS.equals("")) {
+        if (ACTIVITY_STATUS != null || !ACTIVITY_STATUS.equals("")) {
             Bundle bundle = new Bundle();
             bundle.putString("str", ACTIVITY_STATUS);
-            bundle.putString("order_id",ORDER_ID);
+            bundle.putString("order_id", ORDER_ID);
             unDoFragment.setArguments(bundle);
             orderDetailReplacementFragment.setArguments(bundle);
             myOrderFragment.setArguments(bundle);
@@ -321,7 +341,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void postChangeRepair() {
-        RepairChangeDetail repairChangeDetail=new RepairChangeDetail();
+        RepairChangeDetail repairChangeDetail = new RepairChangeDetail();
         repairChangeDetail.setId(RepairCommonDetail.id);
         repairChangeDetail.setLevel(RepairCommonDetail.level);
         repairChangeDetail.setResult(0);
@@ -361,10 +381,9 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
           switch (v.getId()){
               case R.id.img_back:
-                  if(ACTIVITY_STATUS=="no"||ACTIVITY_STATUS.equals("no")){
+                  if (ACTIVITY_STATUS == "no" || ACTIVITY_STATUS.equals("no")) {
                       finish();
-                 }
-                  else {
+                  } else {
                       AlertDialog.Builder builder = new AlertDialog.Builder(this);
                       builder.setMessage("退出后信息将不保存，确认退出吗？");
                       builder.setTitle("提示");

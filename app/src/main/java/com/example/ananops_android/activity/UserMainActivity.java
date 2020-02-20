@@ -21,6 +21,7 @@ import com.example.ananops_android.fragment.UserMainFragment;
 import com.example.ananops_android.fragment.UserMessageFragment;
 import com.example.ananops_android.fragment.UserMineFragment;
 import com.example.ananops_android.fragment.UserTrainFragment;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 
 public class UserMainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -56,8 +57,9 @@ public class UserMainActivity extends AppCompatActivity implements View.OnClickL
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()){
                     case R.id.logout:
-                        BaseUtils.getInstence().intent(mContext, LoginActivity.class);
                        drawerLayout1.closeDrawers();
+                        BaseUtils.getInstence().intent(mContext, LoginActivity.class);
+                        ActivityManager.getInstance().finishAllActivity();
                     break;
                     default:
                         drawerLayout1.closeDrawers();

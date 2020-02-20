@@ -29,6 +29,7 @@ import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.InspectionTaskItem;
 import com.example.ananops_android.entity.ProjectInfo;
 import com.example.ananops_android.net.Net;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
 
@@ -74,6 +75,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspection_add);
+        ActivityManager.getInstance().addActivity(this);
         mContext = this;
         initViews();
         // initDatas();

@@ -64,7 +64,7 @@ public class BaseUtils {
                 statusString = "工单取消";
                 break;
             case 2:
-                statusString = "待审核";
+                statusString = "甲方待审核";
                 break;
             case 3:
                 statusString = "服务商待接单";
@@ -79,7 +79,7 @@ public class BaseUtils {
                 statusString = "维修工已结单";
                 break;
             case 7:
-                statusString = "待审核备件";
+                statusString = "服务商待审核备件";
                 break;
             case 8:
                 statusString = "管理员待审核备件";
@@ -94,10 +94,10 @@ public class BaseUtils {
                 statusString = "管理员待确认账单";
                 break;
             case 12:
-                statusString = "待支付";
+                statusString = "待评价";
                 break;
             case 13:
-                statusString = "待评价";
+                statusString = "已完成";
                  break;
             case 14:
                 statusString = "已完成";
@@ -286,6 +286,7 @@ public class BaseUtils {
      */
     public void intent(Context fromContext, Class<?> cls) {
         Intent intent = new Intent(fromContext, cls);
+        ActivityManager.getInstance().finishActivity();
         fromContext.startActivity(intent);
     }
     /**
@@ -299,6 +300,7 @@ public class BaseUtils {
         Intent intent = new Intent(fromContext, cls);
         intent.putExtra(dataName,data);
         fromContext.startActivity(intent);
+        ActivityManager.getInstance().finishActivity();
     }
 
     public void intent(Context fromContext, Class<?> cls,Bundle bundle,String dataName, String data) {
@@ -306,6 +308,7 @@ public class BaseUtils {
         intent.putExtra(dataName,data);
         intent.putExtras(bundle);
         fromContext.startActivity(intent);
+        ActivityManager.getInstance().finishActivity();
     }
     /**
      * 带参数的跳转
@@ -318,6 +321,7 @@ public class BaseUtils {
         Intent intent = new Intent(fromContext, cls);
         intent.putExtras(bb);
         fromContext.startActivity(intent);
+        ActivityManager.getInstance().finishActivity();
     }
     /**
      * 封装 startActivityForResult 带参数传�?

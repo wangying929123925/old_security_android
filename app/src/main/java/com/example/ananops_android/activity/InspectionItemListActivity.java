@@ -70,7 +70,8 @@ public class InspectionItemListActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Log.v("InspectionListTime", System.currentTimeMillis() + "");
+                        e.printStackTrace();
                     }
 
                     @Override
@@ -80,6 +81,7 @@ public class InspectionItemListActivity extends AppCompatActivity {
                             if (inspectionItemListResponse.getResult().size() > 0) {
                                 inspectionTaskItems.addAll(inspectionItemListResponse.getResult());
                                 Log.v("巡检子项列表1", inspectionItemListResponse.getResult().get(0).getId() + "");
+                                initViews();//
                             } else {
                                 Toast.makeText(mComtext, "无巡检子项列表！", Toast.LENGTH_LONG).show();
                             }
@@ -118,22 +120,22 @@ public class InspectionItemListActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
                     bundle.putString("status","3-1");
-                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class);
+                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
                 }else if(inspectionTaskItems.get(position).getStatus()==3){
                     Bundle bundle = new Bundle();
                     bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
                     bundle.putString("status","3-2");
-                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class);
+                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
                 }else if(inspectionTaskItems.get(position).getStatus()==1){
                     Bundle bundle = new Bundle();
                     bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
                     bundle.putString("status","2-2");
-                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class);
+                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
                 }else {
                     Bundle bundle = new Bundle();
                     bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
                     bundle.putString("status","no");
-                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class);
+                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
                 }
 
             }

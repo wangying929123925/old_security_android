@@ -19,6 +19,7 @@ import com.example.ananops_android.adapter.RepairAdapter;
 import com.example.ananops_android.db.OrderRequest;
 import com.example.ananops_android.entity.RepairContent;
 import com.example.ananops_android.db.UserInfo;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
@@ -43,29 +44,30 @@ public class OrderSearchListActivity extends AppCompatActivity implements View.O
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         mContext=this;
+        ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_research_order_list);
         initDatas();
         initViews();
         setOnListener();
     }
     private void initViews() {
-        title=findViewById(R.id.txt_title);//标题
+        title = findViewById(R.id.txt_title);//标题
         //search_img=findViewById(R.id.img_search);
-        back_img=findViewById(R.id.img_back);
-        search_content=findViewById(R.id.text_search);
-        search_text=findViewById(R.id.search_title_txt);
-        searchType="项目类型";
-        Intent intent=getIntent();
-        TITLE=intent.getStringExtra("title");
+        back_img = findViewById(R.id.img_back);
+        search_content = findViewById(R.id.text_search);
+        search_text = findViewById(R.id.search_title_txt);
+        searchType = "项目类型";
+        Intent intent = getIntent();
+        TITLE = intent.getStringExtra("title");
         title.setText("维修列表");
-        int status= Integer.parseInt(TITLE);
+        int status = Integer.parseInt(TITLE);
         Log.v("Status",String.valueOf(status));
         OrderRequest orderRequest=new OrderRequest();
         orderRequest.setId(SPUtils.getInstance().getString("user_id",""));
         orderRequest.setStatus(status);
         orderRequest.setRoleCode(SPUtils.getInstance().getString("role_code",""));
         repairContents = BaseUtils.getInstence().getRepairList(repairContents,orderRequest,mContext);
-        adapter=new RepairAdapter(repairContents);
+        adapter = new RepairAdapter(repairContents);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView = findViewById(R.id.contact_recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);

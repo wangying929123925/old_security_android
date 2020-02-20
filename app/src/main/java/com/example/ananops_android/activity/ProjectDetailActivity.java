@@ -24,6 +24,7 @@ import com.example.ananops_android.db.ProjectInfoResponse;
 import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.fragment.InspectionItemFragment;
 import com.example.ananops_android.net.Net;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
@@ -53,6 +54,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_order_detail);
         mContext=this;
         initViews();

@@ -19,6 +19,7 @@ import com.amap.api.services.help.Tip;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.AdressSearchAdapter;
 import com.example.ananops_android.entity.AddressSearch;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.view.EditTextWithDel;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class AddressSearchActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_address_search);
         initViews();
         setListener();

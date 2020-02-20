@@ -31,13 +31,13 @@
 
     <!--用户-->
     <string name="user_main_repair1">新建工单</string>
-    <string name="user_main_repair2">待确认</string>
-    <string name="user_main_repair3">维修中</string>
+    <string name="user_main_repair2">维修中</string>
+    <string name="user_main_repair3">待确认</string>
     <string name="user_main_repair4">待评价</string>
     <string name="user_main_repair5">待评价</string>
     <!--用户管理员-->
     <string name="userManager_main_repair1">待审核</string>
-    <string name="userManager_main_repair2">待支付</string>
+    <string name="userManager_main_repair2">待确认</string>
     <string name="userManager_main_repair3">待支付</string>
     <string name="userManager_main_inspection1">巡检申请</string>
     <string name="userManager_main_inspection2">待确认</string>
@@ -48,9 +48,9 @@
     <string name="userManager_main_manage2">设备管理</string>
     <string name="userManager_main_manage3">故障统计</string>
     <!--维修工-->
-    <string name="worker_main_repair1">待确认</string>
+    <string name="worker_main_repair1">待接单</string>
     <string name="worker_main_repair2">填方案</string>
-    <string name="worker_main_repair3">维修中</string>
+    <string name="worker_main_repair3">待确认</string>
     <string name="worker_main_inspection1">待巡检</string>
     <string name="worker_main_inspection2">巡检中</string>
     <string name="worker_main_inspection3">待通过</string>
@@ -58,9 +58,10 @@
     <!--服务商-->
     <string name="service_main_inspection1">待接单</string>
     <string name="service_main_inspection2">待审核</string>
-    <string name="service_main_inspection3">待审查</string>
+    <string name="service_main_inspection3">待确认</string>
     <string name="service_main_repair1">待接单</string>
     <string name="service_main_repair2">待审核</string>
+    <string name="service_main_repair3">待确认</string>
     <string name="service_main_manage1">全部成员</string>
     <string name="service_main_manage2">设备管理</string>
     <string name="service_main_manage3">故障统计</string>

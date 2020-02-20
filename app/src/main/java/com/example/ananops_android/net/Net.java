@@ -136,7 +136,7 @@ public interface Net {
 
     //服务商获取待处理备品备件单据列表
    @GET("/rdc/deviceOrder/todo/{userId}")
-   Observable<RelacementOrderListUndoResult>getRelacementOrderListUndo(@Path("projectId") Long userId, @Header("Authorization") String postToken);
+   Observable<RelacementOrderListUndoResult>getRelacementOrderListUndo(@Path("userId") Long userId, @Header("Authorization") String postToken);
 
    //服务商业务员处理备件申请
    @POST("/rdc/deviceOrder/operation")

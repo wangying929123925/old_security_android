@@ -21,6 +21,7 @@ import com.example.ananops_android.adapter.ListViewHolder;
 import com.example.ananops_android.db.ReplacementListResponse;
 import com.example.ananops_android.entity.Replacement;
 import com.example.ananops_android.net.Net;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.SPUtils;
 
 import java.io.Serializable;
@@ -43,6 +44,7 @@ public class ChooseReplacementActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_replacement_choose);
         mContext=this;
         initViews();

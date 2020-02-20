@@ -119,11 +119,12 @@
                     android:text="维修单号"
                     android:textColor="#353535"
                     android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/order_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                  android:layout_centerVertical="true"
                     android:paddingLeft="90dp"
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
@@ -161,7 +162,7 @@
                     android:textColorHint="#DDDDDD"
                     android:textSize="16sp"
                     android:background="@null"
-                    android:inputType="none"/>
+                    android:inputType="numberDecimal"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
@@ -183,7 +184,7 @@
                     android:textColor="#353535"
                     android:textSize="16sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/replacement_result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -216,15 +217,16 @@
                     android:textColor="#353535"
                     android:textSize="16sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/replacement_suggestion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="45dp"
                     android:paddingLeft="90dp"
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:background="@null"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
@@ -246,7 +248,7 @@
                     android:textColor="#353535"
                     android:textSize="16sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/replacement_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -256,7 +258,9 @@
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
                     android:hint="请输入总价"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:inputType="numberDecimal"
+                    android:background="@null"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"

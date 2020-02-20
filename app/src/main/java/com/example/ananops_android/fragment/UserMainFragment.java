@@ -23,6 +23,7 @@ import com.example.ananops_android.activity.InspectionSearchListActivity;
 import com.example.ananops_android.activity.OrderSearchListActivity;
 import com.example.ananops_android.activity.ProjectListActivity;
 import com.example.ananops_android.activity.RepairAddActivity;
+import com.example.ananops_android.activity.ReplacementOrderListActivity;
 import com.example.ananops_android.activity.UserOrderSearchActivitySpinner;
 import com.example.ananops_android.adapter.RepairAdapter;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersRequest;
@@ -222,17 +223,20 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
 
     private void initServiceData() {
         user_Type.setText(getResources().getString(R.string.SERVICE_MAN));//服务商
-        main_repair_3.setVisibility(View.GONE);//1.3为空
+       // main_repair_3.setVisibility(View.GONE);//1.3为空
         main_repair_4.setVisibility(View.GONE);//1.3为空
         main_repair_5.setVisibility(View.GONE);//1.3为空
         main_inspection_4.setVisibility(View.GONE);//2.3为空
         main_inspection_5.setVisibility(View.GONE);//2.3为空
         main_repair_img1.setImageResource(R.drawable.ic_workorder);
         main_repair_img2.setImageResource(R.drawable.ic_workorder);
+        main_repair_img3.setImageResource(R.drawable.ic_workorder);
         main_repair_text1.setText(getResources().getString(R.string.service_main_repair1));//待接单
         main_repair_text2.setText(getResources().getString(R.string.service_main_repair2));//审核备件
+        main_repair_text2.setText(getResources().getString(R.string.service_main_repair3));//审核备件
         main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
         main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
+        main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num3));
         main_inspection_img1.setImageResource(R.drawable.ic_workorder);
         main_inspection_img2.setImageResource(R.drawable.ic_workorder);
         main_inspection_img3.setImageResource(R.drawable.ic_workorder);
@@ -252,29 +256,29 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         main_repair_img2.setImageResource(R.drawable.ic_workorder);
         main_repair_img3.setImageResource(R.drawable.ic_workorder);
         main_repair_img4.setImageResource(R.drawable.ic_workorder);
-        main_repair_img5.setImageResource(R.drawable.ic_workorder);
         main_repair_text1.setText(getResources().getString(R.string.user_main_repair1));//添加
         main_repair_text2.setText(getResources().getString(R.string.user_main_repair2));//验收
         main_repair_text3.setText(getResources().getString(R.string.user_main_repair3));//评价
         main_repair_text4.setText(getResources().getString(R.string.user_main_repair4));//评价
-        main_repair_text5.setText(getResources().getString(R.string.user_main_repair5));//评价
         main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
         main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
         main_repair_num3.setText(String.valueOf(UnReadNum.main_repair_num3));
         main_repair_num4.setText(String.valueOf(UnReadNum.main_repair_num4));
-        main_repair_num5.setText(String.valueOf(UnReadNum.main_repair_num5));
     }
 private void initUserManagerData(){
     user_Type.setText(getResources().getString(R.string.USER_MANAGER));//用户管理员
-    main_repair_3.setVisibility(View.GONE);//1.3为空
+   // main_repair_3.setVisibility(View.GONE);//1.3为空
     main_repair_4.setVisibility(View.GONE);//1.3为空
     main_repair_5.setVisibility(View.GONE);//1.3为空
     main_repair_img1.setImageResource(R.drawable.ic_workorder);
     main_repair_img2.setImageResource(R.drawable.ic_workorder);
+    main_repair_img3.setImageResource(R.drawable.ic_workorder);
     main_repair_text1.setText(getResources().getString(R.string.userManager_main_repair1));//添加
     main_repair_text2.setText(getResources().getString(R.string.userManager_main_repair2));//验收
+    main_repair_text3.setText(getResources().getString(R.string.userManager_main_repair3));//验收
     main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
     main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
+    main_repair_num3.setText(String.valueOf(UnReadNum.main_repair_num3));
     main_inspection_img1.setImageResource(R.drawable.ic_workorder);
     main_inspection_img2.setImageResource(R.drawable.ic_workorder);
     main_inspection_img3.setImageResource(R.drawable.ic_workorder);
@@ -319,7 +323,7 @@ private void initUserManagerData(){
                     case 1://报修
                         BaseUtils.getInstence().intent(getContext(),RepairAddActivity.class);
                         break;
-                    case 2://待接单
+                    case 2://服务商待接单
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","3");
                         break;
                     case 3://维修工待接单
@@ -328,37 +332,51 @@ private void initUserManagerData(){
                     case 4://甲方待审核
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","2");
                         break;
+                        default:
+                            break;
                 }
                 break;
             case R.id.main_repair_2:
                 switch (SPUtils.getInstance().getInt("role_num",1)){
-                    case 1://待确认
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","10");
+                    case 1://维修中
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","9");
                         break;
-                    case 2://服务商待审核
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","7");
-                        Toast.makeText(getContext(),"Ops,审核备件正在开发中",Toast.LENGTH_LONG).show();
+                    case 2://服务商待分配工程师
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","4");
+                       // Toast.makeText(getContext(),"Ops,审核备件正在开发中",Toast.LENGTH_LONG).show();
                         break;
-                    case 3://维修工已接单
+                    case 3://维修工提交备件申请
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","6");
                         break;
-                    case 4://
-                        Toast.makeText(getContext(),"Ops,账单支付正在开发中",Toast.LENGTH_LONG).show();
+                    case 4://甲方确认备件申请
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","8");
+                        break;
+                       // Toast.makeText(getContext(),"Ops,账单支付正在开发中",Toast.LENGTH_LONG).show();
+                    default:
+                        break;
                 }
                 break;
             case R.id.main_repair_3:
                 switch (SPUtils.getInstance().getInt("role_num",1)){
-                    case 1://维修中
+                    case 1://用户确认完成
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","9");
                         break;
-                    case 3://维修工维修中
+                    case 2://服务商处理备件
+                        BaseUtils.getInstence().intent(getContext(), ReplacementOrderListActivity.class);
+                        break;
+                    case 3://维修工维修中,确认完成
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","9");
                         break;
+                    case 4://甲方确认支付
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","11");
+                        break;
+                        default:
+                            break;
                 }
                 break;
             case R.id.main_repair_4:
                 switch (SPUtils.getInstance().getInt("role_num",1)){
-                    case 1://待验收
+                    case 1://待评价
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","13");
                        // BaseUtils.getInstence().intent(getContext(),ContactActivity.class);
                         break;
@@ -366,19 +384,6 @@ private void initUserManagerData(){
                        // BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","待验收");
                        // BaseUtils.getInstence().intent(getContext(),ContactActivity.class);
                         break;
-                }
-                break;
-            case R.id.main_repair_5:
-                switch (SPUtils.getInstance().getInt("role_num",1)){
-                    case 1://待评价
-                      //  BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","13");
-                       // Toast.makeText(getContext(),"Ops,设备管理正在开发中",Toast.LENGTH_LONG).show();
-                        break;
-                    case 4://
-                       // Toast.makeText(getContext(),"Ops,设备管理正在开发中",Toast.LENGTH_LONG).show();
-                        break;
-                        default:
-                            break;
                 }
                 break;
             case R.id.main_repair_all:

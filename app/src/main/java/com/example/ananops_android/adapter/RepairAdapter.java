@@ -44,17 +44,17 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
         RelativeLayout relative_button;
         public ViewHolder(View view) {
             super(view);
-            order_item_view=view;
-            repairImage=view.findViewById(R.id.order_item_img);
-            order_item_title=view.findViewById(R.id.order_item_title);
-            order_item_project=view.findViewById(R.id.order_item_id);
-            order_item_contract=view.findViewById(R.id.order_item_name);
-            order_item_time=view.findViewById(R.id.order_item_time);
-            order_item_status=view.findViewById(R.id.order_item_status);
-            order_item_details=view.findViewById(R.id.order_item_details);
-            order_item_button1=view.findViewById(R.id.order_item_button1);
-            order_item_button2=view.findViewById(R.id.order_item_button2);
-            relative_button=view.findViewById(R.id.relative_button);
+            order_item_view = view;
+            repairImage = view.findViewById(R.id.order_item_img);
+            order_item_title = view.findViewById(R.id.order_item_title);
+            order_item_project = view.findViewById(R.id.order_item_id);
+            order_item_contract = view.findViewById(R.id.order_item_name);
+            order_item_time = view.findViewById(R.id.order_item_time);
+            order_item_status = view.findViewById(R.id.order_item_status);
+            order_item_details = view.findViewById(R.id.order_item_details);
+            order_item_button1 = view.findViewById(R.id.order_item_button1);
+            order_item_button2 = view.findViewById(R.id.order_item_button2);
+            relative_button = view.findViewById(R.id.relative_button);
             order_item_view.setOnClickListener(RepairAdapter.this);
             order_item_details.setOnClickListener(RepairAdapter.this);
             order_item_button1.setOnClickListener(RepairAdapter.this);
@@ -62,21 +62,21 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
         }
     }
     public RepairAdapter(List<RepairContent> repairContentlist){
-        mrepairContentList=repairContentlist;
+        mrepairContentList = repairContentlist;
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewTye){//创建ViewHolder实例
-        if(mContext ==null){
-            mContext =parent.getContext();
+        if (mContext == null) {
+            mContext = parent.getContext();
         }
         View view= LayoutInflater.from(mContext).inflate(R.layout.repairs_board_item,parent,false);//动态加载布局文件，第一个参数是要加载布局文件的ID，第二个是给布局添加父布局
-        final ViewHolder holder=new ViewHolder(view);
+        final ViewHolder holder = new ViewHolder(view);
         return holder;
     }
     @Override
     public void onBindViewHolder(ViewHolder holder,int position){//对RecycleView子项进行赋值，
         // 通过position参数得到当前实例，再将数据设置到ViewHolder
-        RepairContent repairContent=mrepairContentList.get(position);
+        RepairContent repairContent = mrepairContentList.get(position);
 //        holder.order_item_title.setText(repairContent.getTitle());
 //        holder.order_item_id.setText(repairContent.getPrincipalId());
 //        holder.order_item_name.setText(repairContent.getProjectId());
@@ -99,7 +99,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         holder.order_item_button1.setText("合格");
                         holder.order_item_button2.setText("不合格");
                         break;
-                    case 13:
+                    case 12:
                         holder.relative_button.setVisibility(View.VISIBLE);
                         holder.order_item_button2.setText("去评价");
                         holder.order_item_button1.setVisibility(View.INVISIBLE);
@@ -160,7 +160,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                 holder.order_item_button1.setText("通过");
                 holder.order_item_button2.setText("不通过");
                 break;
-            case 13:
+            case 11:
                 holder.relative_button.setVisibility(View.VISIBLE);
                 holder.order_item_button1.setVisibility(View.INVISIBLE);
                 holder.order_item_button2.setText("去支付");
@@ -234,13 +234,14 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         switch (repairContent.getStatus()){
                             case 3:
                                 Toast.makeText(mContext, "接单派工" , Toast.LENGTH_SHORT).show();
-                                BaseUtils.getInstence().changeStatus(4, repairContent.getId(), "服务商接单", mContext);
-                                BaseUtils.getInstence().intent(mContext, ContactActivity.class);
+                               // BaseUtils.getInstence().changeStatus(4, repairContent.getId(), "服务商接单", mContext);
+                                String repairId = repairContent.getId();
+                                BaseUtils.getInstence().intent(mContext, ContactActivity.class,"repairId",repairId);
                                 break;
-                            case 8:
-                                Toast.makeText(mContext, "你点击了通过按钮" , Toast.LENGTH_SHORT).show();
-                                BaseUtils.getInstence().changeStatus(9, repairContent.getId(), "服务商审核通过", mContext);
-                                BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                            case 7:
+                                //Toast.makeText(mContext, "你点击了通过按钮" , Toast.LENGTH_SHORT).show();
+                                //BaseUtils.getInstence().changeStatus(9, repairContent.getId(), "服务商审核通过", mContext);
+                               // BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
                             default:
                                 break;
@@ -264,8 +265,8 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
                             case 8:
-                                Toast.makeText(mContext, "你点击了合格按钮" , Toast.LENGTH_SHORT).show();
-                                BaseUtils.getInstence().changeStatus(9, repairContent.getId(), "提交方案", mContext);
+                               Toast.makeText(mContext, "你点击了合格按钮" , Toast.LENGTH_SHORT).show();
+                               BaseUtils.getInstence().changeStatus(9, repairContent.getId(), "提交方案", mContext);
                                 BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
                             default:
@@ -289,12 +290,12 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     BaseUtils.getInstence().changeStatus(15,repairContent.getId(), "放弃填单", mContext);
                                     BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
                                     break;
-                                case 13:
+                                case 12:
                                  //   BaseUtils.getInstence().intent(mContext, RepairCommentActivity.class,"order_id",repairContent.getRepair_id());
-                                    BaseUtils.getInstence().intent(mContext, RepairCommentActivity.class);
+                                    BaseUtils.getInstence().intent(mContext, RepairCommentActivity.class,"orderId",repairContent.getId());
                                     break;
                                 default:
-                                    Bundle bundle1=new Bundle();
+                                    Bundle bundle1 = new Bundle();
                                   //  bundle1.putString("order_id",repairContent.getRepair_id());
                                     bundle1.putString("status_do","no");
                                     BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
@@ -326,14 +327,14 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     break;
                                 case 6:
                                     Toast.makeText(mContext, "你点击了填方案按钮" , Toast.LENGTH_SHORT).show();
-                                    Bundle bundle0=new Bundle();
+                                    Bundle bundle0 = new Bundle();
                                     bundle0.putString("order_id",repairContent.getId());
                                     bundle0.putString("status_do","3-2");
                                     BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
                                     break;
                                 case 9:
                                     Toast.makeText(mContext, "你点击了进入维修按钮" , Toast.LENGTH_SHORT).show();
-                                    Bundle bundle1=new Bundle();
+                                    Bundle bundle1 = new Bundle();
                                     bundle1.putString("order_id",repairContent.getId());
                                     bundle1.putString("status_do","3-3");
                                     BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
@@ -348,13 +349,15 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     BaseUtils.getInstence().changeStatus(16, repairContent.getId(), "提交方案", mContext);
                                     BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     break;
-                                case 7:
+                                case 8:
                                     Toast.makeText(mContext, "你点击了不通过按钮" , Toast.LENGTH_SHORT).show();
                                     BaseUtils.getInstence().changeStatus(17, repairContent.getId(), "提交方案", mContext);
                                     BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     break;
-                                case 12:
+                                case 11:
                                     Toast.makeText(mContext, "支付功能正在开发中" , Toast.LENGTH_SHORT).show();
+                                    BaseUtils.getInstence().changeStatus(12, repairContent.getId(), "支付跳转", mContext);
+                                    BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     break;
                                 default:
                                     break;
@@ -368,26 +371,26 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                     case 1:
                         switch (repairContent.getStatus()){
                             case 1:
-                                Bundle bundle=new Bundle();
+                                Bundle bundle = new Bundle();
                                 bundle.putString("order_id",repairContent.getId());
                                 bundle.putString("status_do","1-1");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle);
                                 break;
                             case 10:
-                                Bundle bundle1=new Bundle();
+                                Bundle bundle1 = new Bundle();
                                 bundle1.putString("order_id",repairContent.getId());
                                 bundle1.putString("status_do","1-2");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
-                            case 13:
-                               Bundle bundle2=new Bundle();
+                            case 12:
+                                Bundle bundle2 = new Bundle();
                                 bundle2.putString("order_id",repairContent.getId());
                               //  bundle2.putString("status_do","1-3");
-                              BaseUtils.getInstence().intent(mContext,RepairCommentActivity.class);
+                              BaseUtils.getInstence().intent(mContext,RepairCommentActivity.class,bundle2);
                                 break;
 
                             default:
-                                Bundle bundle0=new Bundle();
+                                Bundle bundle0 = new Bundle();
                                 bundle0.putString("order_id",repairContent.getId());
                                 bundle0.putString("status_do","no");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
@@ -397,19 +400,19 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                     case 2:
                         switch (repairContent.getStatus()){
                             case 3:
-                                Bundle bundle=new Bundle();
+                                Bundle bundle = new Bundle();
                                 bundle.putString("order_id",repairContent.getId());
                                 bundle.putString("status_do","2-1");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle);
                                 break;
-                            case 8:
-                                Bundle bundle1=new Bundle();
+                            case 7:
+                                Bundle bundle1 = new Bundle();
                                 bundle1.putString("order_id",repairContent.getId());
                                 bundle1.putString("status_do","2-2");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
                             default:
-                                Bundle bundle0=new Bundle();
+                                Bundle bundle0 = new Bundle();
                                 bundle0.putString("order_id",repairContent.getId());
                                 bundle0.putString("status_do","no");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
@@ -418,26 +421,26 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                         break;
                     case 3:
                         switch (repairContent.getStatus()){
-                            case 4:
-                                Bundle bundle=new Bundle();
+                            case 5:
+                                Bundle bundle = new Bundle();
                                 bundle.putString("order_id",repairContent.getId());
                                 bundle.putString("status_do","3-1");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle);
                                 break;
-                            case 5:
-                                Bundle bundle2=new Bundle();
+                            case 6:
+                                Bundle bundle2 = new Bundle();
                                 bundle2.putString("order_id",repairContent.getId());
                                 bundle2.putString("status_do","3-2");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle2);
                                 break;
-                            case 6:
-                                Bundle bundle1=new Bundle();
+                            case 9:
+                                Bundle bundle1 = new Bundle();
                                 bundle1.putString("order_id",repairContent.getId());
                                 bundle1.putString("status_do","3-3");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
                             default:
-                                Bundle bundle0=new Bundle();
+                                Bundle bundle0 = new Bundle();
                                 bundle0.putString("order_id",repairContent.getId());
                                 bundle0.putString("status_do","no");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
@@ -447,26 +450,26 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                     case 4:
                         switch (repairContent.getStatus()){
                             case 2:
-                                Bundle bundle=new Bundle();
+                                Bundle bundle = new Bundle();
                                 bundle.putString("order_id",repairContent.getId());
                                 bundle.putString("status_do","4-1");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle);
                                 break;
-                            case 9:
-                                Bundle bundle1=new Bundle();
+                            case 8:
+                                Bundle bundle1 = new Bundle();
                                 bundle1.putString("order_id",repairContent.getId());
                                 bundle1.putString("status_do","4-2");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
-                            case 12:
+                            case 11:
                                //支付
-                                Bundle bundle3=new Bundle();
+                                Bundle bundle3 = new Bundle();
                                 bundle3.putString("order_id",repairContent.getId());
-                                bundle3.putString("status_do","no");
+                                bundle3.putString("status_do","4-3");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle3);
                                 break;
                             default:
-                                Bundle bundle0=new Bundle();
+                                Bundle bundle0 = new Bundle();
                                 bundle0.putString("order_id",repairContent.getId());
                                 bundle0.putString("status_do","no");
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);

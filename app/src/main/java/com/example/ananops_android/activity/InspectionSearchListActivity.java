@@ -23,6 +23,7 @@ import com.example.ananops_android.adapter.RepairAdapter;
 import com.example.ananops_android.entity.InspectionContent;
 import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.UserLogin;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.InspectionUtils;
 
@@ -47,6 +48,7 @@ public class InspectionSearchListActivity extends AppCompatActivity implements V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_research_order_list);
         mContext=this;
+        ActivityManager.getInstance().addActivity(this);
         initDatas();
         initViews();
         setOnListener();

@@ -26,6 +26,7 @@ import com.example.ananops_android.db.RepairerListResponse;
 import com.example.ananops_android.entity.Contacts;
 import com.example.ananops_android.entity.RepairAddContent;
 import com.example.ananops_android.net.Net;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 import com.example.ananops_android.view.EditTextWithDel;
@@ -60,6 +61,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext=this;
+        ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_contacts_main);
         initViews();
     }

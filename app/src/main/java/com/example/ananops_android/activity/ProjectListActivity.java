@@ -20,6 +20,7 @@ import com.example.ananops_android.adapter.ListViewHolder;
 import com.example.ananops_android.db.ProjectListResponse;
 import com.example.ananops_android.entity.ProjectInfo;
 import com.example.ananops_android.net.Net;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 import com.example.ananops_android.view.EditTextWithDel;
@@ -41,24 +42,13 @@ public class ProjectListActivity extends AppCompatActivity {
     private ListCommonAdapter mAdapter;
     private Context mContext;
 
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1:
-
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_main);
         mContext =this;
+        ActivityManager.getInstance().addActivity(this);
         //获取项目信息
         Net.instance.getProjectList(4L, SPUtils.getInstance().getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
