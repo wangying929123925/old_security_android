@@ -275,7 +275,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onConfirmClickListener() {
 //                        Toast.makeText(RepairAddActivity.this, "queding", Toast.LENGTH_SHORT).show();
-                        et_appointment_time.setText(result[0]+"-"+result[1]+"-"+result[2]+"-"+result[3]);
+                        et_appointment_time.setText(result[0]+"-"+result[1]+"-"+result[2]+" "+result[3]);
                     }
 
                     @Override

@@ -152,7 +152,10 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                         //接单派工
                         Toast.makeText(mContext, "接单派工", Toast.LENGTH_SHORT).show();
                         //BaseUtils.getInstence().changeStatus(5, ORDER_ID, "服务商接单", mContext);
-                        BaseUtils.getInstence().intent(mContext, ContactActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("type","repair");
+                        bundle.putString("typeId",ORDER_ID);
+                        BaseUtils.getInstence().intent(mContext, ContactActivity.class,bundle);
                     }
                 });
                 order_detail_button2.setOnClickListener(new View.OnClickListener() {
@@ -194,7 +197,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                         //维修工接单
                         Toast.makeText(mContext, "接单", Toast.LENGTH_SHORT).show();
                         BaseUtils.getInstence().changeStatus(6, ORDER_ID, "维修工接单", mContext);
-                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                       // BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                     }
                 });
                 order_detail_button2.setOnClickListener(new View.OnClickListener() {
@@ -203,7 +206,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                         //不接单
                         Toast.makeText(mContext, "不接单", Toast.LENGTH_SHORT).show();
                         BaseUtils.getInstence().changeStatus(15, ORDER_ID, "服务商审核通过", mContext);
-                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                      //  BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
 
                     }
                 });

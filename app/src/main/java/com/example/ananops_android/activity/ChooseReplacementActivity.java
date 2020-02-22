@@ -48,20 +48,21 @@ public class ChooseReplacementActivity extends AppCompatActivity {
         setContentView(R.layout.activity_replacement_choose);
         mContext=this;
         initViews();
-        initData();
+        //initData();
         setListener();
+        getReplacementData(replacements);
     }
     private void initViews() {
         lv_choose_replacement=findViewById(R.id.lv_choose_replacement);
         title=findViewById(R.id.txt_title);
         imageBack=findViewById(R.id.img_back);
         replacement_choose_confirm=findViewById(R.id.replacement_choose_confirm);
+        title.setText("选择备件");
     }
     private void initData() {
         Intent intent=getIntent();
         repairId=intent.getStringExtra("repairId");
-        title.setText("选择备件");
-        replacements=getReplacementData(replacements);
+    //    replacements=getReplacementData(replacements);
         mAdapter=new ListCommonAdapter<Replacement>(getApplicationContext(),R.layout.item_chooese_replacement,replacements) {
             @Override
             protected void convert(ListViewHolder viewHolder, Replacement replacement, int position) {
@@ -87,6 +88,8 @@ public class ChooseReplacementActivity extends AppCompatActivity {
         replacement1.setPrice((float) 40.00);
         replacements.add(replacement);
         replacements.add(replacement1);
+        replacements.add(replacement);
+        replacements.add(replacement1);
         Net.instance.getReplacementList(SPUtils.getInstance().getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -108,11 +111,13 @@ public class ChooseReplacementActivity extends AppCompatActivity {
                             if (replacementListResult.getResult().size() > 0) {
                                 replacements.addAll(replacementListResult.getResult());
                                 Log.v("巡检子项列表1", replacementListResult.getResult().get(0).getId() + "");
+                                initData();
                             } else {
                                 Toast.makeText(mContext, "无巡检子项列表！", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             Toast.makeText(mContext, replacementListResult.getMessage(), Toast.LENGTH_LONG).show();
+                            initData();
                         }
                     }
                 });

@@ -252,7 +252,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:hint="请选择维修时间"
-                android:maxLength="12"
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"

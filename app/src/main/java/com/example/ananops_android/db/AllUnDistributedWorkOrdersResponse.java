@@ -71,7 +71,7 @@ public class AllUnDistributedWorkOrdersResponse {
         private Integer startRow;
         private Integer endRow;
         private Float total;
-        private ArrayList<InspectionInfo> list;
+      //  private ArrayList<InspectionInfo> list;
 
         public Integer getPageNum() {
             return pageNum;
@@ -121,13 +121,13 @@ public class AllUnDistributedWorkOrdersResponse {
             this.total = total;
         }
 
-        public ArrayList<InspectionInfo> getList() {
-            return list;
-        }
-
-        public void setList(ArrayList<InspectionInfo> list) {
-            this.list = list;
-        }
+//       public ArrayList<InspectionInfo> getList() {
+//            return list;
+//        }
+//
+//        public void setList(ArrayList<InspectionInfo> list) {
+//            this.list = list;
+//        }
 
     }
 }

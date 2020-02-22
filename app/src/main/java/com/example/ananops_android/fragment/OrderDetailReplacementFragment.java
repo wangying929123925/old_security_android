@@ -176,6 +176,10 @@ public class OrderDetailReplacementFragment extends Fragment {
                 //提交备品备件申请
                 ReplacementOrderCreateRequest replacementOrderCreateRequest = new ReplacementOrderCreateRequest();
                 replacementOrderCreateRequest.setObjectId(Long.valueOf(ORDER_ID));
+                replacementOrderCreateRequest.setCurrentApproverId(782517846944000001L);
+                replacementOrderCreateRequest.setCurrentApprover("值机员");
+                replacementOrderCreateRequest.setApplicantId(782525013398923265L);
+                replacementOrderCreateRequest.setApplicant("服务商业务员");
                 replacementOrderCreateRequest.setItems(replacementList);
                 Net.instance.ReplacementOrderCreate(replacementOrderCreateRequest, SPUtils.getInstance().getString("Token", " "))
                         .subscribeOn(Schedulers.newThread())
@@ -197,11 +201,12 @@ public class OrderDetailReplacementFragment extends Fragment {
                             public void onNext(CodeMessageResponse codeMessageResponse) {
                                 if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
                                     Toast.makeText(mContext,"提交成功！",Toast.LENGTH_SHORT).show();
-                                    BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                                    BaseUtils.getInstence().changeStatus(7,ORDER_ID,"提交备件申请",mContext);
+                                  //  BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 }
                                 else{
                                     Toast.makeText(mContext,"服务器故障！",Toast.LENGTH_SHORT).show();
-                                    BaseUtils.getInstence().intent(getActivity(),UserMainActivity.class);
+                                //    BaseUtils.getInstence().intent(getActivity(),UserMainActivity.class);
                                 }
                             }
                         });

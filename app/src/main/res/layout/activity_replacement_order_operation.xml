@@ -221,7 +221,7 @@
                     android:id="@+id/replacement_suggestion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="45dp"
+                    android:layout_centerVertical="true"
                     android:paddingLeft="90dp"
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"

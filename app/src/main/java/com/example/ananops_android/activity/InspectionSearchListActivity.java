@@ -39,7 +39,7 @@ public class InspectionSearchListActivity extends AppCompatActivity implements V
     private ImageView back_img;
     private EditText search_content;
     private TextView search_text;
-    private static String TITLE;
+    private static String statusDo;
     private static String PROJECT_ID;
     private InspectionAdapter inspectionAdapter;
     private Context mContext;
@@ -59,8 +59,8 @@ public class InspectionSearchListActivity extends AppCompatActivity implements V
         back_img=findViewById(R.id.img_back);
         search_content=findViewById(R.id.text_search);
         search_text=findViewById(R.id.search_title_txt);
-        Intent intent=getIntent();
-        PROJECT_ID=intent.getStringExtra("project_id");
+//        Intent intent=getIntent();
+//        PROJECT_ID=intent.getStringExtra("project_id");
         title.setText("巡检列表");
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView=findViewById(R.id.contact_recycler_view);
@@ -73,6 +73,7 @@ public class InspectionSearchListActivity extends AppCompatActivity implements V
                 Toast.makeText(getApplicationContext(), "巡检详情" + (position + 1), Toast.LENGTH_SHORT).show();
                 Bundle bundle0=new Bundle();
                 bundle0.putString("inspectionId",String.valueOf(inspectionInfos.get(position).getId()));
+               bundle0.putString("status",statusDo);
                 BaseUtils.getInstence().intent(mContext,InspectionDetailActivity.class,bundle0,"title","4-2");
             }
         });
@@ -82,6 +83,7 @@ public class InspectionSearchListActivity extends AppCompatActivity implements V
    //  inspectionContents= BaseUtils.getInstence().initInspectionContent(inspectionContents);
         Bundle bundle = getIntent().getExtras();
         inspectionInfos = bundle.getParcelableArrayList("result");
+        statusDo=bundle.getString("statusDo");
         if (inspectionInfos == null) {
             inspectionInfos = new ArrayList<>();
         }

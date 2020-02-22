@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
@@ -13,7 +13,8 @@
         android:textSize="20sp"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/blue"
+        android:textColor="@color/state_selected"
+        android:background="@color/deep_blue"
         />
 
     <LinearLayout
@@ -24,7 +25,8 @@
 
         <com.zyyoona7.picker.DatePickerView
             android:id="@+id/dpv_default"
-            android:layout_width="260dp"
+            android:layout_width="0dp"
+            android:layout_weight="4"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             />
@@ -33,7 +35,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="16dp"
             android:id="@+id/newwheelview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
@@ -49,10 +52,10 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:gravity="center"
-
+        android:textColor="@color/state_selected"
         android:textSize="18sp"
         android:layout_weight="1"
-        android:background="@color/blue"
+        android:background="@color/deep_blue"
         />
 
     <View
@@ -66,7 +69,8 @@
         android:gravity="center"
         android:textSize="18sp"
         android:layout_weight="1"
-        android:background="@color/blue"
+        android:textColor="@color/state_selected"
+        android:background="@color/deep_blue"
         />
 
     </LinearLayout>

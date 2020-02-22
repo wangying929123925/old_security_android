@@ -233,10 +233,10 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         main_repair_img3.setImageResource(R.drawable.ic_workorder);
         main_repair_text1.setText(getResources().getString(R.string.service_main_repair1));//待接单
         main_repair_text2.setText(getResources().getString(R.string.service_main_repair2));//审核备件
-        main_repair_text2.setText(getResources().getString(R.string.service_main_repair3));//审核备件
+        main_repair_text3.setText(getResources().getString(R.string.service_main_repair3));//审核备件
         main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
         main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
-        main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num3));
+        main_repair_num3.setText(String.valueOf(UnReadNum.main_repair_num3));
         main_inspection_img1.setImageResource(R.drawable.ic_workorder);
         main_inspection_img2.setImageResource(R.drawable.ic_workorder);
         main_inspection_img3.setImageResource(R.drawable.ic_workorder);
@@ -377,7 +377,7 @@ private void initUserManagerData(){
             case R.id.main_repair_4:
                 switch (SPUtils.getInstance().getInt("role_num",1)){
                     case 1://待评价
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","13");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","12");
                        // BaseUtils.getInstence().intent(getContext(),ContactActivity.class);
                         break;
                     case 4://
@@ -396,7 +396,7 @@ private void initUserManagerData(){
                         break;
                     case 2://服务商待接单//fuwushangchakan
                         GetAllUnConfirmedWorkOrdersRequset requset = new GetAllUnConfirmedWorkOrdersRequset();
-                        requset.setPageNum(0);
+                        requset.setPageNum(100);
                         requset.setPageSize(0);
                         Net.instance.getAllUnConfirmedWorkOrders(requset, SPUtils.getInstance().getString("Token", " "))
                                 .subscribeOn(Schedulers.newThread())
@@ -423,7 +423,8 @@ private void initUserManagerData(){
                                             if (result != null) {
                                                 Bundle bundle = new Bundle();
                                                 bundle.putParcelableArrayList("result", result);
-                                                BaseUtils.getInstence().intent(getContext(), InspectionSearchListActivity.class, bundle, "title", "4-2");
+                                                bundle.putString("statusDo","2-1");
+                                                BaseUtils.getInstence().intent(getContext(), InspectionSearchListActivity.class, bundle);
                                             }
                                         }
                                     }
@@ -431,7 +432,7 @@ private void initUserManagerData(){
                      //   BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待确认");
                         break;
                     case 3://维修工待接单
-                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,"title","2");
+                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,"statusDo","3-1");
                         break;
                     case 4://甲方巡检申请
                      BaseUtils.getInstence().intent(getContext(), InspectionAddActivity.class);
@@ -445,45 +446,53 @@ private void initUserManagerData(){
                     case 1://
                         break;
                     case 2://服务商待分配工程师
-                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,"title","1");
-//                        final AllUnDistributedWorkOrdersRequest allUnDistributedWorkOrdersRequest = new AllUnDistributedWorkOrdersRequest();
-//                       allUnDistributedWorkOrdersRequest.setType("inspection");
-//                        Net.instance.getAllUnDistributedWorkOrder(allUnDistributedWorkOrdersRequest, SPUtils.getInstance().getString("Token", " "))
-//                                .subscribeOn(Schedulers.newThread())
-//                                .observeOn(AndroidSchedulers.mainThread())
-//                                .subscribe(new Subscriber<AllUnDistributedWorkOrdersResponse>() {
-//                                    @Override
-//                                    public void onCompleted() {
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onError(Throwable e) {
-//                                        Log.v("ErrorGetUnauthorTask", System.currentTimeMillis() + "");
-//                                        e.printStackTrace();
-//                                    }
-//
-//                                    @Override
-//                                    public void onNext(AllUnDistributedWorkOrdersResponse allUnDistributedWorkOrdersResponse) {
-//                                        if (TextUtils.equals(allUnDistributedWorkOrdersResponse.getCode(),"200")) {
-//                                            ArrayList<InspectionInfo> result = allUnDistributedWorkOrdersResponse.getResult().getList();
+                        Toast.makeText(getContext(), "待分配", Toast.LENGTH_SHORT).show();
+                         AllUnDistributedWorkOrdersRequest allUnDistributedWorkOrdersRequest = new AllUnDistributedWorkOrdersRequest();
+                        Net.instance.getAllUnDistributedWorkOrder(allUnDistributedWorkOrdersRequest, SPUtils.getInstance().getString("Token", " "))
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<AllUnDistributedWorkOrdersResponse>() {
+                                    @Override
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.v("ErrorGetUnauthorTask", System.currentTimeMillis() + "");
+                                        e.printStackTrace();
+                                    }
+
+                                    @Override
+                                    public void onNext(AllUnDistributedWorkOrdersResponse allUnDistributedWorkOrdersResponse) {
+                                        if (TextUtils.equals(allUnDistributedWorkOrdersResponse.getCode(),"200")) {
+                                            Toast.makeText(mContext, "code200", Toast.LENGTH_SHORT).show();
+                                           // ArrayList<InspectionInfo> result = allUnDistributedWorkOrdersResponse.getResult().getList();
 //                                            if (result != null) {
-//                                                Bundle bundle = new Bundle();
-//                                                bundle.putParcelableArrayList("result", result);
-//                                                BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle,"title","2-2");
+                                             //   Bundle bundle = new Bundle();
+                                              //  bundle.putParcelableArrayList("result", result);
+                                               // bundle.putString("statusDo","2-2");
+                                              //  BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle);
 //                                            }
-//                                        }
-//                                    }
-//                                });
+//                                            else {
+//
+//                                                BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle)
+//                                            }
+                                        }else {
+                                            Toast.makeText(mContext, "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                         break;
                     case 3://维修工巡检中
-                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,"title","3");
-                     //   Toast.makeText(getContext(),"巡检中",Toast.LENGTH_LONG).show();
-                      //  BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","巡检中");
+                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,"statusDo","3-2");
                         break;
                     case 4://甲方待确认
-                        BaseUtils.getInstence().intent(getContext(), InspectionSearchListActivity.class,"title","待确认");
+                       // BaseUtils.getInstence().intent(getContext(), InspectionSearchListActivity.class,"title","待确认");
+                        BaseUtils.getInstence().getAndPassInspectionList(0,"4-2",getContext());
                         break;
+                        default:
+                            break;
                 }
                 break;
             case R.id.main_inspection_3:
@@ -495,40 +504,39 @@ private void initUserManagerData(){
                        // BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待通过");
                         break;
                     case 4://甲方巡检中//2chakanshenherenwu
-                        final AllUnauthorizedTaskRequest allUnauthorizedTaskRequest = new AllUnauthorizedTaskRequest();
-                        allUnauthorizedTaskRequest.setPageNum(0);
-                        allUnauthorizedTaskRequest.setPageSize(0);
-                        allUnauthorizedTaskRequest.setUserId(1);
-                        Net.instance.getAllUnauthorizedTask(allUnauthorizedTaskRequest, SPUtils.getInstance().getString("Token", " "))
-                                .subscribeOn(Schedulers.newThread())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Subscriber<AllUnauthorizedTaskResponse>() {
-                                    @Override
-                                    public void onCompleted() {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        Log.v("ErrorGetUnauthorTask", System.currentTimeMillis() + "");
-                                        e.printStackTrace();
-                                        Toast.makeText(mContext, "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    @Override
-                                    public void onNext(AllUnauthorizedTaskResponse allUnauthorizedTaskResponse) {
-                                        if (TextUtils.equals(allUnauthorizedTaskResponse.getCode(),"200")) {
-                                            ArrayList<InspectionInfo> result = allUnauthorizedTaskResponse.getResult();
-                                            if (result != null) {
-                                                Bundle bundle = new Bundle();
-                                                bundle.putParcelableArrayList("result", result);
-                                                BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle,"title","4-2");
-                                            }
-                                        }
-                                    }
-                                });
-
-                      //  BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","巡检中");
+//                        final AllUnauthorizedTaskRequest allUnauthorizedTaskRequest = new AllUnauthorizedTaskRequest();
+//                        allUnauthorizedTaskRequest.setPageNum(0);
+//                        allUnauthorizedTaskRequest.setPageSize(0);
+//                        allUnauthorizedTaskRequest.setUserId(1);
+//                        Net.instance.getAllUnauthorizedTask(allUnauthorizedTaskRequest, SPUtils.getInstance().getString("Token", " "))
+//                                .subscribeOn(Schedulers.newThread())
+//                                .observeOn(AndroidSchedulers.mainThread())
+//                                .subscribe(new Subscriber<AllUnauthorizedTaskResponse>() {
+//                                    @Override
+//                                    public void onCompleted() {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onError(Throwable e) {
+//                                        Log.v("ErrorGetUnauthorTask", System.currentTimeMillis() + "");
+//                                        e.printStackTrace();
+//                                        Toast.makeText(mContext, "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
+//                                    }
+//
+//                                    @Override
+//                                    public void onNext(AllUnauthorizedTaskResponse allUnauthorizedTaskResponse) {
+//                                        if (TextUtils.equals(allUnauthorizedTaskResponse.getCode(),"200")) {
+//                                            ArrayList<InspectionInfo> result = allUnauthorizedTaskResponse.getResult();
+//                                            if (result != null) {
+//                                                Bundle bundle = new Bundle();
+//                                                bundle.putParcelableArrayList("result", result);
+//                                                BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle,"title","4-2");
+//                                            }
+//                                        }
+//                                    }
+//                                });
+                        BaseUtils.getInstence().getAndPassInspectionList(4,"4-3",getContext());
                         break;
                 }
                 break;
@@ -537,8 +545,8 @@ private void initUserManagerData(){
                     case 3://
                         break;
                     case 4://甲方待付款
-                     //   BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待付款");
                       //  Toast.makeText(getContext(),"Ops,数据展示正在开发中",Toast.LENGTH_LONG).show();
+                        BaseUtils.getInstence().getAndPassInspectionList(5,"4-4",getContext());
                         break;
                 }
                 break;
@@ -547,8 +555,7 @@ private void initUserManagerData(){
                     case 3://无
                         break;
                     case 4://甲方待评价
-                       // BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待评价");
-                        // Toast.makeText(getContext(),"Ops,数据展示正在开发中",Toast.LENGTH_LONG).show();
+                        BaseUtils.getInstence().getAndPassInspectionList(6,"4-5",getContext());
                         break;
                 }
                 break;

@@ -45,7 +45,7 @@ public class ReplacementOrder {
     private String statusMsg;
     private Float totalPrice;
     private Float discount;
-    private List<Replacement> items;
+  //  private List<Replacement> items;
     private String processResult;
     private String processMsg;
     private String quotationText;
@@ -171,13 +171,13 @@ public class ReplacementOrder {
         this.discount = discount;
     }
 
-    public List<Replacement> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Replacement> items) {
-        this.items = items;
-    }
+//    public List<Replacement> getItems() {
+//        return items;
+//    }
+//
+//    public void setItems(List<Replacement> items) {
+//        this.items = items;
+//    }
 
     public String getProcessResult() {
         return processResult;

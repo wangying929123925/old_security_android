@@ -49,6 +49,7 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
     private Button inspection_detail_button2;
     private LinearLayout fragment_inspection_commit;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
+    private String inspectionItemId;
     private Context mContext;
     private String STATUS = "1"; //有几个角色就设置几个不同的状态 对应不同fragment数据的显示
     @Override
@@ -60,8 +61,9 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
         initFragment();
         initViews();
         initDatas();
-        INSPECTION_ID = getIntent().getStringExtra("inspectionItemId");
-        STATUS=getIntent().getStringExtra("status");
+        Bundle bundle = getIntent().getExtras();
+        inspectionItemId = bundle.getString("inspectionItemId");
+        STATUS = bundle.getString("status");
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list_fragment,list_title);
         //viewPager设置adapter
         vp_search_order_pager.setAdapter(myFragmentPagerAdapter);
@@ -197,42 +199,10 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         //分配工程师
-                        InspectionEngineerDistributeRequest inspectionEngineerDistributeRequest = new InspectionEngineerDistributeRequest();
-                        inspectionEngineerDistributeRequest.setTaskId(Long.valueOf(INSPECTION_ID));
-                        inspectionEngineerDistributeRequest.setEngineerId(782526720958801921L);
-                        Net.instance.inspectionDistributeEngineer(inspectionEngineerDistributeRequest,SPUtils.getInstance().getString("Token", " "))
-                                .subscribeOn(Schedulers.newThread())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Subscriber<CodeMessageResponse>() {
-                                    @Override
-                                    public void onCompleted() {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        Log.v("ErrorEngineerDistribute", System.currentTimeMillis() + "");
-                                        e.printStackTrace();
-                                        Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
-                                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
-                                    }
-
-                                    @Override
-                                    public void onNext(CodeMessageResponse codeMessageResponse) {
-                                        if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
-                                            Toast.makeText(mContext, "分配工程师成功！", Toast.LENGTH_LONG).show();
-                                            try {
-                                                Thread.sleep(500);
-                                            } catch (InterruptedException e) {
-                                                e.printStackTrace();
-                                            }
-                                            BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
-                                        } else {
-                                            Toast.makeText(mContext, codeMessageResponse.getMessage(), Toast.LENGTH_LONG).show();
-                                        }
-
-                                    }
-                                });
+                        Bundle bundle = new Bundle();
+                        bundle.putString("type","inspection");
+                        bundle.putString("typeId",inspectionItemId);
+                        BaseUtils.getInstence().intent(mContext, ContactActivity.class,bundle);
                          }
                 });
                 break;

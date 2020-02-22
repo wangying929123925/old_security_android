@@ -72,6 +72,7 @@ public class ReplacementOrderListActivity extends AppCompatActivity {
                                 replacementOrders.addAll(relacementOrderListUndoResult.getResult());
                                 Log.v("未审核备件订单列表1", relacementOrderListUndoResult.getResult().get(0).getId() + "");
                                 mAdapter.notifyDataSetChanged();//
+
                             } else {
                                 Toast.makeText(mComtext, "无备件订单列表！", Toast.LENGTH_LONG).show();
                             }
@@ -104,8 +105,8 @@ public class ReplacementOrderListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
                 bundle.putString("orderId",String.valueOf(replacementOrders.get(position).getObjectId()));
-                bundle.putString("replacementOrderId", String.valueOf(replacementOrders.get(position).getObjectId()));
-                BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class);
+                bundle.putString("replacementOrderId", String.valueOf(replacementOrders.get(position).getId()));
+                BaseUtils.getInstence().intent(mComtext, ReplacementOrderOperationActivity.class,bundle);
             }
         });
         imageBack.setOnClickListener(new View.OnClickListener() {

@@ -456,6 +456,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
             Toast.makeText(mContext, "请添加网点", Toast.LENGTH_SHORT).show();
         }
         inspectionAddContent.setImcAddInspectionItemDtoList(inspectionTaskItemList1);
+        Log.v("inspectionTaskItemList", inspectionTaskItemList1.size() + "");
         inspectionAddContent.setLoginAuthDto(new InspectionAddContent.LoginAuthDtoBean());
         inspectionAddContent.setProjectId(projectInfos.get(projectTemp).getId());
         inspectionAddContent.setFacilitatorGroupId(1L);

@@ -90,7 +90,7 @@ public class ReplacementOrderOperationActivity extends AppCompatActivity {
     if(replacement_discount.getText().toString().trim().equals("")){
         Toast.makeText(mContext, "请输入折扣数量！", Toast.LENGTH_SHORT).show();
         return false;
-    } else if (Float.valueOf(replacement_discount.getText().toString().trim()) < 0.01 || Float.valueOf(replacement_discount.getText().toString().trim()) > 0.01) {
+    } else if (Float.valueOf(replacement_discount.getText().toString().trim()) < 0.01 || Float.valueOf(replacement_discount.getText().toString().trim()) > 10.00) {
         Toast.makeText(mContext, "请输入正确的折扣范围！", Toast.LENGTH_SHORT).show();
         return false;
     } else if (replacement_result.getText().toString().trim().equals("")) {
@@ -133,6 +133,7 @@ public class ReplacementOrderOperationActivity extends AppCompatActivity {
                             }
                             else{
                                 Toast.makeText(mContext,"服务器故障！",Toast.LENGTH_SHORT).show();
+                                Log.v("replaceOrderOperation", codeMessageResponse.getMessage());
                                 BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
                             }
                         }

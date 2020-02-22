@@ -22,6 +22,7 @@ import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.ContactAdapter;
 import com.example.ananops_android.db.CodeMessageResponse;
+import com.example.ananops_android.db.InspectionEngineerDistributeRequest;
 import com.example.ananops_android.db.RepairerListResponse;
 import com.example.ananops_android.entity.Contacts;
 import com.example.ananops_android.entity.RepairAddContent;
@@ -53,7 +54,8 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     private TextView contactNum;
     private ImageView imageBack;
     private Context mContext;
-    private String repairId;
+    private String typeId;
+    private String type;
     private Contacts contacts;
     private String[] result = new String[4];//日期
     final private RepairAddContent repairAddContent=new RepairAddContent();//save
@@ -68,8 +70,12 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     private void initDatas() {
         title.setText("工作人员");
         imageBack.setOnClickListener(this);
-        Intent intent=getIntent();
-       repairId=intent.getStringExtra("repairId");
+        Bundle bundle=getIntent().getExtras();
+        if (bundle != null) {
+            typeId = bundle.getString("typeId");
+            type=bundle.getString("type");
+        }
+
     }
     private void initViews() {
         sortListView=findViewById(R.id.lv_contact);
@@ -127,7 +133,12 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+                if(type.equals("repair")){
                showExitAlertDialog(view,position);
+                } else if (type.equals("inspection")) {
+                    showExitAlertDialog(view,position);
+                }
+
             }
         });
 
@@ -164,7 +175,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 BaseUtils.showConfirmDialog(result, mContext, "请选择具体报修的时间", new ConfirmDialogInterface() {
                     @Override
                     public void onConfirmClickListener() {
-                        editText.setText(result[0] + "-" + result[1] + "-" + result[2] + "-" + result[3]);
+                        editText.setText(result[0] + "-" + result[1] + "-" + result[2] + " " + result[3]);
                     }
 
                     @Override
@@ -182,12 +193,13 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                String deadline = editText.getText().toString();
+                String deadline = editText.getText().toString().trim();
                 //指派维修工
-                repairAddContent.setId(Long.valueOf(repairId));
+                repairAddContent.setId(Long.valueOf(typeId));
                 repairAddContent.setMaintainerId(Long.valueOf(contacts.getId()));
-                repairAddContent.setStatus(5);
                 repairAddContent.setDeadline(deadline);
+                repairAddContent.setStatus(5);
+                //repairAddContent.setDeadline(deadline);
                 Net.instance.repairAddPost(repairAddContent, SPUtils.getInstance().getString("Token", ""))
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -199,7 +211,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
 
                             @Override
                             public void onError(Throwable e) {
-                                Log.v("RepairerAddTime", System.currentTimeMillis() + "");
+                                Log.v("ContactAddTime", System.currentTimeMillis() + "");
                                 e.printStackTrace();
                                 Toast.makeText(mContext, "提交失败", Toast.LENGTH_SHORT).show();
                             }
@@ -208,7 +220,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                             public void onNext(CodeMessageResponse codeMessageResponse) {
                                 if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
                                     Toast.makeText(mContext,"提交成功！",Toast.LENGTH_SHORT).show();
-                                   // BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
+                                    BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
                                 }
                                 else{
                                     Toast.makeText(mContext,"服务器故障！",Toast.LENGTH_SHORT).show();
@@ -216,7 +228,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                                 }
                             }
                         });
-                BaseUtils.getInstence().intent(ContactActivity.this, UserMainActivity.class);
+               // BaseUtils.getInstence().intent(ContactActivity.this, UserMainActivity.class);
             }
         });
 
@@ -226,10 +238,66 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 dialog.dismiss();
             }
         });
-
         builder.create().show();
     }
+private void submitInspectionRepairer(View view, int i) {
+    contacts = new Contacts();
+    if (SourceDateList.size() != 0) {
+        contacts = SourceDateList.get(i);
+    }
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setMessage("请输入deadline");
+    builder.setTitle("提示");
+    builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            InspectionEngineerDistributeRequest inspectionEngineerDistributeRequest = new InspectionEngineerDistributeRequest();
+            inspectionEngineerDistributeRequest.setTaskId(Long.valueOf(typeId));
+            inspectionEngineerDistributeRequest.setEngineerId(Long.valueOf(contacts.getId()));
+            Net.instance.inspectionDistributeEngineer(inspectionEngineerDistributeRequest,SPUtils.getInstance().getString("Token", " "))
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<CodeMessageResponse>() {
+                        @Override
+                        public void onCompleted() {
 
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.v("ErrorEngineerDistribute", System.currentTimeMillis() + "");
+                            e.printStackTrace();
+                            Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
+                            BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                        }
+
+                        @Override
+                        public void onNext(CodeMessageResponse codeMessageResponse) {
+                            if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
+                                Toast.makeText(mContext, "分配工程师成功！", Toast.LENGTH_LONG).show();
+                                try {
+                                    Thread.sleep(500);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                            } else {
+                                Toast.makeText(mContext, codeMessageResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+
+                        }
+                    });
+            dialog.dismiss();
+        }
+    });
+     builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+      @Override
+       public void onClick(DialogInterface dialog, int which) {
+          dialog.dismiss();
+                }
+            });
+            builder.create().show();
+}
 /**
  * 根据输入框中的值来过滤数据并更新ListView
  */

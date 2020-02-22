@@ -64,11 +64,18 @@ public class RepairCommentActivity extends AppCompatActivity implements View.OnC
         attitude_comment_rat = findViewById(R.id.attitude_comment_rat);
         quality_comment_rat = findViewById(R.id.quality_comment_rat);
         et_comment = findViewById(R.id.et_comment);
-        Intent intent = new Intent();
+        Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+      //  Log.v("", "initView: ");
         if (bundle != null) {
             ORDER_ID = bundle.getString("order_id");
         }
+        else {
+            Toast.makeText(mContext, "no_orderId", Toast.LENGTH_SHORT).show();
+           // Log.v("result",System.currentTimeMillis() + "");
+        }
+        //Log.v("commentOrderId",ORDER_ID);
+      //  Toast.makeText(mContext, "orderId"+ORDER_ID, Toast.LENGTH_SHORT).show();
     }
     private void setOnListener() {
 

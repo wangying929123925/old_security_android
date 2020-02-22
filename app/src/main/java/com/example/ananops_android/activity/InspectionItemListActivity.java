@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.ListCommonAdapter;
 import com.example.ananops_android.adapter.ListViewHolder;
+import com.example.ananops_android.db.AllAcceptedItemByMaintainerRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
 import com.example.ananops_android.db.InspectionQueryByStatusAndIdRequest;
 import com.example.ananops_android.entity.InspectionTaskItem;
@@ -40,7 +41,7 @@ public class InspectionItemListActivity extends AppCompatActivity {
     private ImageView imageBack;
     private List<InspectionTaskItem> inspectionTaskItems=new ArrayList<>();
     private ListCommonAdapter mAdapter;
-    private static String status;
+    private static String statusDo;
     private Context mComtext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,56 +50,94 @@ public class InspectionItemListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contacts_main);
         Intent intent=getIntent();
         if(intent!=null) {
-            status = intent.getStringExtra("title");
-            initDatas(Integer.valueOf(status));
+            statusDo = intent.getStringExtra("statusDo");
+            initDatas(statusDo);
         } else {
             initViews();
         }
     }
-    private void initDatas(Integer status){
-        InspectionQueryByStatusAndIdRequest inspectionQueryByStatusAndIdRequest = new InspectionQueryByStatusAndIdRequest();
-        inspectionQueryByStatusAndIdRequest.setStatus(status);
-        inspectionQueryByStatusAndIdRequest.setUserId(1L);
-        Net.instance.getInspectionItemByMaintainerIdAndStatus(inspectionQueryByStatusAndIdRequest,SPUtils.getInstance().getString("Token", " "))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<InspectionItemListResponse>() {
-                    @Override
-                    public void onCompleted() {
+    private void initDatas(String statusDo){
+        if (statusDo.equals("3-1")) {
+            int status = 2;
+            InspectionQueryByStatusAndIdRequest inspectionQueryByStatusAndIdRequest = new InspectionQueryByStatusAndIdRequest();
+            inspectionQueryByStatusAndIdRequest.setStatus(status);
+            inspectionQueryByStatusAndIdRequest.setUserId(1L);
+            Net.instance.getInspectionItemByMaintainerIdAndStatus(inspectionQueryByStatusAndIdRequest, SPUtils.getInstance().getString("Token", " "))
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<InspectionItemListResponse>() {
+                        @Override
+                        public void onCompleted() {
 
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.v("InspectionListTime", System.currentTimeMillis() + "");
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(InspectionItemListResponse inspectionItemListResponse) {
-                        if (TextUtils.equals(inspectionItemListResponse.getCode(), "200")) {
-                            inspectionTaskItems.clear();
-                            if (inspectionItemListResponse.getResult().size() > 0) {
-                                inspectionTaskItems.addAll(inspectionItemListResponse.getResult());
-                                Log.v("巡检子项列表1", inspectionItemListResponse.getResult().get(0).getId() + "");
-                                initViews();//
-                            } else {
-                                Toast.makeText(mComtext, "无巡检子项列表！", Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Toast.makeText(mComtext, inspectionItemListResponse.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                    }
-                });
 
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.v("InspectionListTime", System.currentTimeMillis() + "");
+                            e.printStackTrace();
+                        }
 
+                        @Override
+                        public void onNext(InspectionItemListResponse inspectionItemListResponse) {
+                            if (TextUtils.equals(inspectionItemListResponse.getCode(), "200")) {
+                                inspectionTaskItems.clear();
+                                if (inspectionItemListResponse.getResult().size() > 0) {
+                                    inspectionTaskItems.addAll(inspectionItemListResponse.getResult());
+                                    Log.v("巡检子项列表1", inspectionItemListResponse.getResult().get(0).getId() + "");
+                                    initViews();//
+                                } else {
+                                    Toast.makeText(mComtext, "无巡检子项列表！", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                Toast.makeText(mComtext, inspectionItemListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+        } else if (statusDo.equals("3-2")) {
+            AllAcceptedItemByMaintainerRequest allAcceptedItemByMaintainerRequest = new AllAcceptedItemByMaintainerRequest();
+            allAcceptedItemByMaintainerRequest.setMaintainerId(Long.valueOf(SPUtils.getInstance().getString("user_id", "")));
+            Net.instance.getAllAcceptedItemByMaintainer(allAcceptedItemByMaintainerRequest, SPUtils.getInstance().getString("Token", " "))
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<InspectionItemListResponse>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.v("ErrorInspectionListTime", System.currentTimeMillis() + "");
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onNext(InspectionItemListResponse inspectionItemListResponse) {
+                            if (TextUtils.equals(inspectionItemListResponse.getCode(), "200")) {
+                                inspectionTaskItems.clear();
+                                if (inspectionItemListResponse.getResult().size() > 0) {
+                                    inspectionTaskItems.addAll(inspectionItemListResponse.getResult());
+                                    Log.v("巡检子项列表1", inspectionItemListResponse.getResult().get(0).getId() + "");
+                                    initViews();//
+                                } else {
+                                    Toast.makeText(mComtext, "无巡检子项列表！", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                Toast.makeText(mComtext, inspectionItemListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+
+        }else {
+            initViews();
+        }
     }
     private void initViews() {
         sortListView=findViewById(R.id.lv_contact);
         mEtSearchName = (EditTextWithDel) findViewById(R.id.et_search_contact);
-        title=findViewById(R.id.txt_title);
-        noResult=findViewById(R.id.no_result_text);
-        imageBack=findViewById(R.id.img_back);
+        title = findViewById(R.id.txt_title);
+        noResult = findViewById(R.id.no_result_text);
+        imageBack = findViewById(R.id.img_back);
         title.setText("巡检任务子项");
        // inspectionTaskItems= InspectionUtils.getInstence().getInspectionTaskItems(inspectionTaskItems,Long.valueOf(inspectionId),mComtext);
         mAdapter = new ListCommonAdapter<InspectionTaskItem>(mComtext, R.layout.item_project_list, inspectionTaskItems) {
@@ -116,27 +155,31 @@ public class InspectionItemListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //进入任务子项
-                if(inspectionTaskItems.get(position).getStatus()==2){
-                    Bundle bundle = new Bundle();
-                    bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
-                    bundle.putString("status","3-1");
-                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
-                }else if(inspectionTaskItems.get(position).getStatus()==3){
-                    Bundle bundle = new Bundle();
-                    bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
-                    bundle.putString("status","3-2");
-                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
-                }else if(inspectionTaskItems.get(position).getStatus()==1){
-                    Bundle bundle = new Bundle();
-                    bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
-                    bundle.putString("status","2-2");
-                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
-                }else {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
-                    bundle.putString("status","no");
-                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
-                }
+                Bundle bundle = new Bundle();
+                bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
+                bundle.putString("status",statusDo);
+                BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
+//                if(inspectionTaskItems.get(position).getStatus()==2){
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
+//                    bundle.putString("status","3-1");
+//                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
+//                }else if(inspectionTaskItems.get(position).getStatus()==3){
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
+//                    bundle.putString("status","3-2");
+//                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
+//                }else if(inspectionTaskItems.get(position).getStatus()==1){
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
+//                    bundle.putString("status","2-2");
+//                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
+//                }else {
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
+//                    bundle.putString("status","no");
+//                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
+//                }
 
             }
         });

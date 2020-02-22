@@ -1,38 +1,38 @@
 package com.example.ananops_android.db;
 
 public class AllUnDistributedWorkOrdersRequest {
-
     /**
+     * orderBy : string
      * pageNum : 0
-     * pageSize : 0
-     * type : inspection
+     * pageSize : 100
      */
 
-    private Integer pageNum;
-    private Integer pageSize;
-    private String type;
+    private String orderBy;
+    private int pageNum;
+    private int pageSize;
 
-    public Integer getPageNum() {
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = "string";
+    }
+
+    public int getPageNum() {
         return pageNum;
     }
 
-    public void setPageNum(Integer pageNum) {
+    public void setPageNum(int pageNum) {
         this.pageNum = 0;
     }
 
-    public Integer getPageSize() {
+    public int getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = 0;
+    public void setPageSize(int pageSize) {
+        this.pageSize = 100;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 }

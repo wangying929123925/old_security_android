@@ -15,15 +15,20 @@ import android.widget.Toast;
 
 import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
+import com.example.ananops_android.activity.InspectionSearchListActivity;
 import com.example.ananops_android.activity.RepairAddActivity;
 import com.example.ananops_android.activity.UserMainActivity;
+import com.example.ananops_android.db.AllUnauthorizedTaskRequest;
+import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
+import com.example.ananops_android.db.InspectionListByUserIdAndStatusRequest;
 import com.example.ananops_android.db.OrderDetailResponse;
 import com.example.ananops_android.db.OrderRequest;
 import com.example.ananops_android.db.OrderResponse;
 import com.example.ananops_android.db.UserInfo;
 import com.example.ananops_android.entity.InspectionContent;
+import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.RepairContent;
 import com.example.ananops_android.net.Net;
 import com.zyyoona7.picker.DatePickerView;
@@ -277,6 +282,45 @@ public class BaseUtils {
                   }
               });
     }
+
+    /*
+     获取巡检列表
+     */
+    public void getAndPassInspectionList(int status, final String statusDo, final Context mContext) {
+        InspectionListByUserIdAndStatusRequest inspectionListByUserIdAndStatusRequest = new InspectionListByUserIdAndStatusRequest();
+        inspectionListByUserIdAndStatusRequest.setRole(1);
+        inspectionListByUserIdAndStatusRequest.setStatus(status);
+        inspectionListByUserIdAndStatusRequest.setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id", "")));
+        Net.instance.getInspectionTaskByUserIdAndStatus(inspectionListByUserIdAndStatusRequest, SPUtils.getInstance().getString("Token", " "))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<AllUnauthorizedTaskResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("ErrorGetInsTaskById", System.currentTimeMillis() + "");
+                        e.printStackTrace();
+                        Toast.makeText(mContext, "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(AllUnauthorizedTaskResponse allUnauthorizedTaskResponse) {
+                        if (TextUtils.equals(allUnauthorizedTaskResponse.getCode(),"200")) {
+                            ArrayList<InspectionInfo> result = allUnauthorizedTaskResponse.getResult();
+                            if (result != null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelableArrayList("result", result);
+                                bundle.putString("statusDo",statusDo);
+                                BaseUtils.getInstence().intent(mContext, InspectionSearchListActivity.class,bundle,"title","4-2");
+                            }
+                        }
+                    }
+                });
+    }
     /**
      * 不带参数的跳转
      *
@@ -286,7 +330,7 @@ public class BaseUtils {
      */
     public void intent(Context fromContext, Class<?> cls) {
         Intent intent = new Intent(fromContext, cls);
-        ActivityManager.getInstance().finishActivity();
+        // ActivityManager.getInstance().finishActivity();
         fromContext.startActivity(intent);
     }
     /**
@@ -300,7 +344,7 @@ public class BaseUtils {
         Intent intent = new Intent(fromContext, cls);
         intent.putExtra(dataName,data);
         fromContext.startActivity(intent);
-        ActivityManager.getInstance().finishActivity();
+      //  ActivityManager.getInstance().finishActivity();
     }
 
     public void intent(Context fromContext, Class<?> cls,Bundle bundle,String dataName, String data) {
@@ -308,7 +352,7 @@ public class BaseUtils {
         intent.putExtra(dataName,data);
         intent.putExtras(bundle);
         fromContext.startActivity(intent);
-        ActivityManager.getInstance().finishActivity();
+      //  ActivityManager.getInstance().finishActivity();
     }
     /**
      * 带参数的跳转
@@ -321,7 +365,7 @@ public class BaseUtils {
         Intent intent = new Intent(fromContext, cls);
         intent.putExtras(bb);
         fromContext.startActivity(intent);
-        ActivityManager.getInstance().finishActivity();
+       // ActivityManager.getInstance().finishActivity();
     }
     /**
      * 封装 startActivityForResult 带参数传�?
@@ -479,8 +523,30 @@ public class BaseUtils {
 
         //初始化数据
         List<String> list = new ArrayList();
-        list.add("上午");
-        list.add("下午");
+        list.add("01:00:00");
+        list.add("02:00:00");
+        list.add("03:00:00");
+        list.add("04:00:00");
+        list.add("05:00:00");
+        list.add("06:00:00");
+        list.add("07:00:00");
+        list.add("08:00:00");
+        list.add("09:00:00");
+        list.add("10:00:00");
+        list.add("11:00:00");
+        list.add("12:00:00");
+        list.add("13:00:00");
+        list.add("14:00:00");
+        list.add("15:00:00");
+        list.add("16:00:00");
+        list.add("17:00:00");
+        list.add("18:00:00");
+        list.add("19:00:00");
+        list.add("20:00:00");
+        list.add("21:00:00");
+        list.add("22:00:00");
+        list.add("23:00:00");
+        list.add("24:00:00");
         //泛型为数据类型
         final WheelView<String> newWheelView = view.findViewById(R.id.newwheelview);
         //设置数据
