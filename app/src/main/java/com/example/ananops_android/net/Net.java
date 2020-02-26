@@ -3,6 +3,7 @@ package com.example.ananops_android.net;
 import com.example.ananops_android.db.AcceptImcTaskByPrincipalRequest;
 import com.example.ananops_android.db.AcceptInspectionItemRequest;
 import com.example.ananops_android.db.AllAcceptedItemByMaintainerRequest;
+import com.example.ananops_android.db.AllItemByTaskIdAndStatuRequest;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersRequest;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersResponse;
 import com.example.ananops_android.db.AllUnauthorizedTaskRequest;
@@ -11,9 +12,12 @@ import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.ConfirmWorkOrderRequest;
+import com.example.ananops_android.db.InspectionDetailResponse;
 import com.example.ananops_android.db.InspectionEngineerDistributeRequest;
+import com.example.ananops_android.db.InspectionItemDetailResponse;
 import com.example.ananops_android.db.InspectionItemListImcRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
+import com.example.ananops_android.db.InspectionItemLogsRequest;
 import com.example.ananops_android.db.InspectionListByProjectRequest;
 import com.example.ananops_android.db.InspectionListByUserIdAndStatusRequest;
 import com.example.ananops_android.db.InspectionListResponse;
@@ -185,7 +189,7 @@ public interface Net {
     Observable<AllUnauthorizedTaskResponse> getInspectionTaskByUserIdAndStatus(@Body InspectionListByUserIdAndStatusRequest getTaskByUserId, @Header("Authorization") String postToken);
 
     //服务商查询未分配工程师的巡检单
-    @POST("/spc/workorder/getAllUnDistributedWorkOrder")
+    @POST("/spc/workorder/getAllUnDistributedWorkOrders")
     Observable<AllUnDistributedWorkOrdersResponse> getAllUnDistributedWorkOrder(@Body AllUnDistributedWorkOrdersRequest WorkOrderStatusQueryDto, @Header("Authorization") String postToken);
 
     //甲方负责人查看未审核任务
@@ -223,6 +227,22 @@ public interface Net {
     //维修工程师查看已接单子项列表
     @POST("/imc/inspectionItem/getAllAcceptedItemByMaintainer")
     Observable<InspectionItemListResponse> getAllAcceptedItemByMaintainer(@Body AllAcceptedItemByMaintainerRequest itemQueryDto, @Header("Authorization") String postToken);
+
+    //根据巡检ID和状态查询子项列表
+    @POST("/imc/inspectionItem/getAllItemByTaskIdAndStatus")
+    Observable<InspectionItemListResponse> getAllItemByTaskIdAndStatus(@Body AllItemByTaskIdAndStatuRequest getAllItemByTaskIdAndStatus, @Header("Authorization") String postToken);
+
+    //根据子项ID查看子项日志
+    @POST("/imc/inspectionItem/getItemLogs")
+    Observable<InspectionLogResponse> getInspectionItemLog(@Body InspectionItemLogsRequest getItemLogs, @Header("Authorization") String postToken);
+
+    //获取子项信息
+    @GET("/imc/inspectionItem/getItemByItemId/{itemId}")
+    Observable<InspectionItemDetailResponse> getInspectionItemDetails(@Path("itemId") Long itemId, @Header("Authorization") String postToken);
+
+    //获取巡检信息
+    @GET("/imc/inspectionTask/getTaskByTaskId/{taskId}")
+    Observable<InspectionDetailResponse> getInspectionDetails(@Path("taskId") Long taskId, @Header("Authorization") String postToken);
 
     //巡检维修工程师接单
     @POST("/imc/inspectionItem/acceptItemByMaintainer")

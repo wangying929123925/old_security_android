@@ -132,8 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.v("LoginTime", System.currentTimeMillis() + "");
                             Log.v("deviceIdLogin", deviceId + "");
                             e.printStackTrace();
-
-                            Toast.makeText(getApplicationContext(), "网络异常，请检查网络状态1", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "网络异常，请检查网络状态login", Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -146,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
                                   SPUtils.getInstance().putString("LoginName", loginResponse.getResult().getLoginName());
                                   Log.v("Token", loginResponse.getResult().getAccess_token());
                                   SPUtils.getInstance().putString("Token", "Bearer" + " " + TOKEN);
-                                  getUerinfo();
+                                  getUserinfo();
                               }
                           }
                           else {
@@ -184,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         } return true;
     }
-    private void getUerinfo(){
+    private void getUserinfo(){
         String userName = SPUtils.getInstance().getString("LoginName", "0");
        Net.instance.getUserInfo(userName,SPUtils.getInstance().getString("Token"," "))
 //        Net.instance1.getUserInfo(userName,UserInfo.TOKEN)
@@ -198,7 +197,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.v("LoginTime", System.currentTimeMillis() + "");
+                        Log.v("errorGetUserInfo", System.currentTimeMillis() + "");
                         e.printStackTrace();
                         Toast.makeText(getApplicationContext(), "网络异常，请检查网络状态getuserInfo", Toast.LENGTH_SHORT).show();
                     }

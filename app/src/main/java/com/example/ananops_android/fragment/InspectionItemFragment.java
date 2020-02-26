@@ -26,7 +26,6 @@ public class InspectionItemFragment extends Fragment {
     private List<String> names = new ArrayList<>();
     private List<String> values = new ArrayList<>();
     private static String inspectionId;
-
     //Fragment中构造方法中不能传递参数
     //通过下面的方式 能将参数传进InspectionFragment中
     public static InspectionItemFragment newIntance(String id,ArrayList<String> names, ArrayList<String> values) {
@@ -44,13 +43,12 @@ public class InspectionItemFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_show, container, false);
         Bundle bundle = getArguments();
-        inspectionId = bundle.getString("id");
+        inspectionId = bundle.getString("id","1");
         names = bundle.getStringArrayList("data");
         values = bundle.getStringArrayList("value");
         myRV = view.findViewById(R.id.rv_inspection);
         myRV.setLayoutManager(new LinearLayoutManager(getContext()));
         myRV.setAdapter(new MyRecyclerViewAdapter(names, values, getContext()));
-
         return view;
     }
 
@@ -116,11 +114,11 @@ public class InspectionItemFragment extends Fragment {
             //电话可修改
             if (mData.get(i).contains("电话")||mData.get(i).contains("等级")) {
                 innerHolder.mContent.setFocusableInTouchMode(true);
-                innerHolder.mButton.setVisibility(View.VISIBLE);
-                innerHolder.mButton.setText("可修改");
+               // innerHolder.mButton.setVisibility(View.VISIBLE);
+               // innerHolder.mButton.setText("可修改");
             }
             if (i == 2) {
-                if (mData.get(i).equals("审核人")) {
+                if (mData.get(i).equals("审核")) {
                     innerHolder.mButton.setVisibility(View.VISIBLE);
                 }
             }

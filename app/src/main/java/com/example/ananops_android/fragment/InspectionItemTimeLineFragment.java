@@ -13,23 +13,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ananops_android.R;
-import com.example.ananops_android.entity.InspectionTaskItem;
 import com.example.ananops_android.entity.InspectionTaskLog;
 import com.example.ananops_android.util.InspectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InspectionTimeLineFragment extends Fragment {
+public class InspectionItemTimeLineFragment extends Fragment {
     private RecyclerView myRV;
     private List<InspectionTaskLog> taskLogs = new ArrayList<>();
-    private static String inspectionId;
-   private Context mContext;
-    public static InspectionTimeLineFragment newIntance(String id) {
-        InspectionTimeLineFragment inspectionDetailFragment = new InspectionTimeLineFragment();
+    private static String inspectionItemId;
+    private Context mContext;
+    public static InspectionItemTimeLineFragment newIntance(String id) {
+        InspectionItemTimeLineFragment inspectionDetailFragment = new InspectionItemTimeLineFragment();
         Bundle bundle = new Bundle();
         bundle.putString("id",id);
         inspectionDetailFragment.setArguments(bundle);
@@ -43,20 +41,20 @@ public class InspectionTimeLineFragment extends Fragment {
         Bundle bundle = getArguments();
         mContext=getContext();
         if(bundle!=null){
-        inspectionId = bundle.getString("id");}
-        Log.v("inspectionTimeLine",inspectionId);
-       // taskItems= InspectionUtils.getInstence().getInspectionTaskItems(taskItems,Long.valueOf(inspectionId),mComtext);
+            inspectionItemId = bundle.getString("id");}
+        Log.v("inspectionTimeLine",inspectionItemId);
+        // taskItems= InspectionUtils.getInstence().getInspectionTaskItems(taskItems,Long.valueOf(inspectionId),mComtext);
         myRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        taskLogs=InspectionUtils.getInstence().getInspectionLogs(taskLogs,Long.valueOf(inspectionId),mContext);
+        taskLogs= InspectionUtils.getInstence().getInspectionItemLogs(taskLogs,Long.valueOf(inspectionItemId),mContext);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(1500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        myRV.setAdapter(new MyRecyclerViewAdapter(taskLogs, getContext()));
+        myRV.setAdapter(new InspectionItemTimeLineFragment.MyRecyclerViewAdapter(taskLogs, getContext()));
         return view;
     }
-    private class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.InnerHolder> {
+    private class MyRecyclerViewAdapter extends RecyclerView.Adapter<InspectionItemTimeLineFragment.MyRecyclerViewAdapter.InnerHolder> {
 
         private List<InspectionTaskLog> taskLogs;
         private Context mContext;
@@ -64,7 +62,7 @@ public class InspectionTimeLineFragment extends Fragment {
 
         public class InnerHolder extends RecyclerView.ViewHolder {
 
-           private TextView tvDirector;
+            private TextView tvDirector;
             private TextView tvProcess;
             private TextView tvTime;
             private RelativeLayout rlDone;
@@ -87,14 +85,14 @@ public class InspectionTimeLineFragment extends Fragment {
 
         @NonNull
         @Override
-        public InnerHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, final int i) {
+        public InspectionItemTimeLineFragment.MyRecyclerViewAdapter.InnerHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, final int i) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.fragment_order_time_line_item, null);
-            final InnerHolder innerHolder = new InnerHolder(view);
+            final InspectionItemTimeLineFragment.MyRecyclerViewAdapter.InnerHolder innerHolder = new InspectionItemTimeLineFragment.MyRecyclerViewAdapter.InnerHolder(view);
             return innerHolder;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull InnerHolder innerHolder, final int i) {
+        public void onBindViewHolder(@NonNull InspectionItemTimeLineFragment.MyRecyclerViewAdapter.InnerHolder innerHolder, final int i) {
             if(i==0){
                 innerHolder.rlDoing.setVisibility(View.VISIBLE);
                 innerHolder.rlDone.setVisibility(View.GONE);

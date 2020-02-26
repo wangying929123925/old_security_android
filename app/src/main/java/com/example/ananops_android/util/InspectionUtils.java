@@ -13,6 +13,7 @@ import com.example.ananops_android.activity.UserMainActivity;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.InspectionItemListImcRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
+import com.example.ananops_android.db.InspectionItemLogsRequest;
 import com.example.ananops_android.db.InspectionListByProjectRequest;
 import com.example.ananops_android.db.InspectionListResponse;
 import com.example.ananops_android.db.InspectionLogResponse;
@@ -23,6 +24,7 @@ import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.InspectionTaskItem;
 import com.example.ananops_android.entity.InspectionTaskLog;
 import com.example.ananops_android.entity.ProjectInfo;
+import com.example.ananops_android.fragment.InspectionItemTimeLineFragment;
 import com.example.ananops_android.net.Net;
 
 import java.util.List;
@@ -210,8 +212,50 @@ public List<InspectionTaskItem> getInspectionTaskItemsImc(final List<InspectionT
         }
         return inspectionTaskLogs;
         }
+
+    //获取巡检日志
+    public List<InspectionTaskLog> getInspectionItemLogs(final List<InspectionTaskLog> inspectionTaskLogs, Long inspectTaskItemId, final Context mContext) {
+        if (inspectTaskItemId != null) {
+            InspectionItemLogsRequest inspectionItemLogsRequest = new InspectionItemLogsRequest();
+            inspectionItemLogsRequest.setItemId(inspectTaskItemId);
+            Net.instance.getInspectionItemLog(inspectionItemLogsRequest, SPUtils.getInstance().getString("Token", " "))
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<InspectionLogResponse>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.v("ErrorGetInspectItemLog", System.currentTimeMillis() + "");
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onNext(InspectionLogResponse inspectionLogResponse) {
+                            if (TextUtils.equals(inspectionLogResponse.getCode(), "200")) {
+
+                                inspectionTaskLogs.clear();
+                                if (inspectionLogResponse.getResult().size() > 0) {
+                                    inspectionTaskLogs.addAll(inspectionLogResponse.getResult());
+                                    Log.v("巡检日志列表1", inspectionLogResponse.getResult().get(0).getId() + "");
+                                } else {
+                                    Toast.makeText(mContext, "无巡检日志列表！", Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                Toast.makeText(mContext, inspectionLogResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+        }else {
+            Toast.makeText(mContext, "没有巡检子项单号！", Toast.LENGTH_LONG).show();
+        }
+        return inspectionTaskLogs;
+    }
 //添加巡检任务
-    public void addInspection(InspectionAddContent inspectionAddContent,final Context mContext) {
+    public void addInspection(InspectionAddContent inspectionAddContent, final Context mContext) {
         Net.instance.addInspectionInfo(inspectionAddContent, SPUtils.getInstance().getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -231,11 +275,10 @@ public List<InspectionTaskItem> getInspectionTaskItemsImc(final List<InspectionT
                     @Override
                     public void onNext(CodeMessageResponse codeMessageResponse) {
                         if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
-                            Toast.makeText(mContext,"提交成功！",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "提交成功！", Toast.LENGTH_SHORT).show();
                             BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
-                        }
-                        else{
-                            Toast.makeText(mContext,"提交失败！",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(mContext, "提交失败！", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

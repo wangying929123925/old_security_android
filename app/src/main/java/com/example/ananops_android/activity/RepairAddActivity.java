@@ -82,6 +82,8 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private String[] result = new String[4];
     private List<ProjectInfo> projectInfos = new ArrayList<>();
     private String[] projectArray;
+    private String[] addressArray;
+    private String[] troubleTypeArray;
     private Context mContext;
 
     private static final int REQUEST_PLACE = 1;
@@ -139,6 +141,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initViews() {
+
         et_project_name=findViewById(R.id.et_project_name);//项目名
         et_repair_person=findViewById(R.id.et_repair_person);//报修人
         repair_listid=findViewById(R.id.et_repair_facname);
@@ -168,6 +171,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private void initDatas() {
         et_repair_person.setText(SPUtils.getInstance().getString("user_id","111"));
         et_repair_tel.setText("18801162442");
+        //获取项目信息
         Net.instance.getProjectList(4L, SPUtils.getInstance().getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -203,6 +207,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                         }
                     }
                 });
+
     }
     @Override
     protected void onResume() {

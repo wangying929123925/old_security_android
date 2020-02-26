@@ -1,7 +1,6 @@
 package com.example.ananops_android.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -17,12 +16,12 @@ import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.ListCommonAdapter;
 import com.example.ananops_android.adapter.ListViewHolder;
 import com.example.ananops_android.db.AllAcceptedItemByMaintainerRequest;
+import com.example.ananops_android.db.AllItemByTaskIdAndStatuRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
 import com.example.ananops_android.db.InspectionQueryByStatusAndIdRequest;
 import com.example.ananops_android.entity.InspectionTaskItem;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
-import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
 import com.example.ananops_android.view.EditTextWithDel;
 
@@ -42,15 +41,19 @@ public class InspectionItemListActivity extends AppCompatActivity {
     private List<InspectionTaskItem> inspectionTaskItems=new ArrayList<>();
     private ListCommonAdapter mAdapter;
     private static String statusDo;
-    private Context mComtext;
+    private String status;
+    private String inspectionId;
+    private Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mComtext=this;
+        mContext =this;
         setContentView(R.layout.activity_contacts_main);
-        Intent intent=getIntent();
-        if(intent!=null) {
-            statusDo = intent.getStringExtra("statusDo");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            statusDo = bundle.getString("statusDo");
+            inspectionId = bundle.getString("inspectionId");
+            status = bundle.getString("status", "1");
             initDatas(statusDo);
         } else {
             initViews();
@@ -86,10 +89,10 @@ public class InspectionItemListActivity extends AppCompatActivity {
                                     Log.v("巡检子项列表1", inspectionItemListResponse.getResult().get(0).getId() + "");
                                     initViews();//
                                 } else {
-                                    Toast.makeText(mComtext, "无巡检子项列表！", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext, "无巡检子项列表！", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(mComtext, inspectionItemListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(mContext, inspectionItemListResponse.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -120,16 +123,15 @@ public class InspectionItemListActivity extends AppCompatActivity {
                                     Log.v("巡检子项列表1", inspectionItemListResponse.getResult().get(0).getId() + "");
                                     initViews();//
                                 } else {
-                                    Toast.makeText(mComtext, "无巡检子项列表！", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext, "无巡检子项列表！", Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Toast.makeText(mComtext, inspectionItemListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(mContext, inspectionItemListResponse.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
                     });
-
         }else {
-            initViews();
+            getInspectionListByTaskIdAndStatus();
         }
     }
     private void initViews() {
@@ -139,8 +141,8 @@ public class InspectionItemListActivity extends AppCompatActivity {
         noResult = findViewById(R.id.no_result_text);
         imageBack = findViewById(R.id.img_back);
         title.setText("巡检任务子项");
-       // inspectionTaskItems= InspectionUtils.getInstence().getInspectionTaskItems(inspectionTaskItems,Long.valueOf(inspectionId),mComtext);
-        mAdapter = new ListCommonAdapter<InspectionTaskItem>(mComtext, R.layout.item_project_list, inspectionTaskItems) {
+       // inspectionTaskItems= InspectionUtils.getInstence().getInspectionTaskItems(inspectionTaskItems,Long.valueOf(inspectionId),mContext);
+        mAdapter = new ListCommonAdapter<InspectionTaskItem>(mContext, R.layout.item_project_list, inspectionTaskItems) {
             @Override
             protected void convert(ListViewHolder viewHolder, InspectionTaskItem inspectionTaskItem, int position) {
                 viewHolder.setText(R.id.Plist_name, inspectionTaskItem.getItemName());//名称
@@ -157,28 +159,28 @@ public class InspectionItemListActivity extends AppCompatActivity {
                 //进入任务子项
                 Bundle bundle = new Bundle();
                 bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
-                bundle.putString("status",statusDo);
-                BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
+                bundle.putString("statusDo",statusDo);
+                BaseUtils.getInstence().intent(mContext, InspectionItemDetailActivity.class,bundle);
 //                if(inspectionTaskItems.get(position).getStatus()==2){
 //                    Bundle bundle = new Bundle();
 //                    bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
 //                    bundle.putString("status","3-1");
-//                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
+//                    BaseUtils.getInstence().intent(mContext, InspectionItemDetailActivity.class,bundle);
 //                }else if(inspectionTaskItems.get(position).getStatus()==3){
 //                    Bundle bundle = new Bundle();
 //                    bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
 //                    bundle.putString("status","3-2");
-//                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
+//                    BaseUtils.getInstence().intent(mContext, InspectionItemDetailActivity.class,bundle);
 //                }else if(inspectionTaskItems.get(position).getStatus()==1){
 //                    Bundle bundle = new Bundle();
 //                    bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
 //                    bundle.putString("status","2-2");
-//                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
+//                    BaseUtils.getInstence().intent(mContext, InspectionItemDetailActivity.class,bundle);
 //                }else {
 //                    Bundle bundle = new Bundle();
 //                    bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
 //                    bundle.putString("status","no");
-//                    BaseUtils.getInstence().intent(mComtext, InspectionItemDetailActivity.class,bundle);
+//                    BaseUtils.getInstence().intent(mContext, InspectionItemDetailActivity.class,bundle);
 //                }
 
             }
@@ -189,5 +191,42 @@ public class InspectionItemListActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    private void getInspectionListByTaskIdAndStatus(){
+        AllItemByTaskIdAndStatuRequest allItemByTaskIdAndStatuRequest = new AllItemByTaskIdAndStatuRequest();
+        allItemByTaskIdAndStatuRequest.setStatus(status);
+        allItemByTaskIdAndStatuRequest.setTaskId(inspectionId);
+        Net.instance.getAllItemByTaskIdAndStatus(allItemByTaskIdAndStatuRequest,SPUtils.getInstance().getString("Token", " "))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<InspectionItemListResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("ErrorInspectionListTime", System.currentTimeMillis() + "");
+                        e.printStackTrace();
+                        initViews();
+                    }
+
+                    @Override
+                    public void onNext(InspectionItemListResponse inspectionItemListResponse) {
+                        if (TextUtils.equals(inspectionItemListResponse.getCode(), "200")) {
+                            inspectionTaskItems.clear();
+                            if (inspectionItemListResponse.getResult().size() > 0) {
+                                inspectionTaskItems.addAll(inspectionItemListResponse.getResult());
+                                Log.v("巡检子项列表1", inspectionItemListResponse.getResult().get(0).getId() + "");
+                                initViews();//
+                            } else {
+                                Toast.makeText(mContext, "无巡检子项列表！", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(mContext, inspectionItemListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 }
