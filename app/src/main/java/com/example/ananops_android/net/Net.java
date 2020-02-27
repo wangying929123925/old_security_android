@@ -39,6 +39,7 @@ import com.example.ananops_android.db.RepairCommentRequest;
 import com.example.ananops_android.db.RepairerListResponse;
 import com.example.ananops_android.db.ReplacementListResponse;
 import com.example.ananops_android.db.ReplacementOrderCreateRequest;
+import com.example.ananops_android.db.TroubleTypeAndAddressListResponse;
 import com.example.ananops_android.db.UnDistrbutedInspectionDetailRequest;
 import com.example.ananops_android.db.UnDistrbutedInspectionDetailResponse;
 import com.example.ananops_android.db.UserInformation;
@@ -58,6 +59,7 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 public interface Net {
@@ -99,10 +101,14 @@ public interface Net {
     @POST("/mdmc/mdmcTask/getTaskListByIdAndStatus")
     Observable<OrderResponse> getRepairList(@Body OrderRequest queryDto, @Header("Authorization") String postToken);
 
+    //获取巡检地址和设备列表
+    @GET("/mdmc/mdmcTask/getTroubleTypeListAndAddressList")
+    Observable<TroubleTypeAndAddressListResponse> getTroubleTypeListAndAddressList(@Query("userId") Long userId, @Header("Authorization") String postToken);
+
     //工单填写提交
     @Headers("Content-Type:application/json")
     @POST("/mdmc/mdmcTask/save")
-    Observable<CodeMessageResponse> repairAddPost(@Body RepairAddContent MdmcAddTaskDto, @Header("Authorization") String postToken);
+    Observable<CodeMessageResponse> repairAddPost(@Body RepairAddContent saveTask, @Header("Authorization") String postToken);
 
     //获取图片
     @POST("/uac/auth/code/image")
@@ -123,7 +129,7 @@ public interface Net {
     @GET("/mdmc/mdmcTask/getTaskByTaskId/{taskId}")
     Observable<OrderDetailResponse> getOrderDetail(@Path("taskId") String orderId, @Header("Authorization") String postToken);
 
-    //填写维修信息
+    //修改维修信息
     @POST("/mdmc/mdmcTask/modify")
     @Headers("Content-Type:application/json")
     Observable<CodeMessageResponse> postRepairDetail(@Body RepairChangeDetail modifyTask, @Header("Authorization") String postToken);

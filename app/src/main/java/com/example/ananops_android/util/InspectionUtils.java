@@ -27,8 +27,10 @@ import com.example.ananops_android.entity.ProjectInfo;
 import com.example.ananops_android.fragment.InspectionItemTimeLineFragment;
 import com.example.ananops_android.net.Net;
 
+import java.io.IOException;
 import java.util.List;
 
+import retrofit2.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -269,7 +271,20 @@ public List<InspectionTaskItem> getInspectionTaskItemsImc(final List<InspectionT
                     public void onError(Throwable e) {
                         Log.v("ErrorAddInspection", System.currentTimeMillis() + "");
                         Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
+                        //e.printStackTrace();
+                        if (e instanceof HttpException) {
+                            HttpException httpException = (HttpException) e;
+                            try{
+                                String error = httpException.response().errorBody().string();
+                                Log.v("RepairAddError", error);
+                                //BaseErrorBean bean = new Gson().fromJson(error , BaseErrorBean.class);
+                                // ToastUtil.showLongToast(bean.getError());
+                            }catch(IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }else {
+                            //ToastUtil.showLongToast("请求失败");
+                        }
                     }
 
                     @Override
