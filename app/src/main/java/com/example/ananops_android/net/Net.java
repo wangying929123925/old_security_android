@@ -185,7 +185,7 @@ public interface Net {
     Observable<AllUnauthorizedTaskResponse> getInspectionTaskByUserIdAndStatus(@Body InspectionListByUserIdAndStatusRequest getTaskByUserId, @Header("Authorization") String postToken);
 
     //服务商查询未分配工程师的巡检单
-    @POST("/spc/workorder/getAllUnDistributedWorkOrder")
+    @POST("/spc/workorder/getAllUnDistributedWorkOrders")
     Observable<AllUnDistributedWorkOrdersResponse> getAllUnDistributedWorkOrder(@Body AllUnDistributedWorkOrdersRequest WorkOrderStatusQueryDto, @Header("Authorization") String postToken);
 
     //甲方负责人查看未审核任务

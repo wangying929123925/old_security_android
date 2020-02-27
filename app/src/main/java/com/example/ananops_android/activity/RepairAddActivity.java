@@ -1,11 +1,16 @@
 package com.example.ananops_android.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -84,6 +89,12 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private String[] projectArray;
     private Context mContext;
 
+    private static String[] PERMISSION_STORAGE_PHOTO ={
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+    };
+
     private static final int REQUEST_PLACE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,11 +108,29 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         initViews();
         initDatas();
         setOnListener();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,PERMISSION_STORAGE_PHOTO,1);
+            }
+        }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        String s = "";
+        if (requestCode == 1) {
+            for (int i = 0; i < permissions.length; i++) {
+                s += permissions[i];
+                s += " ";
+            }
+            Toast.makeText(mContext, "成功授权"+s, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setOnListener() {
@@ -119,20 +148,24 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String imgs = (String) parent.getItemAtPosition(position);
-                if ("paizhao".equals(imgs) ){
-                    PhotoPickerIntent intent = new PhotoPickerIntent(RepairAddActivity.this);
-                    intent.setSelectModel(SelectModel.MULTI);
-                    intent.setShowCarema(true); // 是否显示拍照
-                    intent.setMaxTotal(6); // 最多选择照片数量，默认为6
-                    intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
-                    startActivityForResult(intent, REQUEST_CAMERA_CODE);
-                }else{
-                    Toast.makeText(RepairAddActivity.this,"1"+position,Toast.LENGTH_SHORT).show();
-                    PhotoPreviewIntent intent = new PhotoPreviewIntent(RepairAddActivity.this);
-                    intent.setCurrentItem(position);
-                    intent.setPhotoPaths(imagePaths);
-                    startActivityForResult(intent, REQUEST_PREVIEW_CODE);
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED) {
+                        String imgs = (String) parent.getItemAtPosition(position);
+                        if ("paizhao".equals(imgs) ){
+                            PhotoPickerIntent intent = new PhotoPickerIntent(RepairAddActivity.this);
+                            intent.setSelectModel(SelectModel.MULTI);
+                            intent.setShowCarema(true); // 是否显示拍照
+                            intent.setMaxTotal(6); // 最多选择照片数量，默认为6
+                            intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
+                            startActivityForResult(intent, REQUEST_CAMERA_CODE);
+                        }else{
+                            Toast.makeText(RepairAddActivity.this,"1"+position,Toast.LENGTH_SHORT).show();
+                            PhotoPreviewIntent intent = new PhotoPreviewIntent(RepairAddActivity.this);
+                            intent.setCurrentItem(position);
+                            intent.setPhotoPaths(imagePaths);
+                            startActivityForResult(intent, REQUEST_PREVIEW_CODE);
+                        }
+                    }
                 }
             }
         });
