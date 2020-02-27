@@ -193,7 +193,7 @@
                 android:layout_height="50dp"
                 android:text="提交"
                 android:id="@+id/choose_replacement_button"
-                android:background="#3255D5"
+                android:background="@color/deep_blue"
                 android:textSize="20sp"
                 android:textColor="#ffffff"
                 android:visibility="gone"

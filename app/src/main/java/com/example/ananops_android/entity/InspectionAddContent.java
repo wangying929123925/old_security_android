@@ -229,7 +229,7 @@ public class InspectionAddContent {
         }
 
         public void setGroupId(Long groupId) {
-            this.groupId = 1L;
+            this.groupId = groupId;
         }
 
         public String getGroupName() {
@@ -237,7 +237,7 @@ public class InspectionAddContent {
         }
 
         public void setGroupName(String groupName) {
-            this.groupName = "paascloud";
+            this.groupName = groupName;
         }
 
         public String getLoginName() {
@@ -245,7 +245,7 @@ public class InspectionAddContent {
         }
 
         public void setLoginName(String loginName) {
-            this.loginName = "admin";
+            this.loginName = loginName;
         }
 
         public Long getUserId() {
@@ -253,7 +253,7 @@ public class InspectionAddContent {
         }
 
         public void setUserId(Long userId) {
-            this.userId = 1L;
+            this.userId = userId;
         }
 
         public String getUserName() {
@@ -261,7 +261,7 @@ public class InspectionAddContent {
         }
 
         public void setUserName(String userName) {
-            this.userName = "超级管理员";
+            this.userName = userName;
         }
     }
 

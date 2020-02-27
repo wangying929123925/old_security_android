@@ -58,7 +58,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     private String type;
     private Contacts contacts;
     private String[] result = new String[4];//日期
-    final private RepairAddContent repairAddContent=new RepairAddContent();//save
+    final private RepairAddContent repairAddContent = new RepairAddContent();//save
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,21 +70,21 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     private void initDatas() {
         title.setText("工作人员");
         imageBack.setOnClickListener(this);
-        Bundle bundle=getIntent().getExtras();
+        Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             typeId = bundle.getString("typeId");
-            type=bundle.getString("type");
+            type = bundle.getString("type");
         }
 
     }
     private void initViews() {
-        sortListView=findViewById(R.id.lv_contact);
+        sortListView = findViewById(R.id.lv_contact);
         mEtSearchName = (EditTextWithDel) findViewById(R.id.et_search_contact);
-        title=findViewById(R.id.txt_title);
-        noResult=findViewById(R.id.no_result_text);
-        departNum=findViewById(R.id.department_num);
-        contactNum=findViewById(R.id.department_men_num);
-        imageBack=findViewById(R.id.img_back);
+        title = findViewById(R.id.txt_title);
+        noResult = findViewById(R.id.no_result_text);
+        departNum = findViewById(R.id.department_num);
+        contactNum = findViewById(R.id.department_men_num);
+        imageBack = findViewById(R.id.img_back);
         initDatas();
         initEvents();
       //  setListAdapter();
@@ -134,9 +134,9 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 if(type.equals("repair")){
-               showExitAlertDialog(view,position);
+                    showExitAlertDialog(view, position);
                 } else if (type.equals("inspection")) {
-                    showExitAlertDialog(view,position);
+                    submitInspectionRepairer(view,position);
                 }
 
             }
@@ -246,7 +246,7 @@ private void submitInspectionRepairer(View view, int i) {
         contacts = SourceDateList.get(i);
     }
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setMessage("请输入deadline");
+    builder.setMessage("确认指派工程师吗");
     builder.setTitle("提示");
     builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
         @Override
@@ -302,13 +302,13 @@ private void submitInspectionRepairer(View view, int i) {
  * 根据输入框中的值来过滤数据并更新ListView
  */
 private void filterData(String filterStr) {
-    List<Contacts> contactsList=new ArrayList<>();
+    List<Contacts> contactsList = new ArrayList<>();
     if(TextUtils.isEmpty(filterStr)){
-        contactsList=SourceDateList;
+        contactsList = SourceDateList;
     }else {
         contactsList.clear();
         for(Contacts contacts:SourceDateList){
-            String name=contacts.getName();
+            String name = contacts.getName();
            Pattern p = Pattern.compile(filterStr);
            Matcher m = p.matcher(name);
            // String match=".*"+filterStr+".*";
@@ -320,10 +320,9 @@ private void filterData(String filterStr) {
     }
     Collections.sort(contactsList,new SortDerpart());
     adapter.updateListView(contactsList);
-    if (contactsList.size()==0){
-noResult.setVisibility(View.VISIBLE);
-    }
-    else {
+    if (contactsList.size() == 0) {
+        noResult.setVisibility(View.VISIBLE);
+    } else {
         noResult.setVisibility(View.GONE);
     }
 }
@@ -331,18 +330,18 @@ noResult.setVisibility(View.VISIBLE);
 private List<Contacts> filledData(String[] data) {
     List<Contacts> mSortList = new ArrayList<>();
     ArrayList<Integer> countDepart = new ArrayList<>();
-    for(int i=0;i<data.length;i++){
-    Contacts contacts=new Contacts();
-    int temp=Integer.parseInt(data[i].substring(0,1));
+    for (int i = 0; i < data.length; i++) {
+        Contacts contacts = new Contacts();
+        int temp = Integer.parseInt(data[i].substring(0, 1));
         contacts.setDepartment(temp);
-  //  contacts.setDepartment("第"+temp+"组");
-    String temp1=data[i];
-    contacts.setName(temp1.substring(1));
-    mSortList.add(contacts);
+        //  contacts.setDepartment("第"+temp+"组");
+        String temp1 = data[i];
+        contacts.setName(temp1.substring(1));
+        mSortList.add(contacts);
 
-    if(!countDepart.contains(contacts.getDepartment())){
-        countDepart.add(contacts.getDepartment());
-    }
+        if (!countDepart.contains(contacts.getDepartment())) {
+            countDepart.add(contacts.getDepartment());
+        }
     }
  //  departNum.setText(countDepart.size());
     departNum.setText(String.valueOf(countDepart.size()));

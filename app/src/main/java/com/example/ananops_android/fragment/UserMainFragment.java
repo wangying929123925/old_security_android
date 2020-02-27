@@ -432,7 +432,10 @@ private void initUserManagerData(){
                      //   BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待确认");
                         break;
                     case 3://维修工待接单
-                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,"statusDo","3-1");
+                        Bundle bundle = new Bundle();
+                        bundle.putString("inspectionItemId","0");
+                        bundle.putString("statusDo","3-1");
+                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,bundle);
                         break;
                     case 4://甲方巡检申请
                      BaseUtils.getInstence().intent(getContext(), InspectionAddActivity.class);
@@ -466,26 +469,30 @@ private void initUserManagerData(){
                                     @Override
                                     public void onNext(AllUnDistributedWorkOrdersResponse allUnDistributedWorkOrdersResponse) {
                                         if (TextUtils.equals(allUnDistributedWorkOrdersResponse.getCode(),"200")) {
-                                            Toast.makeText(mContext, "code200", Toast.LENGTH_SHORT).show();
-                                           // ArrayList<InspectionInfo> result = allUnDistributedWorkOrdersResponse.getResult().getList();
+                                           // Toast.makeText(mContext, "code200", Toast.LENGTH_SHORT).show();
+                                            ArrayList<InspectionInfo> result = allUnDistributedWorkOrdersResponse.getResult().getList();
 //                                            if (result != null) {
-                                             //   Bundle bundle = new Bundle();
-                                              //  bundle.putParcelableArrayList("result", result);
-                                               // bundle.putString("statusDo","2-2");
-                                              //  BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle);
+                                               Bundle bundle = new Bundle();
+                                                bundle.putParcelableArrayList("result", result);
+                                               bundle.putString("statusDo","2-2");
+                                               BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle);
 //                                            }
 //                                            else {
 //
 //                                                BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle)
 //                                            }
-                                        }else {
+                                        }
+                                        else {
                                             Toast.makeText(mContext, "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
                         break;
                     case 3://维修工巡检中
-                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,"statusDo","3-2");
+                        Bundle bundle = new Bundle();
+                        bundle.putString("inspectionItemId","0");
+                        bundle.putString("statusDo","3-2");
+                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,bundle);
                         break;
                     case 4://甲方待确认
                        // BaseUtils.getInstence().intent(getContext(), InspectionSearchListActivity.class,"title","待确认");

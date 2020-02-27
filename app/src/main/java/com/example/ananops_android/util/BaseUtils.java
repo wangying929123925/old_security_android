@@ -476,7 +476,7 @@ public class BaseUtils {
         result[0] = year + "";
         result[1] = month + "";
         result[2] = day + "";
-        result[3] = "上午";
+        result[3] = "01:00:00";
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         //加载布局
         View view = View.inflate(mContext, R.layout.dialog_confirm, null);

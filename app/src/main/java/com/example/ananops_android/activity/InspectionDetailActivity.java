@@ -11,18 +11,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.MyFragmentPagerAdapter;
 import com.example.ananops_android.db.AcceptImcTaskByPrincipalRequest;
-import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.ConfirmWorkOrderRequest;
+import com.example.ananops_android.db.InspectionDetailResponse;
+import com.example.ananops_android.db.InspectionItemDetailResponse;
 import com.example.ananops_android.db.TestResponse;
-import com.example.ananops_android.entity.InspectionInfo;
-import com.example.ananops_android.fragment.InspectionDetailFragment;
+import com.example.ananops_android.fragment.InspectionItemClassifyFragment;
 import com.example.ananops_android.fragment.InspectionItemFragment;
 import com.example.ananops_android.fragment.InspectionTimeLineFragment;
 import com.example.ananops_android.net.Net;
@@ -44,14 +45,17 @@ public class InspectionDetailActivity extends AppCompatActivity {
     private List<Fragment> list_fragment;                                //定义要装fragment的列表
     private List<String> list_title;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
-    private String STATUS = "1"; //有几个角色就设置几个不同的状态 对应不同fragment数据的显示
+    private int userCode ; //有几个角色就设置几个不同的状态 对应不同fragment数据的显示
     private static String inspectionId;
     private TextView title;
     private Button b1, b2;
+    private LinearLayout fragment_inspection_commit;
     //  private ImageView search_img;
     private ImageView back_img;
     private Context mContext;
-    private String SIGN; //上一个界面传过来的标志位用以区分Button的Text 和 点击效果
+    private ArrayList<String> list_value1= new ArrayList<>();
+    private ArrayList<String> list_value4= new ArrayList<>();
+    private static String statusDo; //StatusDo
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,21 +63,20 @@ public class InspectionDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inspection_item_detail);
         mContext = this;
         ActivityManager.getInstance().addActivity(this);
-        inspectionId = getIntent().getStringExtra("inspectionId");
-        initFragment();
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            inspectionId = bundle.getString("inspectionId");
+            statusDo = bundle.getString("statusDo");
+        }
+        getInspectionInfo();
+     //   initFragment();
         initViews();
         initDatas();
-        setOnListener();
-        myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list_fragment, list_title);
-        //viewPager设置adapter
-        vp_search_order_pager.setAdapter(myFragmentPagerAdapter);
-        vp_search_order_pager.setOffscreenPageLimit(1);
-        tab_search_order_title.setupWithViewPager(vp_search_order_pager);
 
     }
 
     private void initFragment() {
-
+        userCode = SPUtils.getInstance().getInt("role_num", 1);
         if (list_title == null) {
             list_title = new ArrayList<>();
             list_title.add("巡检信息");
@@ -85,13 +88,9 @@ public class InspectionDetailActivity extends AppCompatActivity {
             list_fragment = new ArrayList<>();
         }
         ArrayList<String> list_item1 = new ArrayList<>();
-        ArrayList<String> list_item2 = new ArrayList<>();
-        ArrayList<String> list_item3 = new ArrayList<>();
         ArrayList<String> list_item4 = new ArrayList<>();
-        ArrayList<String> list_value1 = new ArrayList<>();
-        ArrayList<String> list_value2 = new ArrayList<>();
-        ArrayList<String> list_value3 = new ArrayList<>();
-        ArrayList<String> list_value4 = new ArrayList<>();
+       // ArrayList<String> list_value1 = new ArrayList<>();
+       // ArrayList<String> list_value4 = new ArrayList<>();
         //首先把数据做全量填充
         //the first fragment
         list_item1.add("巡检名称");
@@ -101,36 +100,17 @@ public class InspectionDetailActivity extends AppCompatActivity {
         list_item1.add("巡检内容");
         list_item1.add("巡检备注");
         list_item1.add("服务商");
-        TestResponse bean = new TestResponse();
-        TestResponse.ResultBean result = bean.getResult();
-        list_value1.add(String.valueOf(bean.getCode()));
-        list_value1.add(bean.getMessage());
-        list_value1.add(result.getCreator());
-        list_value1.add(result.getCreator());
-        list_value1.add(String.valueOf(result.getPageNum()));
-        list_value1.add(result.getCreator());
-        list_value1.add(result.getCreator());
-        list_value1.add(String.valueOf(result.getPageNum()));
-        //the second fragment
-        list_item2.add("设备编号");
-        list_item2.add("设备名称");
-        list_item2.add("设备位置");
-        list_item2.add("报修人");
-        list_item2.add("联系电话");
-        list_value2.add(String.valueOf(bean.getCode()));
-        list_value2.add(String.valueOf(bean.getCode()));
-        list_value2.add(result.getCreator());
-        list_value2.add(result.getCreator());
-        list_value2.add(String.valueOf(result.getPageNum()));
+//        TestResponse bean = new TestResponse();
+//        TestResponse.ResultBean result = bean.getResult();
+//        list_value1.add(String.valueOf(bean.getCode()));
+//        list_value1.add(bean.getMessage());
+//        list_value1.add(result.getCreator());
+//        list_value1.add(result.getCreator());
+//        list_value1.add(String.valueOf(result.getPageNum()));
+//        list_value1.add(result.getCreator());
+//       // list_value1.add(result.getCreator());
+//        list_value1.add(String.valueOf(result.getPageNum()));
         //the third fragment
-        list_item3.add("故障程度");
-        list_item3.add("故障等级");
-        list_item3.add("故障类型");
-        list_item3.add("故障描述");
-        list_value3.add(String.valueOf(bean.getCode()));
-        list_value3.add(String.valueOf(bean.getCode()));
-        list_value3.add(result.getCreator());
-        list_value3.add(result.getCreator());
         //the fourth fragment
         list_item4.add("单据状态");
         list_item4.add("报修单号");
@@ -139,68 +119,32 @@ public class InspectionDetailActivity extends AppCompatActivity {
         list_item4.add("维修人员");
         list_item4.add("计划时间");
         list_item4.add("处理意见");
-        list_value4.add(String.valueOf(bean.getCode()));
-        list_value4.add(String.valueOf(bean.getCode()));
-        list_value4.add("");
-        list_value4.add(result.getCreator());
-        list_value4.add("");
-        list_value4.add(result.getCreator());
-        list_value4.add("");
-        switch (STATUS) {
-            //根据不同的用户权限 做小量调整
-            case "1":
-
-                /*the first fragment*/
-                //去掉乙方相关信息
-                List<String> subList = new ArrayList<>();
-                for (String s :
-                        list_item1.subList(0, 5)) {  //保留前五个
-                    subList.add(s);
-                }
-                list_item1.clear();//清空原list
-                for (String s :
-                        subList) {
-                    list_item1.add(s);//赋值给原list
-                }
-                List<String> list0 = new ArrayList<>();
-
-                for (String s :
-                        list_value1.subList(0, 5)) {
-                    list0.add(s);
-                }
-                list_value1.clear();
-                for (String s :
-                        list0) {
-                    list_value1.add(s);
-                }
-                /*the second fragment*/
-//                list_item2.add("设备编号");list_item2.add("设备名称");
-                /*the third fragment*/
-//                list_item3.add("故障程度");list_item3.add("故障等级");
-                /*the fourth fragment*/
-//                list_item4.add("单据状态");list_item4.add("报修单号");
-
-                break;
-            case "2":
-
-                break;
-            default:
-                break;
-
-        }
-        list_fragment.add(InspectionItemFragment.newIntance(inspectionId, list_item1, list_value1));
+//        list_value4.add(String.valueOf(bean.getCode()));
+//        list_value4.add(String.valueOf(bean.getCode()));
+//        list_value4.add("");
+//        list_value4.add(result.getCreator());
+//        list_value4.add("");
+//        list_value4.add(result.getCreator());
+//        list_value4.add("");
+        list_fragment.add(InspectionItemFragment.newIntance("1", list_item1, list_value1));
         list_fragment.add(InspectionTimeLineFragment.newIntance(inspectionId));
-        list_fragment.add(InspectionDetailFragment.newIntance(inspectionId));
-        list_fragment.add(InspectionItemFragment.newIntance(inspectionId, list_item4, list_value4));
+        list_fragment.add(InspectionItemClassifyFragment.newInstance(inspectionId,statusDo));
+        list_fragment.add(InspectionItemFragment.newIntance("1", list_item4, list_value4));
+        myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list_fragment, list_title);
+        //viewPager设置adapter
+        vp_search_order_pager.setAdapter(myFragmentPagerAdapter);
+        vp_search_order_pager.setOffscreenPageLimit(1);
+        tab_search_order_title.setupWithViewPager(vp_search_order_pager);
     }
 
     private void initViews() {
         vp_search_order_pager = findViewById(R.id.vp_search_inspection_pager);
         b1 = findViewById(R.id.inspection_detail_button1);
         b2 = findViewById(R.id.inspection_detail_button2);
-        SIGN = getIntent().getStringExtra("title");
-        if (!SIGN.equals("")) {
-            switch (SIGN) {
+        fragment_inspection_commit = findViewById(R.id.fragment_inspection_commit);
+       // statusDo = getIntent().getStringExtra("statusDo");
+        if (!statusDo.equals("")) {
+            switch (statusDo) {
                 case "4-2"://甲方负责人审核通过or不通过:
                     b1.setText("通过");
                     b1.setOnClickListener(new View.OnClickListener() {
@@ -330,6 +274,7 @@ public class InspectionDetailActivity extends AppCompatActivity {
                     });
                     break;
                 default:
+                    fragment_inspection_commit.setVisibility(View.GONE);
                     break;
             }
         }
@@ -346,11 +291,65 @@ public class InspectionDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
-    private void setOnListener() {
+    private void getInspectionInfo() {
+        Net.instance.getInspectionDetails(Long.valueOf(inspectionId), SPUtils.getInstance().getString("Token", " "))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<InspectionDetailResponse>() {
+                    @Override
+                    public void onCompleted() {
 
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("ErrorGetInspectionInfo", System.currentTimeMillis() + "");
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(InspectionDetailResponse inspectionDetailResponse) {
+                        if (TextUtils.equals(inspectionDetailResponse.getCode(), "200")) {
+                            list_value1.clear();
+                            list_value1.add(inspectionDetailResponse.getResult().getTaskName());
+                            list_value1.add(inspectionDetailResponse.getResult().getFrequency()+"天");
+                            list_value1.add(inspectionDetailResponse.getResult().getScheduledStartTime());
+                            list_value1.add(" ");
+                            list_value1.add(" ");
+                            list_value1.add(" ");
+                            list_value1.add(String.valueOf(inspectionDetailResponse.getResult().getFacilitatorId()));
+                            list_value4 .clear();
+                            list_value4.add(String.valueOf(inspectionDetailResponse.getResult().getStatus()));
+                            list_value4.add(String.valueOf(inspectionDetailResponse.getResult().getId()));
+                            list_value4.add(" ");
+                            list_value4.add(" ");
+                            list_value4.add(" ");
+                            list_value4.add(" ");
+                            list_value4.add(" ");
+                            initFragment();
+                        } else {
+                            Toast.makeText(mContext, inspectionDetailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            list_value1.clear();
+                            list_value1.add(" ");
+                            list_value1.add(" ");
+                            list_value1.add(" ");
+                            list_value1.add(" ");
+                            list_value1.add(" ");
+                            list_value1.add(" ");
+                            list_value1.add(" ");
+                            list_value4 .clear();
+                            list_value4.add(" ");
+                            list_value4.add(" ");
+                            list_value4.add(" ");
+                            list_value4.add(" ");
+                            list_value4.add(" ");
+                            list_value4.add(" ");
+                            list_value4.add(" ");
+                            initFragment();
+                        }
+                    }
+                });
     }
-
 }

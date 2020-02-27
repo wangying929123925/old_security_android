@@ -3,6 +3,7 @@ package com.example.ananops_android.net;
 import com.example.ananops_android.db.AcceptImcTaskByPrincipalRequest;
 import com.example.ananops_android.db.AcceptInspectionItemRequest;
 import com.example.ananops_android.db.AllAcceptedItemByMaintainerRequest;
+import com.example.ananops_android.db.AllItemByTaskIdAndStatuRequest;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersRequest;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersResponse;
 import com.example.ananops_android.db.AllUnauthorizedTaskRequest;
@@ -11,9 +12,12 @@ import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.ConfirmWorkOrderRequest;
+import com.example.ananops_android.db.InspectionDetailResponse;
 import com.example.ananops_android.db.InspectionEngineerDistributeRequest;
+import com.example.ananops_android.db.InspectionItemDetailResponse;
 import com.example.ananops_android.db.InspectionItemListImcRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
+import com.example.ananops_android.db.InspectionItemLogsRequest;
 import com.example.ananops_android.db.InspectionListByProjectRequest;
 import com.example.ananops_android.db.InspectionListByUserIdAndStatusRequest;
 import com.example.ananops_android.db.InspectionListResponse;
@@ -35,6 +39,7 @@ import com.example.ananops_android.db.RepairCommentRequest;
 import com.example.ananops_android.db.RepairerListResponse;
 import com.example.ananops_android.db.ReplacementListResponse;
 import com.example.ananops_android.db.ReplacementOrderCreateRequest;
+import com.example.ananops_android.db.TroubleTypeAndAddressListResponse;
 import com.example.ananops_android.db.UnDistrbutedInspectionDetailRequest;
 import com.example.ananops_android.db.UnDistrbutedInspectionDetailResponse;
 import com.example.ananops_android.db.UserInformation;
@@ -54,6 +59,7 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 public interface Net {
@@ -95,10 +101,14 @@ public interface Net {
     @POST("/mdmc/mdmcTask/getTaskListByIdAndStatus")
     Observable<OrderResponse> getRepairList(@Body OrderRequest queryDto, @Header("Authorization") String postToken);
 
+    //获取巡检地址和设备列表
+    @GET("/mdmc/mdmcTask/getTroubleTypeListAndAddressList")
+    Observable<TroubleTypeAndAddressListResponse> getTroubleTypeListAndAddressList(@Query("userId") Long userId, @Header("Authorization") String postToken);
+
     //工单填写提交
     @Headers("Content-Type:application/json")
     @POST("/mdmc/mdmcTask/save")
-    Observable<CodeMessageResponse> repairAddPost(@Body RepairAddContent MdmcAddTaskDto, @Header("Authorization") String postToken);
+    Observable<CodeMessageResponse> repairAddPost(@Body RepairAddContent saveTask, @Header("Authorization") String postToken);
 
     //获取图片
     @POST("/uac/auth/code/image")
@@ -119,7 +129,7 @@ public interface Net {
     @GET("/mdmc/mdmcTask/getTaskByTaskId/{taskId}")
     Observable<OrderDetailResponse> getOrderDetail(@Path("taskId") String orderId, @Header("Authorization") String postToken);
 
-    //填写维修信息
+    //修改维修信息
     @POST("/mdmc/mdmcTask/modify")
     @Headers("Content-Type:application/json")
     Observable<CodeMessageResponse> postRepairDetail(@Body RepairChangeDetail modifyTask, @Header("Authorization") String postToken);
@@ -223,6 +233,22 @@ public interface Net {
     //维修工程师查看已接单子项列表
     @POST("/imc/inspectionItem/getAllAcceptedItemByMaintainer")
     Observable<InspectionItemListResponse> getAllAcceptedItemByMaintainer(@Body AllAcceptedItemByMaintainerRequest itemQueryDto, @Header("Authorization") String postToken);
+
+    //根据巡检ID和状态查询子项列表
+    @POST("/imc/inspectionItem/getAllItemByTaskIdAndStatus")
+    Observable<InspectionItemListResponse> getAllItemByTaskIdAndStatus(@Body AllItemByTaskIdAndStatuRequest getAllItemByTaskIdAndStatus, @Header("Authorization") String postToken);
+
+    //根据子项ID查看子项日志
+    @POST("/imc/inspectionItem/getItemLogs")
+    Observable<InspectionLogResponse> getInspectionItemLog(@Body InspectionItemLogsRequest getItemLogs, @Header("Authorization") String postToken);
+
+    //获取子项信息
+    @GET("/imc/inspectionItem/getItemByItemId/{itemId}")
+    Observable<InspectionItemDetailResponse> getInspectionItemDetails(@Path("itemId") Long itemId, @Header("Authorization") String postToken);
+
+    //获取巡检信息
+    @GET("/imc/inspectionTask/getTaskByTaskId/{taskId}")
+    Observable<InspectionDetailResponse> getInspectionDetails(@Path("taskId") Long taskId, @Header("Authorization") String postToken);
 
     //巡检维修工程师接单
     @POST("/imc/inspectionItem/acceptItemByMaintainer")

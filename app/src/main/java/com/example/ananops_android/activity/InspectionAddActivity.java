@@ -440,6 +440,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
             for (int i = 0; i < checkedArray.size(); i++) {
                 if (checkedArray.valueAt(i)) {
                     //添加巡检子项
+                    inspectionTaskItems.get(i).setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id", "")));
                     inspectionTaskItemList1.add(inspectionTaskItems.get(i));
                 }
             }
@@ -459,13 +460,18 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
         Log.v("inspectionTaskItemList", inspectionTaskItemList1.size() + "");
         inspectionAddContent.setLoginAuthDto(new InspectionAddContent.LoginAuthDtoBean());
         inspectionAddContent.setProjectId(projectInfos.get(projectTemp).getId());
-        inspectionAddContent.setFacilitatorGroupId(1L);
-        inspectionAddContent.setFacilitatorId(1L);
-        inspectionAddContent.setFacilitatorManagerId(1L);
+        inspectionAddContent.setFacilitatorGroupId(4L);
+        inspectionAddContent.setFacilitatorId(4L);
+        inspectionAddContent.setScheduledStartTime(inspectionInfos.get(inspectionTemp).getScheduledStartTime());
+        inspectionAddContent.setTaskName(inspectionInfos.get(inspectionTemp).getTaskName());
+        inspectionAddContent.setTotalCost(inspectionInfos.get(inspectionTemp).getTotalCost());
+        inspectionAddContent.setFacilitatorManagerId(projectInfos.get(projectTemp).getAleaderId());
         inspectionAddContent.setPrincipalId(1L);
         inspectionAddContent.setFrequency(inspectionInfos.get(inspectionTemp).getCycleTime());
         inspectionAddContent.setInspectionType(1);
-        inspectionAddContent.setUserId(1L);
+        inspectionAddContent.setStatus(0);
+        inspectionAddContent.setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id", "")));
+        Log.v("inspectionAddContent", inspectionAddContent+ "");
         InspectionUtils.getInstence().addInspection(inspectionAddContent,mContext);
     }
 

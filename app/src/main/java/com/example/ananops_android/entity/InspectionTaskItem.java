@@ -48,6 +48,7 @@ public class InspectionTaskItem {
     private int status;
     private String updateTime;
     private int version;
+    private Long userId;
     /**
      * id : 799909602912112640
      * version : null
@@ -77,6 +78,14 @@ public class InspectionTaskItem {
     private Double itemLatitude;
     private Double itemLongitude;
     private Float count;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getCreatedTime() {
         return createdTime;

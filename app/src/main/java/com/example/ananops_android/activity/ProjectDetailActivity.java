@@ -171,6 +171,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
                                 public void onCompleted() {
                                     Bundle bundle0=new Bundle();
                                     bundle0.putParcelableArrayList("result",inspectionInfoList);
+                                    bundle0.putString("statusDo","no");
                                     BaseUtils.getInstence().intent(mContext, InspectionSearchListActivity.class,bundle0);
                                 }
 

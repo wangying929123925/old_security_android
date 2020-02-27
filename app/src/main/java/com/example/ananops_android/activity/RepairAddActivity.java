@@ -28,11 +28,11 @@ import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.GridAdapter;
 import com.example.ananops_android.db.CodeMessageResponse;
-import com.example.ananops_android.db.PostResponse;
 import com.example.ananops_android.db.ProjectListResponse;
-import com.example.ananops_android.db.UserInfo;
+import com.example.ananops_android.db.TroubleTypeAndAddressListResponse;
 import com.example.ananops_android.entity.ProjectInfo;
 import com.example.ananops_android.entity.RepairAddContent;
+import com.example.ananops_android.entity.TroubleAddress;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.photopicker.PhotoPickerActivity;
 import com.example.ananops_android.photopicker.PhotoPreviewActivity;
@@ -41,16 +41,17 @@ import com.example.ananops_android.photopicker.intent.PhotoPickerIntent;
 import com.example.ananops_android.photopicker.intent.PhotoPreviewIntent;
 import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
-import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 
-import java.lang.reflect.Array;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import retrofit2.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -87,6 +88,11 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private String[] result = new String[4];
     private List<ProjectInfo> projectInfos = new ArrayList<>();
     private String[] projectArray;
+    private String[] addressArray;
+    private List<TroubleAddress> troubleAddresses = new ArrayList<>();
+    private int addressTmp=0;
+    private String[] troubleTypeArray;
+    private int troubleTypeTmp=0;
     private Context mContext;
 
     private static String[] PERMISSION_STORAGE_PHOTO ={
@@ -172,6 +178,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initViews() {
+
         et_project_name=findViewById(R.id.et_project_name);//项目名
         et_repair_person=findViewById(R.id.et_repair_person);//报修人
         repair_listid=findViewById(R.id.et_repair_facname);
@@ -201,6 +208,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private void initDatas() {
         et_repair_person.setText(SPUtils.getInstance().getString("user_id","111"));
         et_repair_tel.setText("18801162442");
+        //获取项目信息
         Net.instance.getProjectList(4L, SPUtils.getInstance().getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -236,6 +244,52 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                         }
                     }
                 });
+        //获取类型和位置列表
+        Net.instance.getTroubleTypeListAndAddressList(Long.valueOf(SPUtils.getInstance().getString("user_id","111")),SPUtils.getInstance().getString("Token","111"))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<TroubleTypeAndAddressListResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("ErrorTroubleAndAddress", System.currentTimeMillis() + "");
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(TroubleTypeAndAddressListResponse troubleTypeAndAddressListResponse) {
+                        if (TextUtils.equals(troubleTypeAndAddressListResponse.getCode(), "200")) {
+                           //故障类型列表
+                            troubleAddresses.clear();
+                            if (troubleTypeAndAddressListResponse.getResult().getTroubleTypeList().size() > 0) {
+                                troubleTypeArray = new String[troubleTypeAndAddressListResponse.getResult().getTroubleTypeList().size()];
+                                for (int i = 0; i <troubleTypeAndAddressListResponse.getResult().getTroubleTypeList().size(); i++) {
+                                    troubleTypeArray[i] = troubleTypeAndAddressListResponse.getResult().getTroubleTypeList().get(i);
+                                }
+                                Log.v("故障列表1", troubleTypeAndAddressListResponse.getResult().getTroubleTypeList().get(0) + "");
+                            } else {
+                                Toast.makeText(mContext, "无故障列表！", Toast.LENGTH_LONG).show();
+                            }
+                            //故障位置列表
+                            if (troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().size() > 0) {
+                                addressArray = new String[troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().size()];
+                                for (int i = 0; i <troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().size(); i++) {
+                                    troubleAddresses.add(troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().get(i));
+                                    addressArray[i] = troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().get(i).getTroubleAddress();
+                                }
+                                Log.v("位置列表1", troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().get(0).getTroubleAddress() + "");
+                            } else {
+                                Toast.makeText(mContext, "无位置列表！", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(mContext, troubleTypeAndAddressListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
     @Override
     protected void onResume() {
@@ -265,8 +319,10 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 if (tip.getName() != null) {
                     et_repair_address.setText(tip.getName());
                   //  repairAddContent.getTaskItemDto().setAddress_name(tip.getName());
-                    repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLongitude(tip.getPoint().getLongitude());
-                    repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLatitude(tip.getPoint().getLatitude());
+//                    repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLongitude(tip.getPoint().getLongitude());
+//                    repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLatitude(tip.getPoint().getLatitude());
+                    repairAddContent.setRequestLatitude(tip.getPoint().getLatitude());
+                    repairAddContent.setRequestLongitude(tip.getPoint().getLatitude());
                     Toast.makeText(RepairAddActivity.this,"经度="+tip.getPoint().getLongitude()+"纬度="+tip.getPoint().getLatitude(),Toast.LENGTH_LONG).show();
                 }
             }
@@ -289,11 +345,11 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 showFaultNameAlertDialog(v);
                 break;
             case R.id.et_fault_degree:
-                String[] item={"一级", "二级", "三级"};
+                String[] item={"p0", "p1", "其他"};
                 showChooseDislog(v,et_fault_degree,item);
                 break;
             case R.id.et_emergency_degree:
-                String[] item1={"1", "2", "3"};
+                String[] item1={"紧急", "中等", "一般"};
                 showChooseDislog(v,et_emergency_degree,item1);
                 break;
             case R.id.choose_service:
@@ -308,7 +364,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onConfirmClickListener() {
 //                        Toast.makeText(RepairAddActivity.this, "queding", Toast.LENGTH_SHORT).show();
-                        et_appointment_time.setText(result[0]+"-"+result[1]+"-"+result[2]+" "+result[3]);
+                        et_appointment_time.setText(result[0] + "-" + result[1] + "-" + result[2] + " " + result[3]);
                     }
 
                     @Override
@@ -346,15 +402,16 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         }
     }
     public void showFaultTypeAlertDialog(View view){
-        final String[] items = {"视频系统", "报警系统", "门禁系统"};
+       // final String[] items = {"视频系统", "报警系统", "门禁系统"};
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setTitle("请选择故障类型");
-        alertBuilder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+        alertBuilder.setSingleChoiceItems(troubleTypeArray, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-               Toast.makeText(RepairAddActivity.this,items[i],Toast.LENGTH_SHORT).show();
-               tmp=items[i];
-               fault_type.setText(items[i]);
+               Toast.makeText(RepairAddActivity.this,troubleTypeArray[i],Toast.LENGTH_SHORT).show();
+               tmp=troubleTypeArray[i];
+               troubleTypeTmp=i;
+               fault_type.setText(troubleTypeArray[i]);
                 alertFaultType.dismiss();
             }
         });
@@ -363,24 +420,23 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         alertFaultType.show();
     }
     public void showFaultAddrAlertDialog(View view){
-        final String[] items = {"大门","大厅","现金柜台","非现金柜台","自助银行","办公区","网络机房","监控机房","其他","自助银行","办公区","网络机房","监控机房","其他"};
+        //final String[] items = {"大门","大厅","现金柜台","非现金柜台","自助银行","办公区","网络机房","监控机房","其他","自助银行","办公区","网络机房","监控机房","其他"};
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setTitle("请选择故障位置");
-        alertBuilder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+        alertBuilder.setSingleChoiceItems(addressArray, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(RepairAddActivity.this,items[i],Toast.LENGTH_SHORT).show();
-                fault_addr.setText(items[i]);
+                Toast.makeText(RepairAddActivity.this,addressArray[i],Toast.LENGTH_SHORT).show();
+                addressTmp = i;
+                fault_addr.setText(addressArray[i]);
                 alertFaultAddr.dismiss();
             }
         });
-
         alertFaultAddr = alertBuilder.create();
         alertFaultAddr.show();
     }
     public void showFaultNameAlertDialog(View view){
         final String[] items = {"摄像机故障","监视器故障","硬盘录像机故障","拾音器故障","报警系统故障","门禁系统故障"};
-
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setTitle("请选择故障位置");
         alertBuilder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
@@ -391,8 +447,6 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 alertFaultName.dismiss();
             }
         });
-
-
         alertFaultName = alertBuilder.create();
         alertFaultName.show();
     }
@@ -420,8 +474,9 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                         projectTmp = which;
                         if(projectInfos.size()>projectTmp){
                                 repair_listid.setText(projectInfos.get(projectTmp).getPartyAName());
-                            et_repair_person.setText(projectInfos.get(projectTmp).getAleaderName());
+                            et_repair_person.setText(projectInfos.get(projectTmp).getAoneName());
                             et_repair_tel.setText(projectInfos.get(projectTmp).getAleaderTel());
+
                         }
                         else {
                             repair_listid.setText("");
@@ -458,36 +513,33 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         builder.create().show();
     }
     private void addRepairSubmit(){
-//        repairAddContent.setProjectId(et_project_name.getText().toString().trim());
-//        repairAddContent.setUserId(et_repair_person.getText().toString().trim());
-//        repairAddContent.setCreator_call(et_repair_tel.getText().toString().trim());
-//        repairAddContent.setCreated_time(repair_time.getText().toString().trim());
-//        repairAddContent.setFacilitatorId(choose_service.getText().toString().trim());
-//        repairAddContent.setAppoint_time(et_appointment_time.getText().toString().trim());
-//        repairAddContent.setLevel(et_emergency_degree.getText().toString().trim());
-//        repairAddContent.getTaskItemDtoList().get(0).setDeviceId(fault_name.getText().toString().trim());
-//        repairAddContent.getTaskItemDtoList().get(0).setLevel(et_fault_degree.getText().toString().trim());
-//        repairAddContent.getTaskItemDtoList().get(0).setDescription(fault_description.getText().toString().trim());
-        repairAddContent.setAppointTime("");
-        repairAddContent.setContractId(1L);
-        repairAddContent.setAddressName(et_repair_address.getText().toString().trim());
-        repairAddContent.setFacilitatorId(782525013398923265L);
-        repairAddContent.setId(null);
-        repairAddContent.setLevel(Integer.valueOf(et_emergency_degree.getText().toString().trim()));
-        repairAddContent.setPrincipalId(782516789266360321L);
-        repairAddContent.setProjectId(projectInfos.get(projectTmp).getId());
-        repairAddContent.setResult(0);
-        repairAddContent.setSuggestion("");
-        repairAddContent.setTitle("");
-        repairAddContent.setTotalCost(2);
-        repairAddContent.setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id","111")));
+       // repairAddContent.setAppointTime("1577160060000");
+        repairAddContent.setAppointTime(et_appointment_time.getText().toString().trim());//
+        repairAddContent.setContractId(1L);//
+        repairAddContent.setAddressName(et_repair_address.getText().toString().trim());//
+        repairAddContent.setFacilitatorId(projectInfos.get(projectTmp).getPartyAId());//
+        repairAddContent.setId(null);//
+        repairAddContent.setCall(et_repair_tel.getText().toString().trim());
+        repairAddContent.setObjectId(null);
+        repairAddContent.setObjectType(1);
+        repairAddContent.setLevel(changeLevel(et_emergency_degree.getText().toString().trim()));//
+        repairAddContent.setPrincipalId(projectInfos.get(projectTmp).getAleaderId());//
+        repairAddContent.setProjectId(projectInfos.get(projectTmp).getId());//
+        repairAddContent.setStatus(0);//
+        repairAddContent.setSuggestion("");//
+        repairAddContent.setTitle(addressArray[addressTmp]);//
+        repairAddContent.setTotalCost(0);//
+        repairAddContent.setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id","111")));//
         repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDescription(fault_description.getText().toString().trim());
-        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceId(0L);
+        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceId(0L);//
         repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceType(fault_type.getText().toString().trim());//设备类型
+        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLatitude(troubleAddresses.get(troubleTypeTmp).getTroubleLatitude());
+        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLongitude(troubleAddresses.get(troubleTypeTmp).getTroubleLongitude());
         repairAddContent.getMdmcAddTaskItemDtoList().get(0).setLevel(et_fault_degree.getText().toString().trim());
         repairAddContent.getMdmcAddTaskItemDtoList().get(0).setId(null);
-        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTaskId(null);
-        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTroubleType(Integer.valueOf(et_emergency_degree.getText().toString().trim()));//故障类型
+        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTaskId(0L);
+        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTroubleType(troubleTypeTmp);//故障类型
+        Log.v("repairAddContent", repairAddContent + "");
        // Net.instance.repairAddPost(repairAddContent, SPUtils.getInstance().getString("Token",""))
         Net.instance.repairAddPost(repairAddContent,SPUtils.getInstance().getString("Token",""))
                 .subscribeOn(Schedulers.newThread())
@@ -501,9 +553,23 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onError(Throwable e) {
                 Log.v("LoginAddTime", System.currentTimeMillis() + "");
-                e.printStackTrace();
+              //  e.printStackTrace();
                 Toast.makeText(RepairAddActivity.this, "提交失败", Toast.LENGTH_SHORT).show();
-                BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
+              //  BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
+                if (e instanceof HttpException) {
+                    HttpException httpException = (HttpException) e;
+                    try{
+                        String error = httpException.response().errorBody().string();
+                        Log.v("RepairAddError", error);
+                        //BaseErrorBean bean = new Gson().fromJson(error , BaseErrorBean.class);
+                       // ToastUtil.showLongToast(bean.getError());
+                    }catch(IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }else {
+                    //ToastUtil.showLongToast("请求失败");
+                }
+
             }
             @Override
             public void onNext(CodeMessageResponse codeMessageResponse) {
@@ -513,10 +579,25 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 }
                 else{
                     Toast.makeText(RepairAddActivity.this,"服务器故障！",Toast.LENGTH_SHORT).show();
-                    BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
+                   // BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
                 }
             }
         });
     }
-
+    private int changeLevel(String string) {
+        int level;
+        if (string.equals("紧急")) {
+            level = 0;
+            return level;
+        } else if (string.equals("中等")) {
+            level = 1;
+            return level;
+        } else if (string.equals("一般")) {
+            level = 2;
+            return level;
+        } else {
+            level = 0;
+            return level;
+        }
+    }
 }
