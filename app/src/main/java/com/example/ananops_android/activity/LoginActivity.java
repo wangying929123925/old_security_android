@@ -3,7 +3,6 @@ package com.example.ananops_android.activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -20,17 +19,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.example.ananops_android.R;
-import com.example.ananops_android.db.LoginRequest;
 import com.example.ananops_android.db.LoginResponse;
 import com.example.ananops_android.db.PostResponse;
-import com.example.ananops_android.db.UserInfo;
 import com.example.ananops_android.db.UserInformation;
-import com.example.ananops_android.entity.UserLogin;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.photopicker.Image;
 import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
@@ -117,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                // editor.putBoolean("mRememberCheck", false);
             }
 
-           // getUerinfo(userName);
+           // getUserinfo(userName);
             Net.instance.login(userName,userPwd,imgCode,"password","ananops-client-gateway","",deviceId)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
