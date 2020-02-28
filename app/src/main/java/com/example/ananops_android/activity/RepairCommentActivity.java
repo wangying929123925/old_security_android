@@ -112,7 +112,7 @@ public class RepairCommentActivity extends AppCompatActivity implements View.OnC
          showExitAlertDialog(v);
          break;
      case R.id.comment_submit_button:
-         Toast.makeText(RepairCommentActivity.this,"提交评论！",Toast.LENGTH_LONG).show();
+        // Toast.makeText(RepairCommentActivity.this,"提交评论！",Toast.LENGTH_LONG).show();
          RepairCommentRequest repairCommentRequest = new RepairCommentRequest();
          repairCommentRequest.setTaskId(Long.valueOf(ORDER_ID));
          repairCommentRequest.setContents(et_comment.getText().toString().trim());
@@ -147,13 +147,13 @@ public class RepairCommentActivity extends AppCompatActivity implements View.OnC
                          }
                      }
                  });
-         BaseUtils.getInstence().intent(this, UserMainActivity.class);
+       //  BaseUtils.getInstence().intent(this, UserMainActivity.class);
       break;
      }
     }
     public void showExitAlertDialog(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("评价未提交，退出将不报错编辑，确认退出吗？");
+        builder.setMessage("评价未提交，退出将不保存编辑，确认退出吗？");
         builder.setTitle("提示");
         builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override

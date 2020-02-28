@@ -29,6 +29,7 @@ import com.example.ananops_android.entity.RepairAddContent;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
+import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
 import com.example.ananops_android.view.EditTextWithDel;
 
@@ -56,6 +57,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     private Context mContext;
     private String typeId;
     private String type;
+    private String projectId;
     private Contacts contacts;
     private String[] result = new String[4];//日期
     final private RepairAddContent repairAddContent = new RepairAddContent();//save
@@ -72,8 +74,9 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         imageBack.setOnClickListener(this);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            typeId = bundle.getString("typeId");
-            type = bundle.getString("type");
+            typeId = bundle.getString("typeId","1");
+            type = bundle.getString("type","repair");
+            projectId = bundle.getString("projectId", "1");
         }
 
     }
@@ -92,7 +95,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
 
     }
     private void getResource(){
-        Net.instance.getRepairerList(1L, SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getRepairerList(Long.valueOf(projectId), SPUtils.getInstance().getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<RepairerListResponse>() {
@@ -172,7 +175,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BaseUtils.showConfirmDialog(result, mContext, "请选择具体报修的时间", new ConfirmDialogInterface() {
+                BaseUtils.showConfirmDialog(result, mContext, "请选择具体deadline的时间", new ConfirmDialogInterface() {
                     @Override
                     public void onConfirmClickListener() {
                         editText.setText(result[0] + "-" + result[1] + "-" + result[2] + " " + result[3]);
@@ -220,6 +223,8 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                             public void onNext(CodeMessageResponse codeMessageResponse) {
                                 if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
                                     Toast.makeText(mContext,"提交成功！",Toast.LENGTH_SHORT).show();
+                                    Log.v("ContactAddTime200:", System.currentTimeMillis() + "");
+                                    BaseUtils.getInstence().changeStatus(5,typeId,"服务商接单派工",mContext);
                                     BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
                                 }
                                 else{
@@ -268,19 +273,15 @@ private void submitInspectionRepairer(View view, int i) {
                             Log.v("ErrorEngineerDistribute", System.currentTimeMillis() + "");
                             e.printStackTrace();
                             Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
-                            BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                           // BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                         }
 
                         @Override
                         public void onNext(CodeMessageResponse codeMessageResponse) {
                             if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
                                 Toast.makeText(mContext, "分配工程师成功！", Toast.LENGTH_LONG).show();
-                                try {
-                                    Thread.sleep(500);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                                InspectionUtils.getInstence().changeInspectionItemStatus(2,typeId,mContext);
+                                //BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                             } else {
                                 Toast.makeText(mContext, codeMessageResponse.getMessage(), Toast.LENGTH_LONG).show();
                             }

@@ -29,6 +29,7 @@ import com.example.ananops_android.db.OrderResponse;
 import com.example.ananops_android.db.UserInfo;
 import com.example.ananops_android.entity.InspectionContent;
 import com.example.ananops_android.entity.InspectionInfo;
+import com.example.ananops_android.entity.RepairAddContent;
 import com.example.ananops_android.entity.RepairContent;
 import com.example.ananops_android.net.Net;
 import com.zyyoona7.picker.DatePickerView;
@@ -36,6 +37,7 @@ import com.zyyoona7.picker.base.BaseDatePickerView;
 import com.zyyoona7.picker.listener.OnDateSelectedListener;
 import com.zyyoona7.wheel.WheelView;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,6 +48,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import retrofit2.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -244,8 +247,52 @@ public class BaseUtils {
         inspectionContents.add(inspectionContent1);
         return inspectionContents;
     }
-/*
-* */
+
+    //维修add
+    public void repairAdd(RepairAddContent repairAddContent, final Context mContext) {
+        Net.instance.repairAddPost(repairAddContent,SPUtils.getInstance().getString("Token",""))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<CodeMessageResponse>(){
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("LoginAddTime", System.currentTimeMillis() + "");
+                        //  e.printStackTrace();
+                        Toast.makeText(mContext, "提交失败", Toast.LENGTH_SHORT).show();
+                        if (e instanceof HttpException) {
+                            HttpException httpException = (HttpException) e;
+                            try{
+                                String error = httpException.response().errorBody().string();
+                                Log.v("RepairAddError", error);
+                            }catch(IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }else {
+                            //ToastUtil.showLongToast("请求失败");
+                        }
+
+                    }
+                    @Override
+                    public void onNext(CodeMessageResponse codeMessageResponse) {
+                        if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
+                            Toast.makeText(mContext,"提交成功！",Toast.LENGTH_SHORT).show();
+                           // BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
+                        }
+                        else{
+                            Toast.makeText(mContext,"服务器故障！",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    /*
+   * 改变巡检状态
+   * */
     public void changeStatus(int status,String orderId,String statusMsg ,final Context mContext){
         ChangeStatusDto changeStatusDto=new ChangeStatusDto();
         changeStatusDto.setStatus(status);
@@ -264,8 +311,9 @@ public class BaseUtils {
                   public void onError(Throwable e) {
                       Log.v("LoginTime", System.currentTimeMillis() + "");
                       e.printStackTrace();
+
                       Toast.makeText(mContext, "网络异常，请检查网络状态changeStatus", Toast.LENGTH_SHORT).show();
-                      BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                     // BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                   }
 
                   @Override

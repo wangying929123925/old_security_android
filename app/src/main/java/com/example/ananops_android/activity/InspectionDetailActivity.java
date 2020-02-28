@@ -31,9 +31,11 @@ import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -229,7 +231,7 @@ public class InspectionDetailActivity extends AppCompatActivity {
                             ConfirmWorkOrderRequest request = new ConfirmWorkOrderRequest();
                             request.setDecision(1);
                             ConfirmWorkOrderRequest.WorkOrderQueryDtoBean inner = new ConfirmWorkOrderRequest.WorkOrderQueryDtoBean();
-                            inner.setId(Long.parseLong(inspectionId));
+                            inner.setId(Long.valueOf(inspectionId));
                             inner.setPageNum(0);
                             inner.setPageSize(0);
                             inner.setType("inspection");
@@ -247,7 +249,17 @@ public class InspectionDetailActivity extends AppCompatActivity {
                                         public void onError(Throwable e) {
                                             Log.v("ErrorAcceptImcTaskBy", System.currentTimeMillis() + "");
                                             Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
-                                            e.printStackTrace();
+                                            if (e instanceof HttpException) {
+                                                HttpException httpException = (HttpException) e;
+                                                try{
+                                                    String error = httpException.response().errorBody().string();
+                                                    Log.v("RepairAddError", error);
+                                                }catch(IOException e1) {
+                                                    e1.printStackTrace();
+                                                }
+                                            }else {
+                                                //ToastUtil.showLongToast("请求失败");
+                                            }
                                         }
 
                                         @Override
@@ -272,6 +284,10 @@ public class InspectionDetailActivity extends AppCompatActivity {
                             Toast.makeText(mContext, "不通过", Toast.LENGTH_SHORT).show();
                         }
                     });
+                    break;
+                case "4-3":
+                    b1.setText("确认完成");
+                    b1.setVisibility(View.GONE);
                     break;
                 default:
                     fragment_inspection_commit.setVisibility(View.GONE);

@@ -371,7 +371,7 @@ private void initUserManagerData(){
             case R.id.main_repair_3:
                 switch (SPUtils.getInstance().getInt("role_num",1)){
                     case 1://用户确认完成
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","9");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","10");
                         break;
                     case 2://服务商处理备件
                         BaseUtils.getInstence().intent(getContext(), ReplacementOrderListActivity.class);
@@ -522,7 +522,7 @@ private void initUserManagerData(){
                     case 3://维修工待通过
                        // BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待通过");
                         break;
-                    case 4://甲方巡检中//2chakanshenherenwu
+                    case 4://甲方巡检中确认任务完成
 //                        final AllUnauthorizedTaskRequest allUnauthorizedTaskRequest = new AllUnauthorizedTaskRequest();
 //                        allUnauthorizedTaskRequest.setPageNum(0);
 //                        allUnauthorizedTaskRequest.setPageSize(0);

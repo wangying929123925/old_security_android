@@ -70,12 +70,20 @@ public class InspectionSearchListActivity extends AppCompatActivity implements V
             @Override
             public void onItemClick(int position) {
              //   InspectionInfo inspectionInfo=inspectionInfos.get(position);
-                Toast.makeText(getApplicationContext(), "巡检详情" + (position + 1), Toast.LENGTH_SHORT).show();
-                Bundle bundle0=new Bundle();
-                bundle0.putString("inspectionId",String.valueOf(inspectionInfos.get(position).getId()));
-               bundle0.putString("statusDo",statusDo);
-                BaseUtils.getInstence().intent(mContext,InspectionDetailActivity.class,bundle0,"title","4-2");
-            }
+                if(statusDo.equals("4-5")){
+                    Toast.makeText(mContext, "评价" + (position + 1), Toast.LENGTH_SHORT).show();
+                    Bundle bundle0 = new Bundle();
+                    bundle0.putString("inspectionId", String.valueOf(inspectionInfos.get(position).getId()));
+                   // bundle0.putString("statusDo", statusDo);
+                    BaseUtils.getInstence().intent(mContext, InspectionCommentActivity.class, bundle0, "title", "4-2");
+                }else {
+                    Toast.makeText(getApplicationContext(), "巡检详情" + (position + 1), Toast.LENGTH_SHORT).show();
+                    Bundle bundle0 = new Bundle();
+                    bundle0.putString("inspectionId", String.valueOf(inspectionInfos.get(position).getId()));
+                    bundle0.putString("statusDo", statusDo);
+                    BaseUtils.getInstence().intent(mContext, InspectionDetailActivity.class, bundle0, "title", "4-2");
+                }
+                }
         });
         mRecyclerView.setAdapter(inspectionAdapter);
     }

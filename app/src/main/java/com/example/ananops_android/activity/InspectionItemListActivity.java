@@ -160,6 +160,7 @@ public class InspectionItemListActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("inspectionItemId",String.valueOf(inspectionTaskItems.get(position).getId()));
                 bundle.putString("statusDo",statusDo);
+               // bundle.putString("projectId","1");
                 BaseUtils.getInstence().intent(mContext, InspectionItemDetailActivity.class,bundle);
 //                if(inspectionTaskItems.get(position).getStatus()==2){
 //                    Bundle bundle = new Bundle();

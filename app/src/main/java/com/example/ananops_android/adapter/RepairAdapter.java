@@ -241,12 +241,16 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 Toast.makeText(mContext, "接单派工" , Toast.LENGTH_SHORT).show();
                                // BaseUtils.getInstence().changeStatus(4, repairContent.getId(), "服务商接单", mContext);
                                 String repairId = repairContent.getId();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("typeId",repairId);
+                                bundle.putString("type","inspection");
+                                bundle.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext, ContactActivity.class,"repairId",repairId);
                                 break;
 
                             case 7:
                                 //Toast.makeText(mContext, "你点击了通过按钮" , Toast.LENGTH_SHORT).show();
-                                //BaseUtils.getInstence().changeStatus(9, repairContent.getId(), "服务商审核通过", mContext);
+                                BaseUtils.getInstence().changeStatus(8, repairContent.getId(), "服务商审核通过", mContext);
                                // BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 break;
                             default:
@@ -306,6 +310,8 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     Bundle bundle1 = new Bundle();
                                   //  bundle1.putString("order_id",repairContent.getRepair_id());
                                     bundle1.putString("status_do","no");
+                                    bundle1.putString("status_do","3-2");
+                                    bundle1.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                     BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                     break;
                             }
@@ -324,6 +330,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     Bundle bundle = new Bundle();
                                     bundle.putString("type","inspection");
                                     bundle.putString("typeId",repairId1);
+                                    bundle.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                     BaseUtils.getInstence().intent(mContext, ContactActivity.class,bundle);
                                     break;
                                 case 7:
@@ -347,6 +354,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     Bundle bundle0 = new Bundle();
                                     bundle0.putString("order_id",repairContent.getId());
                                     bundle0.putString("status_do","3-2");
+                                    bundle0.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                     BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
                                     break;
                                 case 9:
@@ -354,6 +362,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                     Bundle bundle1 = new Bundle();
                                     bundle1.putString("order_id",repairContent.getId());
                                     bundle1.putString("status_do","3-3");
+                                    bundle1.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                     BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                     break;
                                 default:
@@ -391,12 +400,14 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 Bundle bundle = new Bundle();
                                 bundle.putString("order_id",repairContent.getId());
                                 bundle.putString("status_do","1-1");
+                                bundle.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle);
                                 break;
                             case 10:
                                 Bundle bundle1 = new Bundle();
                                 bundle1.putString("order_id",repairContent.getId());
                                 bundle1.putString("status_do","1-2");
+                                bundle1.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
                             case 12:
@@ -410,6 +421,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 Bundle bundle0 = new Bundle();
                                 bundle0.putString("order_id",repairContent.getId());
                                 bundle0.putString("status_do","no");
+                                bundle0.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
                                 break;
                         }
@@ -420,24 +432,28 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 Bundle bundle = new Bundle();
                                 bundle.putString("order_id",repairContent.getId());
                                 bundle.putString("status_do","2-1");
+                                bundle.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle);
                                 break;
                             case 4:
                                 Bundle bundle3 = new Bundle();
                                 bundle3.putString("order_id",repairContent.getId());
                                 bundle3.putString("status_do","2-1");
+                                bundle3.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle3);
                                 break;
                             case 7:
                                 Bundle bundle1 = new Bundle();
                                 bundle1.putString("order_id",repairContent.getId());
                                 bundle1.putString("status_do","2-2");
+                                bundle1.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
                             default:
                                 Bundle bundle0 = new Bundle();
                                 bundle0.putString("order_id",repairContent.getId());
                                 bundle0.putString("status_do","no");
+                                bundle0.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
                                 break;
                         }
@@ -448,24 +464,28 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 Bundle bundle = new Bundle();
                                 bundle.putString("order_id",repairContent.getId());
                                 bundle.putString("status_do","3-1");
+                                bundle.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle);
                                 break;
                             case 6:
                                 Bundle bundle2 = new Bundle();
                                 bundle2.putString("order_id",repairContent.getId());
                                 bundle2.putString("status_do","3-2");
+                                bundle2.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle2);
                                 break;
                             case 9:
                                 Bundle bundle1 = new Bundle();
                                 bundle1.putString("order_id",repairContent.getId());
                                 bundle1.putString("status_do","3-3");
+                                bundle1.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
                             default:
                                 Bundle bundle0 = new Bundle();
                                 bundle0.putString("order_id",repairContent.getId());
                                 bundle0.putString("status_do","no");
+                                bundle0.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
                                 break;
                         }
@@ -476,12 +496,14 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 Bundle bundle = new Bundle();
                                 bundle.putString("order_id",repairContent.getId());
                                 bundle.putString("status_do","4-1");
+                                bundle.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle);
                                 break;
                             case 8:
                                 Bundle bundle1 = new Bundle();
                                 bundle1.putString("order_id",repairContent.getId());
                                 bundle1.putString("status_do","4-2");
+                                bundle1.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle1);
                                 break;
                             case 11:
@@ -489,12 +511,14 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 Bundle bundle3 = new Bundle();
                                 bundle3.putString("order_id",repairContent.getId());
                                 bundle3.putString("status_do","4-3");
+                                bundle3.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle3);
                                 break;
                             default:
                                 Bundle bundle0 = new Bundle();
                                 bundle0.putString("order_id",repairContent.getId());
                                 bundle0.putString("status_do","no");
+                                bundle0.putString("projectId", String.valueOf(repairContent.getProjectId()));
                                 BaseUtils.getInstence().intent(mContext,OrderDetailActivity.class,bundle0);
                                 break;
                         }

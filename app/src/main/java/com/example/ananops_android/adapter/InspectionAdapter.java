@@ -57,7 +57,7 @@ public class InspectionAdapter extends BaseRecyclerAdapter {
             inspection_name.setText(inspectionContent.getTaskName());
             inspection_id.setText(String.valueOf(inspectionContent.getId()));
             inspection_time.setText(inspectionContent.getCycleTime()+"天");
-            inspection_status.setText(inspectionContent.getStatus());
+            inspection_status.setText(String.valueOf(inspectionContent.getStatus()));
             relativeButton.setVisibility(View.GONE);
         }
 

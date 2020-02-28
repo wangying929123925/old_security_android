@@ -88,7 +88,7 @@ public class ReplacementOrderListActivity extends AppCompatActivity {
         title = findViewById(R.id.txt_title);
         noResult = findViewById(R.id.no_result_text);
         imageBack = findViewById(R.id.img_back);
-        title.setText("巡检任务子项");
+        title.setText("维修备件单处理");
         mAdapter = new ListCommonAdapter<ReplacementOrder>(mComtext, R.layout.item_project_list,replacementOrders) {
             @Override
             protected void convert(ListViewHolder viewHolder, ReplacementOrder replacementOrder, int position) {

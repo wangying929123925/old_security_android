@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.alibaba.idst.nls.internal.utils.L;
 import com.example.ananops_android.activity.RepairAddActivity;
 import com.example.ananops_android.activity.UserMainActivity;
+import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.InspectionItemListImcRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
@@ -294,6 +295,50 @@ public List<InspectionTaskItem> getInspectionTaskItemsImc(final List<InspectionT
                             BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                         } else {
                             Toast.makeText(mContext, "提交失败！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+    //改变巡检子项状态
+    public void changeInspectionItemStatus(int status,String inspectionItemId,final Context mContext) {
+        ChangeInspectionItemStatusRequest changeInspectionItemStatusRequest = new ChangeInspectionItemStatusRequest();
+        changeInspectionItemStatusRequest.setStatus(status);
+        changeInspectionItemStatusRequest.setItemId(Long.valueOf(inspectionItemId));
+        Net.instance.modifyItemStatusByItemId(changeInspectionItemStatusRequest, SPUtils.getInstance().getString("Token", " "))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<CodeMessageResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("ErrorModifyItemStatus", System.currentTimeMillis() + "");
+                        // e.printStackTrace();
+                        Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
+                        if (e instanceof HttpException) {
+                            HttpException httpException = (HttpException) e;
+                            try{
+                                String error = httpException.response().errorBody().string();
+                                Log.v("changeItemStatusError", error);
+                            }catch(IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }else {
+                            //ToastUtil.showLongToast("请求失败");
+                        }
+                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                    }
+
+                    @Override
+                    public void onNext(CodeMessageResponse codeMessageResponse) {
+                        if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
+                            Toast.makeText(mContext, "修改状态成功！", Toast.LENGTH_LONG).show();
+                            BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                        } else {
+                            Toast.makeText(mContext, codeMessageResponse.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });

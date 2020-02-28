@@ -59,6 +59,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     private ImageView back_img;
     private static String ACTIVITY_STATUS;
     private static String ORDER_ID;
+    private static String projectId;
     private Button order_detail_button1;
     private Button order_detail_button2;
     private LinearLayout fragment_order_commit;
@@ -85,8 +86,9 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
-            ACTIVITY_STATUS = bundle.getString("status_do");
-            ORDER_ID = bundle.getString("order_id");
+            ACTIVITY_STATUS = bundle.getString("status_do","no");
+            ORDER_ID = bundle.getString("order_id","1");
+            projectId = bundle.getString("projectId", "1");
         }
         switch (ACTIVITY_STATUS){
             case "1-1":
@@ -155,6 +157,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                         Bundle bundle = new Bundle();
                         bundle.putString("type","repair");
                         bundle.putString("typeId",ORDER_ID);
+                        bundle.putString("projectId",projectId);
                         BaseUtils.getInstence().intent(mContext, ContactActivity.class,bundle);
                     }
                 });

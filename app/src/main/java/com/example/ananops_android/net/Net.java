@@ -12,6 +12,7 @@ import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.ConfirmWorkOrderRequest;
+import com.example.ananops_android.db.InspectionCommentRequest;
 import com.example.ananops_android.db.InspectionDetailResponse;
 import com.example.ananops_android.db.InspectionEngineerDistributeRequest;
 import com.example.ananops_android.db.InspectionItemDetailResponse;
@@ -216,7 +217,7 @@ public interface Net {
 
     //服务商通过审核
     @POST("/spc/workorder/confirmWorkOrder")
-    Observable<CodeMessageResponse> confirmWorkOrder(@Body ConfirmWorkOrderRequest acceptImcTaskByPrincipalRequest, @Header("Authorization") String postToken);
+    Observable<CodeMessageResponse> confirmWorkOrder(@Body ConfirmWorkOrderRequest WorkOrderConfirmDto, @Header("Authorization") String postToken);
 
     ////服务商查询未分配工程师巡检单的详细信息
     @POST("/spc/workorder/getSpcWorkOrderById")
@@ -254,7 +255,11 @@ public interface Net {
     @POST("/imc/inspectionItem/acceptItemByMaintainer")
     Observable<CodeMessageResponse> acceptItemByMaintainer(@Body AcceptInspectionItemRequest confirmImcItemDto, @Header("Authorization") String postToken);
 
-    //修改巡检状态
+    //巡检评价
+    @POST("/imc/inspectionReview/save")
+    Observable<CodeMessageResponse> InspectionCommentAdd(@Body InspectionCommentRequest saveInspectionReview, @Header("Authorization") String postToken);
+
+    //修改巡检子项状态
     @POST("/imc/inspectionItem/modifyItemStatusByItemId")
     Observable<CodeMessageResponse> modifyItemStatusByItemId(@Body ChangeInspectionItemStatusRequest modifyItemStatus, @Header("Authorization") String postToken);
 }

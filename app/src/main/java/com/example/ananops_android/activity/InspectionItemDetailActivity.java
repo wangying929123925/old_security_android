@@ -29,11 +29,14 @@ import com.example.ananops_android.fragment.InspectionItemTimeLineFragment;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
+import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -148,6 +151,7 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
                         Bundle bundle = new Bundle();
                         bundle.putString("type","inspection");
                         bundle.putString("typeId",inspectionItemId);
+                        bundle.putString("projectId","1");
                         BaseUtils.getInstence().intent(mContext, ContactActivity.class,bundle);
                          }
                 });
@@ -162,7 +166,7 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         //确认接单
                         AcceptInspectionItemRequest acceptInspectionItemRequest=new AcceptInspectionItemRequest();
-                        acceptInspectionItemRequest.setItemId(Long.valueOf(INSPECTION_ID));
+                        acceptInspectionItemRequest.setItemId(Long.valueOf(inspectionItemId));
                     Net.instance.acceptItemByMaintainer(acceptInspectionItemRequest,SPUtils.getInstance().getString("Token", " "))
                             .subscribeOn(Schedulers.newThread())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -184,7 +188,8 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
                                 public void onNext(CodeMessageResponse codeMessageResponse) {
                                     if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
                                         Toast.makeText(mContext, "工程师接单成功！", Toast.LENGTH_LONG).show();
-                                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                                        InspectionUtils.getInstence().changeInspectionItemStatus(3,inspectionItemId,mContext);
+                                        //BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     } else {
                                         Toast.makeText(mContext, codeMessageResponse.getMessage(), Toast.LENGTH_LONG).show();
                                     }
@@ -197,46 +202,13 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
                 fragment_inspection_commit.setVisibility(View.VISIBLE);
                 inspection_detail_button1.setVisibility(View.GONE);
                 inspection_detail_button2.setVisibility(View.VISIBLE);
-                inspection_detail_button2.setText("接单");
+                inspection_detail_button2.setText("完成");
                 inspection_detail_button2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //改变状态
-                        ChangeInspectionItemStatusRequest changeInspectionItemStatusRequest = new ChangeInspectionItemStatusRequest();
-                        changeInspectionItemStatusRequest.setStatus(4);
-                        changeInspectionItemStatusRequest.setItemId(Long.valueOf(INSPECTION_ID));
-                        Net.instance.modifyItemStatusByItemId(changeInspectionItemStatusRequest, SPUtils.getInstance().getString("Token", " "))
-                                .subscribeOn(Schedulers.newThread())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Subscriber<CodeMessageResponse>() {
-                                    @Override
-                                    public void onCompleted() {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        Log.v("ErrorModifyItemStatus", System.currentTimeMillis() + "");
-                                        e.printStackTrace();
-                                        Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
-                                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
-                                    }
-
-                                    @Override
-                                    public void onNext(CodeMessageResponse codeMessageResponse) {
-                                        if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
-                                            Toast.makeText(mContext, "修改状态成功！", Toast.LENGTH_LONG).show();
-                                            try {
-                                                Thread.sleep(500);
-                                            } catch (InterruptedException e) {
-                                                e.printStackTrace();
-                                            }
-                                            BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
-                                        } else {
-                                            Toast.makeText(mContext, codeMessageResponse.getMessage(), Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
+                        InspectionUtils.getInstence().changeInspectionItemStatus(4,inspectionItemId,mContext);
+                     //   InspectionUtils.getInstence().changeInspectionItemStatus(4,inspectionItemId,mContext);
                     }
                 });
                 break;

@@ -114,11 +114,11 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         initViews();
         initDatas();
         setOnListener();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+       // if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,PERMISSION_STORAGE_PHOTO,1);
             }
-        }
+     //   }
     }
 
     @Override
@@ -541,48 +541,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTroubleType(troubleTypeTmp);//故障类型
         Log.v("repairAddContent", repairAddContent + "");
        // Net.instance.repairAddPost(repairAddContent, SPUtils.getInstance().getString("Token",""))
-        Net.instance.repairAddPost(repairAddContent,SPUtils.getInstance().getString("Token",""))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<CodeMessageResponse>(){
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.v("LoginAddTime", System.currentTimeMillis() + "");
-              //  e.printStackTrace();
-                Toast.makeText(RepairAddActivity.this, "提交失败", Toast.LENGTH_SHORT).show();
-              //  BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
-                if (e instanceof HttpException) {
-                    HttpException httpException = (HttpException) e;
-                    try{
-                        String error = httpException.response().errorBody().string();
-                        Log.v("RepairAddError", error);
-                        //BaseErrorBean bean = new Gson().fromJson(error , BaseErrorBean.class);
-                       // ToastUtil.showLongToast(bean.getError());
-                    }catch(IOException e1) {
-                        e1.printStackTrace();
-                    }
-                }else {
-                    //ToastUtil.showLongToast("请求失败");
-                }
-
-            }
-            @Override
-            public void onNext(CodeMessageResponse codeMessageResponse) {
-                if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
-                Toast.makeText(RepairAddActivity.this,"提交成功！",Toast.LENGTH_SHORT).show();
-                BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
-                }
-                else{
-                    Toast.makeText(RepairAddActivity.this,"服务器故障！",Toast.LENGTH_SHORT).show();
-                   // BaseUtils.getInstence().intent(RepairAddActivity.this,UserMainActivity.class);
-                }
-            }
-        });
+        BaseUtils.getInstence().repairAdd(repairAddContent,mContext);
     }
     private int changeLevel(String string) {
         int level;

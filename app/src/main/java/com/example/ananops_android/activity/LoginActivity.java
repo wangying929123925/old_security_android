@@ -239,7 +239,7 @@ public class LoginActivity extends AppCompatActivity {
                        public void onError(Throwable e) {
                            Log.v("LoginTime", System.currentTimeMillis() + "");
                            e.printStackTrace();
-                           Toast.makeText(getApplicationContext(), "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
+                        //   Toast.makeText(getApplicationContext(), "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
                        }
 
                        @Override
