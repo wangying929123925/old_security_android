@@ -98,6 +98,8 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
     private RepairAdapter adapter;//适配器
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+    private int[] repairStatus = new int[16];
+    private int[] inspectionStatus=new int[16];
     private List<RepairContent> repairContents=new ArrayList<>();
    private Context mContext;
     @Override
@@ -151,18 +153,28 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         main_inspection_num3=view.findViewById(R.id.main_inspection_num3);
         main_inspection_num4=view.findViewById(R.id.main_inspection_num4);
         main_inspection_num5=view.findViewById(R.id.main_inspection_num5);
-        repair_all=view.findViewById(R.id.main_repair_all);
-        inspection_all=view.findViewById(R.id.main_inspection_all);
+        repair_all = view.findViewById(R.id.main_repair_all);
+        inspection_all = view.findViewById(R.id.main_inspection_all);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView=view.findViewById(R.id.contact_recycler_view);
+        mRecyclerView = view.findViewById(R.id.contact_recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        OrderRequest orderRequest=new OrderRequest();
+        OrderRequest orderRequest = new OrderRequest();
         orderRequest.setId(SPUtils.getInstance().getString("user_id",""));
         orderRequest.setStatus(null);
         orderRequest.setRoleCode(SPUtils.getInstance().getString("role_code",""));
         repairContents=BaseUtils.getInstence().getRepairList(repairContents,orderRequest,mContext);
         adapter=new RepairAdapter(repairContents);
         mRecyclerView.setAdapter(adapter);
+        main_repair_num1.setVisibility(View.INVISIBLE);
+        main_repair_num2.setVisibility(View.INVISIBLE);
+        main_repair_num3.setVisibility(View.INVISIBLE);
+        main_repair_num4.setVisibility(View.INVISIBLE);
+        main_repair_num5.setVisibility(View.INVISIBLE);
+        main_inspection_num1.setVisibility(View.INVISIBLE);
+        main_inspection_num2.setVisibility(View.INVISIBLE);
+        main_inspection_num3.setVisibility(View.INVISIBLE);
+        main_inspection_num4.setVisibility(View.INVISIBLE);
+        main_inspection_num5.setVisibility(View.INVISIBLE);
         initData();
        // mRecyclerView.setLayoutManager(new GridLayoutManager(this,4,VERTICAL,false));
         return view;
@@ -204,9 +216,9 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         main_repair_img1.setImageResource(R.drawable.ic_workorder);
         main_repair_img2.setImageResource(R.drawable.ic_workorder);
         main_repair_img3.setImageResource(R.drawable.ic_workorder);
-        main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
-        main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
-        main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num3));
+//        main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
+//        main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
+//        main_repair_num3.setText(String.valueOf(UnReadNum.main_repair_num3));
         main_repair_text1.setText(getResources().getString(R.string.worker_main_repair1));//待确认
         main_repair_text2.setText(getResources().getString(R.string.worker_main_repair2));//维修中
         main_repair_text3.setText(getResources().getString(R.string.worker_main_repair3));//维修中
@@ -474,7 +486,7 @@ private void initUserManagerData(){
 //                                            if (result != null) {
                                                Bundle bundle = new Bundle();
                                                 bundle.putParcelableArrayList("result", result);
-                                               bundle.putString("statusDo","2-2");
+                                                bundle.putString("statusDo","2-2");
                                                BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,bundle);
 //                                            }
 //                                            else {
