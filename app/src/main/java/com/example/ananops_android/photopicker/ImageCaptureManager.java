@@ -1,8 +1,10 @@
 package com.example.ananops_android.photopicker;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -47,15 +49,29 @@ public class ImageCaptureManager {
 
     public Intent dispatchTakePictureIntent() throws IOException {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        takePictureIntent.setAction();
+//        takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = createImageFile();
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile));
+            if (Build.VERSION.SDK_INT < 24) {
+                // Continue only if the File was successfully created
+                if (photoFile != null) {
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                            Uri.fromFile(photoFile));
+                }
+            } else {
+                ContentValues contentValues=new ContentValues(1);
+                contentValues.put(MediaStore.Images.Media.DATA,
+                        photoFile.getAbsolutePath());
+                Uri uri= mContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
+                mContext.grantUriPermission("com.example.ananops_android",uri,Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,uri);
             }
+
         }
         return takePictureIntent;
     }
