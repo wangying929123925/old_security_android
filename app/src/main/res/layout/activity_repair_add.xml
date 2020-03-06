@@ -600,6 +600,24 @@
                 android:horizontalSpacing="@dimen/space_size"
                 android:numColumns="3"
                 android:verticalSpacing="@dimen/space_size" />
+            <Button
+                android:id="@+id/repair_submit_pics"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/deep_blue"
+                android:textColor="@color/state_selected"
+                android:text="上传图片"
+                android:textSize="25dp"/>
+            <ProgressBar
+                android:id="@+id/progressBar01"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:visibility="gone"
+                />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

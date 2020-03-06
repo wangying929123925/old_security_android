@@ -44,6 +44,7 @@ public class UserMainActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_main);
+        ActivityManager.getInstance().addActivity(this);
         final Context mContext=this;
       //  imageBack=findViewById(R.id.img_back);
       //  imageRight=findViewById(R.id.img_right);

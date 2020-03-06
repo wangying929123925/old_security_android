@@ -43,12 +43,18 @@ import com.example.ananops_android.db.ReplacementOrderCreateRequest;
 import com.example.ananops_android.db.TroubleTypeAndAddressListResponse;
 import com.example.ananops_android.db.UnDistrbutedInspectionDetailRequest;
 import com.example.ananops_android.db.UnDistrbutedInspectionDetailResponse;
+import com.example.ananops_android.db.UpLoadFilesResponse;
 import com.example.ananops_android.db.UserInformation;
 import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersRequset;
 import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersResponse;
 import com.example.ananops_android.entity.InspectionAddContent;
 import com.example.ananops_android.entity.RepairAddContent;
 
+import java.util.List;
+import java.util.Map;
+
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -58,9 +64,13 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 import rx.Observable;
 
 public interface Net {
@@ -111,7 +121,18 @@ public interface Net {
     @POST("/mdmc/mdmcTask/save")
     Observable<CodeMessageResponse> repairAddPost(@Body RepairAddContent saveTask, @Header("Authorization") String postToken);
 
-    //获取图片
+    //维修提交图片
+    @Multipart
+    @POST("/mdmc/mdmcTask/uploadTaskPicture")
+    Observable<List<UpLoadFilesResponse>>upLoadFiles(@Query("fileType")String fileType,
+                                                     @Query("filePath")String filePath,
+                                                     @Query("bucketName")String bucketName,
+                                                     @Part MultipartBody.Part file,
+                                                     @Header("Authorization") String postToken,
+                                                     @Header("deviceId") Long deviceId
+                                        );
+
+    //获取验证码图片
     @POST("/uac/auth/code/image")
     Observable<PostResponse> getImage(@Header("deviceId") Long deviceId);
 

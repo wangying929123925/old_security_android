@@ -12,7 +12,9 @@ import android.widget.Toast;
 import com.example.ananops_android.R;
 import com.example.ananops_android.activity.LoginActivity;
 import com.example.ananops_android.activity.UerMessageActivity;
+import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
+import com.example.ananops_android.util.SPUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -49,7 +51,7 @@ public class UserMineFragment extends Fragment implements View.OnClickListener {
     }
 
     private void inirDatas() {
-        mine_text.setText("您好，你的名字");
+        mine_text.setText("您好"+ SPUtils.getInstance().getString("role_name","111"));
         today_order_num.setText(String.valueOf(0));
         toweek_order_num.setText(String.valueOf(0));
         tomonth_order_num.setText(String.valueOf(0));
@@ -77,6 +79,7 @@ public class UserMineFragment extends Fragment implements View.OnClickListener {
                 break;
             case  R.id.mine_my_config:
                 BaseUtils.getInstence().intent(getContext(), LoginActivity.class);
+                ActivityManager.getInstance().finishAllActivity();
                 break;
 
     }}

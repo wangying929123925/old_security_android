@@ -180,7 +180,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                     break;
         }
 
-        Glide.with(mContext).load(R.drawable.haoyue).into(holder.repairImage);//使用Glide依赖库，是一个强大的图片加载库load()可以传入URL或者本地路径或者资源ID
+        Glide.with(mContext).load(R.drawable.ic_workorder).into(holder.repairImage);//使用Glide依赖库，是一个强大的图片加载库load()可以传入URL或者本地路径或者资源ID
         //into()将图片设置到某个具体的ImageView
         holder.order_item_details.setTag(position);
         holder.order_item_button1.setTag(position);

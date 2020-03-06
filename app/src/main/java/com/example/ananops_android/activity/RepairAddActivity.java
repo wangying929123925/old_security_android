@@ -1,6 +1,7 @@
 package com.example.ananops_android.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,9 +18,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,9 +30,9 @@ import com.amap.api.services.help.Tip;
 import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.GridAdapter;
-import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.ProjectListResponse;
 import com.example.ananops_android.db.TroubleTypeAndAddressListResponse;
+import com.example.ananops_android.db.UpLoadFilesResponse;
 import com.example.ananops_android.entity.ProjectInfo;
 import com.example.ananops_android.entity.RepairAddContent;
 import com.example.ananops_android.entity.TroubleAddress;
@@ -41,16 +44,23 @@ import com.example.ananops_android.photopicker.intent.PhotoPickerIntent;
 import com.example.ananops_android.photopicker.intent.PhotoPreviewIntent;
 import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
+import com.example.ananops_android.util.FileUtils;
 import com.example.ananops_android.util.SPUtils;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -78,11 +88,15 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private AlertDialog alertFaultAddr; //故障地点
     private AlertDialog alertFaultType; //故障类型
     private AlertDialog alertFaultName; //故障名称
+    private Button repair_submit_pics;//上传图片
+    private ProgressBar progressBar01;
+    private ProgressDialog progressDialog;
     private GridView gridView;
     private GridAdapter gridAdapter;
     private static final int REQUEST_CAMERA_CODE = 10;
     private static final int REQUEST_PREVIEW_CODE = 20;
     private ArrayList<String> imagePaths = new ArrayList<>();//图片
+    ArrayList<String> imagePathUp = new ArrayList<>();//上传
     private int projectTmp=0;
     private String tmp="";
     private String[] result = new String[4];
@@ -151,6 +165,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         et_emergency_degree.setOnClickListener(this);
         et_fault_degree.setOnClickListener(this);
          choose_service.setOnClickListener(this);
+        repair_submit_pics.setOnClickListener(this);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -178,23 +193,25 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void initViews() {
-
-        et_project_name=findViewById(R.id.et_project_name);//项目名
-        et_repair_person=findViewById(R.id.et_repair_person);//报修人
-        repair_listid=findViewById(R.id.et_repair_facname);
-        et_repair_tel=findViewById(R.id.et_repair_tel);
-        repair_time=findViewById(R.id.et_repair_time);
-        fault_type=findViewById(R.id.et_fault_type);
-        fault_addr=findViewById(R.id.et_fault_addr);
-        et_repair_address=findViewById(R.id.et_repair_address);
-        fault_description=findViewById(R.id.et_fault_description);
-        fault_name=findViewById(R.id.et_fault_name);
-        et_fault_degree=findViewById(R.id.et_fault_degree);
-        et_emergency_degree=findViewById(R.id.et_emergency_degree);
-        choose_service=findViewById(R.id. choose_service);
+        et_project_name = findViewById(R.id.et_project_name);//项目名
+        et_repair_person = findViewById(R.id.et_repair_person);//报修人
+        repair_listid = findViewById(R.id.et_repair_facname);
+        et_repair_tel = findViewById(R.id.et_repair_tel);
+        repair_time = findViewById(R.id.et_repair_time);
+        fault_type = findViewById(R.id.et_fault_type);
+        fault_addr = findViewById(R.id.et_fault_addr);
+        et_repair_address = findViewById(R.id.et_repair_address);
+        fault_description = findViewById(R.id.et_fault_description);
+        fault_name = findViewById(R.id.et_fault_name);
+        et_fault_degree = findViewById(R.id.et_fault_degree);
+        et_emergency_degree = findViewById(R.id.et_emergency_degree);
+        choose_service = findViewById(R.id.choose_service);
         et_appointment_time = findViewById(R.id.et_appointment_time);
-        repair_add_confirm=findViewById(R.id.repair_add_confirm);
-        basicinfo_back=findViewById(R.id.basicinfo_back);
+        repair_add_confirm = findViewById(R.id.repair_add_confirm);
+        basicinfo_back = findViewById(R.id.basicinfo_back);
+        repair_submit_pics = findViewById(R.id.repair_submit_pics);
+        progressBar01 = findViewById((R.id.progressBar01));
+        progressBar01.setIndeterminate(false);//不确定模式
         repair_time.setText(BaseUtils.getInstence().getTime());
         gridView = (GridView) findViewById(R.id.gridView_photo);
         int cols = getResources().getDisplayMetrics().widthPixels / getResources().getDisplayMetrics().densityDpi;
@@ -345,15 +362,15 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 showFaultNameAlertDialog(v);
                 break;
             case R.id.et_fault_degree:
-                String[] item={"p0", "p1", "其他"};
+                String[] item = {"p0", "p1", "其他"};
                 showChooseDislog(v,et_fault_degree,item);
                 break;
             case R.id.et_emergency_degree:
-                String[] item1={"紧急", "中等", "一般"};
+                String[] item1 = {"紧急", "中等", "一般"};
                 showChooseDislog(v,et_emergency_degree,item1);
                 break;
             case R.id.choose_service:
-                String[] item2={"1", "2", "3"};
+                String[] item2 = {"1", "2", "3"};
                 showChooseDislog(v,choose_service,item2);
                 break;
             case R.id.basicinfo_back:
@@ -374,11 +391,15 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 });
                 break;
             case R.id.et_repair_address:
-                Intent intent=new Intent(RepairAddActivity.this,AddressSearchActivity.class);
+                Intent intent = new Intent(RepairAddActivity.this, AddressSearchActivity.class);
                 startActivityForResult(intent, REQUEST_PLACE);
                 break;
             case R.id.repair_add_confirm:
                 addRepairSubmit();
+                break;
+            case R.id.repair_submit_pics:
+               repairPicsSubmit();
+                break;
             default:
                 break;
         }
@@ -391,12 +412,19 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         if (paths.contains("paizhao")){
             paths.remove("paizhao");
         }
-        paths.add("paizhao");
         imagePaths.addAll(paths);
+        imagePaths.add("paizhao");
+        Thread thread=new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
         gridAdapter  = new GridAdapter(this,imagePaths);
         gridView.setAdapter(gridAdapter);
         try{
             JSONArray obj = new JSONArray(imagePaths);
+            Log.d("imagePaths", obj+"");
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -502,16 +530,95 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                 RepairAddActivity.this.finish();
             }
         });
-
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-
         builder.create().show();
     }
+    private void showProgressBar() {
+        progressDialog=ProgressDialog.show(this,"提示","上传中",false);
+    }
+    private void hideProgressBar() {
+        progressDialog.dismiss();
+    }
+    private void repairPicsSubmit() {
+        showProgressBar();
+        imagePathUp.clear();
+        imagePathUp.addAll(imagePaths);
+        if (imagePathUp.contains("paizhao")) {
+            imagePathUp.remove("paizhao");
+            Log.d("imagePathUp", imagePathUp+"");
+        }
+        Long deviceId = new Date().getTime();
+        if (imagePathUp.size() > 0) {
+            Log.d("imagePaths", imagePaths + "");
+            for (int i = 0; i < imagePathUp.size(); i++) {
+                String string = imagePathUp.get(i);
+                File file = new File(string);
+                long fileSize = FileUtils.getInstance().getFileSize(file);
+                if (fileSize > 1048576L) {
+                           string = FileUtils.getInstance().compressReSave(string, mContext, 100);
+                           file = new File(string);
+                       }
+                String type = string.substring(string.lastIndexOf(".") + 1);
+                Log.d("imgType", type);
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/" + type), file);
+                Log.d("RequestBody", requestFile+"");
+                MultipartBody.Part body = MultipartBody.Part.createFormData("file", string, requestFile);
+                Net.instance.upLoadFiles(type, "mdmcTaskAndroid", "ananops", body, SPUtils.getInstance().getString("Token", ""), deviceId)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<List<UpLoadFilesResponse>>() {
+                            @Override
+                            public void onCompleted() {
+                                FileUtils.getInstance().deleteCacheFile();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.v("UploadTime", System.currentTimeMillis() + "");
+                                //  e.printStackTrace();
+                                Toast.makeText(mContext, "提交失败", Toast.LENGTH_SHORT).show();
+                                if (e instanceof HttpException) {
+                                    HttpException httpException = (HttpException) e;
+                                    try {
+                                        String error = httpException.response().errorBody().string();
+                                        Log.e("RepairUpError", error);
+                                    } catch (IOException e1) {
+                                        e1.printStackTrace();
+                                    }
+                                } else {
+                                    //ToastUtil.showLongToast("请求失败");
+                                }
+                            }
+
+                            @Override
+                            public void onNext(List<UpLoadFilesResponse> upLoadFilesResponses) {
+                                Log.v("upLoadFilesResponses", upLoadFilesResponses + "");
+                                if (upLoadFilesResponses.size() > 0) {
+                                    Toast.makeText(mContext, "提交照片成功！", Toast.LENGTH_SHORT).show();
+                                    // BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
+                                    String[] strings = new String[upLoadFilesResponses.size()];
+                                    for (int i = 0; i < upLoadFilesResponses.size(); i++) {
+                                        UpLoadFilesResponse upLoadFilesResponse = upLoadFilesResponses.get(i);
+                                        strings[i] = upLoadFilesResponse.getAttachmentId();
+                                        Log.v("AttachmentIds", strings[i]);
+                                    }
+                                } else {
+                                    Toast.makeText(mContext, "无返回！", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        }
+            else{
+                Toast.makeText(mContext, "无图片上传！", Toast.LENGTH_SHORT).show();
+            }
+            hideProgressBar();
+        }
     private void addRepairSubmit(){
        // repairAddContent.setAppointTime("1577160060000");
         repairAddContent.setAppointTime(et_appointment_time.getText().toString().trim());//

@@ -34,7 +34,7 @@ public class LoadingActivity extends AppCompatActivity {
     private class AnimationImpl implements Animation.AnimationListener {
         @Override
         public void onAnimationStart(Animation animation) {
-            welcomeImg.setBackgroundResource(R.drawable.chai);
+            welcomeImg.setBackgroundResource(R.drawable.load_pic);
         }
 
         @Override

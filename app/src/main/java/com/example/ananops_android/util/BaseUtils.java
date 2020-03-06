@@ -281,7 +281,7 @@ public class BaseUtils {
                     public void onNext(CodeMessageResponse codeMessageResponse) {
                         if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
                             Toast.makeText(mContext,"提交成功！",Toast.LENGTH_SHORT).show();
-                           // BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
+                            BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
                         }
                         else{
                             Toast.makeText(mContext,"服务器故障！",Toast.LENGTH_SHORT).show();

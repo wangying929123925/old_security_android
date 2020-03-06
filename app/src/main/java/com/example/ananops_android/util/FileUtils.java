@@ -1,0 +1,163 @@
+package com.example.ananops_android.util;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
+
+public class FileUtils {
+    public static FileUtils instance;
+    public static FileUtils getInstance() {
+        if (null == instance) {
+            instance = new FileUtils();
+        }
+        return instance;
+    }
+
+    private FileUtils() {
+    }
+
+    //获取文件大小
+    /**
+     * 获取指定文件大小
+     */
+    public long getFileSize(File file) {
+        long size = 0;
+        if (file.exists()) {
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                size = fis.available();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.e("获取文件大小", "文件不存在!");
+        }
+        Log.d("文件大小为", String.valueOf(size));
+        return size;
+    }
+
+    //压缩文件
+    /**
+     * 质量压缩
+     *
+     * @param srcPath 原图路径
+     * @param context
+     * @param max 要压缩到多大以内（单位：kb）
+     * @return
+     */
+    public String compressReSave(String srcPath, Context context, int max) {
+        String filePath = "";
+        Bitmap image = BitmapFactory.decodeFile(srcPath);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        int options = 90;
+        while (baos.toByteArray().length / 1024 > max) { // 循环判断如果压缩后图片是否大于maxkb,大于继续压缩
+            baos.reset(); // 重置baos即清空baos
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);// 这里压缩options%，把压缩后的数据存放到baos中
+            if (options > 10){
+                options -= 10;// 每次都减少10
+            } else {
+                options -= 5;
+            }
+            if (options == 5){//这里最多压缩到5，options不能小于0
+                break;
+            }
+        }
+        FileOutputStream outStream = null;
+        filePath = createFile(context, "myImg");
+        try {
+            outStream = new FileOutputStream(filePath);
+            // 把数据写入文件
+            outStream.write(baos.toByteArray());
+            // 记得要关闭流！
+            outStream.close();
+            Log.v("压缩路径",  filePath);
+            return filePath;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.v("压缩失败",  filePath);
+            return null;
+        } finally {
+            try {
+                if (outStream != null) {
+                    // 记得要关闭流！
+                    outStream.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public static String createFile(Context context, String pathName) {
+        String path = "";
+        File file = null;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            file = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + pathName);
+        } else {
+            file = new File(context.getFilesDir().getPath() + File.separator + pathName);
+        }
+        if (file != null) {
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            File output = new File(file, System.currentTimeMillis() + ".png");
+            try {
+                if (output.exists()) {
+                    output.delete();
+                } else {
+                    output.createNewFile();
+                }
+                path = output.getAbsolutePath();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return path;
+    }
+    /**
+     * 清除缓存文件
+     */
+    public void deleteCacheFile(){
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/myImg/");
+        RecursionDeleteFile(file);
+    }
+    /**
+     * 递归删除
+     */
+    public  void RecursionDeleteFile(File file){
+        if(file.isFile()){
+            file.delete();
+            return;
+        }
+        if(file.isDirectory()){
+            File[] childFile = file.listFiles();
+            if(childFile == null || childFile.length == 0){
+                file.delete();
+                return;
+            }
+            for(File f : childFile){
+                RecursionDeleteFile(f);
+            }
+            file.delete();
+        }
+    }
+
+}
