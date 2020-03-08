@@ -11,18 +11,18 @@ public class UpLoadFilesResponse {
      * refNo : null
      */
 
-    private String attachmentId;
+    private Long attachmentId;
     private String attachmentUrl;
     private String attachmentName;
     private String attachmentPath;
     private String fileType;
     private Object refNo;
 
-    public String getAttachmentId() {
+    public Long getAttachmentId() {
         return attachmentId;
     }
 
-    public void setAttachmentId(String attachmentId) {
+    public void setAttachmentId(Long attachmentId) {
         this.attachmentId = attachmentId;
     }
 

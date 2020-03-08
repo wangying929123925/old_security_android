@@ -57,6 +57,15 @@ public class RepairAddContent {
     private int totalCost;
     private Long userId;
     private List<MdmcAddTaskItemDtoListBean> mdmcAddTaskItemDtoList;
+    private List<Long> attachmentIdList;
+
+    public List<Long> getAttachmentIdList() {
+        return attachmentIdList;
+    }
+
+    public void setAttachmentIdList(List<Long> attachmentIdList) {
+        this.attachmentIdList = attachmentIdList;
+    }
 
     public String getAddressName() {
         return addressName;

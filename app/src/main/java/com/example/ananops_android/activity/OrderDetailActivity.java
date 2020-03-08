@@ -1,6 +1,5 @@
 package com.example.ananops_android.activity;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,16 +17,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.FindTabAdapter;
-import com.example.ananops_android.db.CodeMessageResponse;
-import com.example.ananops_android.db.RepairChangeDetail;
-import com.example.ananops_android.entity.RepairCommonDetail;
+import com.example.ananops_android.db.OrderDetailResponse;
+import com.example.ananops_android.db.RepairFileUrlResponse;
 import com.example.ananops_android.fragment.OrderDetailAppendix;
-import com.example.ananops_android.fragment.OrderDetailAuditFragment;
 import com.example.ananops_android.fragment.OrderDetailContentFragment;
-import com.example.ananops_android.fragment.OrderDetailRepairFragment;
 import com.example.ananops_android.fragment.OrderDetailReplacementFragment;
 import com.example.ananops_android.fragment.TimeLineFragment;
 import com.example.ananops_android.net.Net;
@@ -35,9 +30,11 @@ import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -47,12 +44,9 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     private ViewPager vp_search_order_pager;  //内容
     private List<Fragment> list_fragment;                                //定义要装fragment的列表
     private List<String> list_title;
-    private TimeLineFragment unDoFragment;
-    private OrderDetailRepairFragment servicingOrderFragment;
-    private OrderDetailContentFragment myOrderFragment;
-    private OrderDetailAppendix orderDetailAppendix;
-    private OrderDetailAuditFragment orderDetailAuditFragment;
-    private OrderDetailReplacementFragment orderDetailReplacementFragment;
+    private ArrayList<String> value1 = new ArrayList<>();//详细信息
+    private ArrayList<String> value2 = new ArrayList<>();//维修信息
+    private ArrayList<String> value3 = new ArrayList<>();//附件信息
     private FindTabAdapter findTabAdapter;
     private TextView title;
   //  private ImageView search_img;
@@ -70,6 +64,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
           setContentView(R.layout.activity_order_detail);
           ActivityManager.getInstance().addActivity(this);
           mContext=this;
+          defaultArrayLists();
           initViews();
           initDatas();
           setOnListener();
@@ -210,7 +205,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                         Toast.makeText(mContext, "不接单", Toast.LENGTH_SHORT).show();
                         BaseUtils.getInstence().changeStatus(15, ORDER_ID, "服务商审核通过", mContext);
                       //  BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
-
                     }
                 });
                 break;
@@ -220,16 +214,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 order_detail_button1.setVisibility(View.GONE);
                 order_detail_button2.setVisibility(View.VISIBLE);
                 order_detail_button2.setText("提交方案");
-//                order_detail_button2.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        //维修提交
-//                        BaseUtils.getInstence().changeStatus(7, ORDER_ID, "提交方案", mContext);
-//                        postChangeRepair();
-//                        Toast.makeText(mContext, "确认提交", Toast.LENGTH_SHORT).show();
-//                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
-//                    }
-//                });
                 break;
             case "3-3":
                 //维修中
@@ -305,83 +289,172 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         title.setText("工单详情");
     }
     private void initDatas() {
-        list_title = new ArrayList<>();
-        list_title.add("处理进度");
-        list_title.add("工单详情");
-        list_title.add("维修详情");
-        list_title.add("备品备件");
-        list_title.add("审核详情");
-        list_title.add("附件信息");
-        list_fragment = new ArrayList<>();
-        unDoFragment = new TimeLineFragment();//维修记录
-        servicingOrderFragment = new OrderDetailRepairFragment();//xiangqing
-        myOrderFragment = new OrderDetailContentFragment();//weixiu
-        orderDetailReplacementFragment = new OrderDetailReplacementFragment();//备件
-        orderDetailAuditFragment = new OrderDetailAuditFragment();//审核
-        orderDetailAppendix = new OrderDetailAppendix();//附件
+
+        Net.instance.getOrderDetail(Long.valueOf(ORDER_ID), SPUtils.getInstance().getString("Token"," "))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<OrderDetailResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        getFileUrl();
+                        Log.e("getRepairDetail", System.currentTimeMillis() + "");
+                        if (e instanceof HttpException) {
+                            HttpException httpException = (HttpException) e;
+                            try {
+                                String error = httpException.response().errorBody().string();
+                                Log.e("RepairDetail", error);
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        } else {
+                            //ToastUtil.showLongToast("请求失败");
+                        }
+                        Toast.makeText(mContext, "网络异常，请检查网络状态orderDetail", Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onNext(OrderDetailResponse orderDetailResponse) {
+                        if (TextUtils.equals(orderDetailResponse.getCode(), "200")) {
+                                value1.clear();
+                                value1.add(orderDetailResponse.getResult().getPmcProjectDto().getProjectName());//项目
+                                value1.add(orderDetailResponse.getResult().getPmcProjectDto().getPartyAName());//
+                                value1.add(orderDetailResponse.getResult().getMdmcTask().getCreator());//
+                                value1.add(orderDetailResponse.getResult().getMdmcTask().getCall());//
+                                value1.add(orderDetailResponse.getResult().getMdmcTask().getAppointTime());//
+                                value1.add(orderDetailResponse.getResult().getMdmcTask().getAddressName());//
+                                value1.add(statusChange(orderDetailResponse.getResult().getMdmcTask().getLevel()));
+                                value1.add(orderDetailResponse.getResult().getMdmcTask().getSuggestion());
+                                value2.clear();
+                                if(orderDetailResponse.getResult().getPrincipalInfoDto()!=null){
+                                    value2.add(orderDetailResponse.getResult().getPrincipalInfoDto().getUserName());
+                                }else {
+                                    value2.add("");
+                                }
+                               if (orderDetailResponse.getResult().getEngineerDto() != null) {
+                                value2.add(orderDetailResponse.getResult().getEngineerDto().getUserName());
+                               }else {
+                                   value2.add("");
+                               }
+                               value2.add(orderDetailResponse.getResult().getMdmcTask().getSuggestion());
+                               value2.add(String.valueOf(orderDetailResponse.getResult().getMdmcTask().getResult()));
+                               getFileUrl();
+                        } else {
+                            getFileUrl();
+                            Toast.makeText(mContext,orderDetailResponse.getMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
         //传值
-        if (ACTIVITY_STATUS != null || !ACTIVITY_STATUS.equals("")) {
-            Bundle bundle = new Bundle();
-            bundle.putString("str", ACTIVITY_STATUS);
-            bundle.putString("order_id", ORDER_ID);
-            unDoFragment.setArguments(bundle);
-            orderDetailReplacementFragment.setArguments(bundle);
-            myOrderFragment.setArguments(bundle);
-            servicingOrderFragment.setArguments(bundle);
-            orderDetailAuditFragment.setArguments(bundle);
-        }
-        list_fragment.add(unDoFragment);
-        list_fragment.add(myOrderFragment);
-       list_fragment.add(servicingOrderFragment);
-       list_fragment.add(orderDetailReplacementFragment);
-        list_fragment.add(orderDetailAuditFragment);
-        list_fragment.add(orderDetailAppendix);
-        findTabAdapter=new FindTabAdapter(getSupportFragmentManager(),list_fragment,list_title);
-        vp_search_order_pager.setAdapter(findTabAdapter);
-        tab_search_order_title.setupWithViewPager(vp_search_order_pager);
-        vp_search_order_pager.setOffscreenPageLimit(6);
+    }
+
+    private String statusChange(int i) {
+          if(i==0){
+              return "紧急";
+          } else if (i == 1) {
+              return "中等";
+          }else {
+              return "一般";
+          }
     }
     private void setOnListener() {
          // search_img.setOnClickListener(this);
           back_img.setOnClickListener(this);
     }
+    private void initFragment(){
+        list_title = new ArrayList<>();
+        list_title.add("工单详情");
+        list_title.add("维修详情");
+        list_title.add("处理进度");
+        list_title.add("附件信息");
+        list_fragment = new ArrayList<>();
+        if (ACTIVITY_STATUS != null || !ACTIVITY_STATUS.equals("")) {
+            list_fragment.add(OrderDetailContentFragment.newInstance(value1));
+            list_fragment.add(OrderDetailReplacementFragment.getInstance(value2, ORDER_ID, ACTIVITY_STATUS));
+            list_fragment.add(TimeLineFragment.newInstance(ORDER_ID));
+            list_fragment.add(OrderDetailAppendix.newInstance(value3));
+        }else {
+            list_fragment.add(OrderDetailContentFragment.newInstance(value1));
+            list_fragment.add(OrderDetailReplacementFragment.getInstance(value2, "1", "no"));
+            list_fragment.add(TimeLineFragment.newInstance("1"));
+            list_fragment.add(OrderDetailAppendix.newInstance(value3));
+        }
+        findTabAdapter=new FindTabAdapter(getSupportFragmentManager(),list_fragment,list_title);
+        vp_search_order_pager.setAdapter(findTabAdapter);
+        tab_search_order_title.setupWithViewPager(vp_search_order_pager);
+        vp_search_order_pager.setOffscreenPageLimit(4);
+    }
+    private void getFileUrl() {
+          Net.instance.getFilesUrl(Long.valueOf(ORDER_ID), SPUtils.getInstance().getString("Token"," "))
+                  .subscribeOn(Schedulers.newThread())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(new Subscriber<RepairFileUrlResponse>() {
+                      @Override
+                      public void onCompleted() {
 
-    private void postChangeRepair() {
-        RepairChangeDetail repairChangeDetail = new RepairChangeDetail();
-        repairChangeDetail.setId(RepairCommonDetail.id);
-        repairChangeDetail.setLevel(RepairCommonDetail.level);
-        repairChangeDetail.setResult(0);
-        repairChangeDetail.setSuggestion(RepairCommonDetail.suggestion);
-        repairChangeDetail.setTitle(RepairCommonDetail.title);
-        repairChangeDetail.setTotalCost(RepairCommonDetail.totalCost);
-        Net.instance.postRepairDetail(repairChangeDetail, SPUtils.getInstance().getString("Token"," "))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<CodeMessageResponse>() {
-                    @Override
-                    public void onCompleted() {
+                      }
 
-                    }
+                      @Override
+                      public void onError(Throwable e) {
+                          initFragment();
+                          Log.e("getRepairFiles", System.currentTimeMillis() + "");
+                          if (e instanceof HttpException) {
+                              HttpException httpException = (HttpException) e;
+                              try {
+                                  String error = httpException.response().errorBody().string();
+                                  Log.e("RepairFiles", error);
+                              } catch (IOException e1) {
+                                  e1.printStackTrace();
+                              }
+                          } else {
+                              //ToastUtil.showLongToast("请求失败");
+                          }
+                          Toast.makeText(mContext, "网络异常，请检查网络状态orderUrl", Toast.LENGTH_SHORT).show();
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.v("LoginTime", System.currentTimeMillis() + "");
-                        e.printStackTrace();
-                        Toast.makeText(mContext, "网络异常，请检查网络状态changeStatus", Toast.LENGTH_SHORT).show();
-                    }
+                      }
 
-                    @Override
-                    public void onNext(CodeMessageResponse codeMessageResponse) {
-                        if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
-                            Log.v("操作成功", System.currentTimeMillis() + "");
-                            Toast.makeText(mContext,"操作成功！",Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            Toast.makeText(mContext,"操作失败！",Toast.LENGTH_SHORT).show();
-                            Log.v("操作成功", codeMessageResponse.getMessage());
-                        }
-                    }
-                });
+                      @Override
+                      public void onNext(RepairFileUrlResponse repairFileUrlResponse) {
+                          if (TextUtils.equals(repairFileUrlResponse.getCode(), "200")) {
+                              if (repairFileUrlResponse.getResult().size() > 0) {
+                                  int urlSize = repairFileUrlResponse.getResult().get(0).getElementImgUrlDtoList().size();
+                                  if (urlSize > 0) {
+                                      value3.clear();
+                                      for (int i = 0; i < urlSize; i++) {
+                                          value3.add(repairFileUrlResponse.getResult().get(0).getElementImgUrlDtoList().get(i).getAttachmentId());
+                                      }
+                                  }
+                              }
+                              initFragment();
+                          } else {
+                              initFragment();
+                          }
+                      }
+                  });
+    }
+
+    private void defaultArrayLists() {
+      value1.clear();
+        value1.add("");
+        value1.add("");
+        value1.add("");
+        value1.add("");
+        value1.add("");
+        value1.add("");
+        value1.add("");
+        value1.add("");
+        value1.add("");
+        value1.add("");
+      value2.clear();
+        value2.add("");
+        value2.add("");
+        value2.add("");
+        value2.add("");
+        value2.add("");
+        value3.add("");
     }
     @Override
     public void onClick(View v) {

@@ -64,11 +64,16 @@ public class AddressSearchActivity extends AppCompatActivity implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(tipList!=null) {
-                    Tip tip = (Tip) adapter.getItem(position);
-                    Intent intent = new Intent();
-                    intent.putExtra("tip", tip);
-                    setResult(RESULT_CODE_INPUTTIPS, intent);
-                    finish();
+                    Tip tip = tipList.get(position);
+                   // Tip tip = (Tip) adapter.getItem(position);
+                    if (null != tip.getPoint()) {
+                        Intent intent = new Intent();
+                        intent.putExtra("tip", tip);
+                        setResult(RESULT_CODE_INPUTTIPS, intent);
+                        finish();
+                    } else {
+                        Toast.makeText(AddressSearchActivity.this,"请选择具体地理位置",Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });

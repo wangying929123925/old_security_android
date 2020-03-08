@@ -12,6 +12,9 @@ import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.ConfirmWorkOrderRequest;
+import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersRequset;
+import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersResponse;
+import com.example.ananops_android.db.GroupIdResponse;
 import com.example.ananops_android.db.InspectionCommentRequest;
 import com.example.ananops_android.db.InspectionDetailResponse;
 import com.example.ananops_android.db.InspectionEngineerDistributeRequest;
@@ -25,18 +28,19 @@ import com.example.ananops_android.db.InspectionListResponse;
 import com.example.ananops_android.db.InspectionLogResponse;
 import com.example.ananops_android.db.InspectionLogsRequest;
 import com.example.ananops_android.db.InspectionQueryByStatusAndIdRequest;
-import com.example.ananops_android.db.ProjectInfoResponse;
-import com.example.ananops_android.db.ProjectListResponse;
 import com.example.ananops_android.db.LoginResponse;
 import com.example.ananops_android.db.OrderDetailResponse;
 import com.example.ananops_android.db.OrderRequest;
 import com.example.ananops_android.db.OrderResponse;
 import com.example.ananops_android.db.OrderTimelineResponse;
 import com.example.ananops_android.db.PostResponse;
+import com.example.ananops_android.db.ProjectInfoResponse;
+import com.example.ananops_android.db.ProjectListResponse;
 import com.example.ananops_android.db.RelacementOrderListUndoResult;
 import com.example.ananops_android.db.RelacementOrderOperationRequest;
 import com.example.ananops_android.db.RepairChangeDetail;
 import com.example.ananops_android.db.RepairCommentRequest;
+import com.example.ananops_android.db.RepairFileUrlResponse;
 import com.example.ananops_android.db.RepairerListResponse;
 import com.example.ananops_android.db.ReplacementListResponse;
 import com.example.ananops_android.db.ReplacementOrderCreateRequest;
@@ -45,16 +49,12 @@ import com.example.ananops_android.db.UnDistrbutedInspectionDetailRequest;
 import com.example.ananops_android.db.UnDistrbutedInspectionDetailResponse;
 import com.example.ananops_android.db.UpLoadFilesResponse;
 import com.example.ananops_android.db.UserInformation;
-import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersRequset;
-import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersResponse;
 import com.example.ananops_android.entity.InspectionAddContent;
 import com.example.ananops_android.entity.RepairAddContent;
 
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -67,10 +67,8 @@ import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 import rx.Observable;
 
 public interface Net {
@@ -106,7 +104,9 @@ public interface Net {
     //获取用户信息
     @POST("/uac/user/queryUserInfo/{loginName}")
     Observable<UserInformation> getUserInfo(@Path("loginName") String loginName, @Header("Authorization") String postToken);
-
+    //获取组织信息
+    @GET("/uac/user/getPGIdByUserId/{userId}")
+    Observable<GroupIdResponse> getGroupId(@Path("userId")Long userId,@Header("Authorization") String postToken);
     //获取工单列表
     @Headers("Content-Type:application/json")
     @POST("/mdmc/mdmcTask/getTaskListByIdAndStatus")
@@ -121,7 +121,7 @@ public interface Net {
     @POST("/mdmc/mdmcTask/save")
     Observable<CodeMessageResponse> repairAddPost(@Body RepairAddContent saveTask, @Header("Authorization") String postToken);
 
-    //维修提交图片
+    //维修上传图片
     @Multipart
     @POST("/mdmc/mdmcTask/uploadTaskPicture")
     Observable<List<UpLoadFilesResponse>>upLoadFiles(@Query("fileType")String fileType,
@@ -131,7 +131,9 @@ public interface Net {
                                                      @Header("Authorization") String postToken,
                                                      @Header("deviceId") Long deviceId
                                         );
-
+   //维修查看文件
+    @GET("/mdmc/mdmcTask/getPictureByTaskId")
+    Observable<RepairFileUrlResponse>getFilesUrl(@Query("taskId") Long taskId, @Header("Authorization") String postToken);
     //获取验证码图片
     @POST("/uac/auth/code/image")
     Observable<PostResponse> getImage(@Header("deviceId") Long deviceId);
@@ -148,8 +150,8 @@ public interface Net {
 
     //获取工单所有详情
     @Headers("Content-Type:application/json")
-    @GET("/mdmc/mdmcTask/getTaskByTaskId/{taskId}")
-    Observable<OrderDetailResponse> getOrderDetail(@Path("taskId") String orderId, @Header("Authorization") String postToken);
+    @GET("/mdmc/mdmcTask/getTaskDetailByTaskId")
+    Observable<OrderDetailResponse> getOrderDetail(@Query("taskId") Long orderId, @Header("Authorization") String postToken);
 
     //修改维修信息
     @POST("/mdmc/mdmcTask/modify")

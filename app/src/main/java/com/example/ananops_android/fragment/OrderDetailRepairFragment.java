@@ -2,14 +2,8 @@ package com.example.ananops_android.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ananops_android.R;
-import com.example.ananops_android.db.OrderDetailResponse;
 import com.example.ananops_android.entity.RepairCommonDetail;
-import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
-import com.example.ananops_android.util.SPUtils;
-
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class OrderDetailRepairFragment extends Fragment {
@@ -85,7 +72,6 @@ public class OrderDetailRepairFragment extends Fragment {
         if((getArguments()!=null)){
             STATUS_FLAG=(String)getArguments().get("str");
             ORDER_ID=(String) getArguments().get("order_id");
-            getRepairDetail();
             Toast.makeText(getContext(),"STATUS_FLAG"+STATUS_FLAG,Toast.LENGTH_SHORT).show();
         }
             if(STATUS_FLAG=="3-2"||STATUS_FLAG.equals("3-2")){
@@ -105,45 +91,6 @@ public class OrderDetailRepairFragment extends Fragment {
                 bt_order_end_time.setVisibility(View.INVISIBLE);
             }
 
-    }
-    private void getRepairDetail(){
-        ORDER_ID=(String) getArguments().get("order_id");
-        Net.instance.getOrderDetail(ORDER_ID, SPUtils.getInstance().getString("Token"," "))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<OrderDetailResponse>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.v("LoginTime", System.currentTimeMillis() + "");
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), "网络异常，请检查网络状态fragmentgetDetail", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onNext(OrderDetailResponse orderDetailResponse) {
-                        if (TextUtils.equals(orderDetailResponse.getCode(), "200")) {
-                            tv_repair_start_time.setText(String.valueOf(orderDetailResponse.getResult().getActualStartTime()));
-                            tv_repair_end_time.setText(String.valueOf(orderDetailResponse.getResult().getActualFinishTime()));
-                            tv_repair_degree.setText(String.valueOf(orderDetailResponse.getResult().getLevel()));
-                            tv_repair_description.setText(String.valueOf(orderDetailResponse.getResult().getSuggestion()));
-                            tv_repair_money.setText(String.valueOf(orderDetailResponse.getResult().getTotalCost()));
-                            tv_repair_status.setText(BaseUtils.getInstence().statusNumConvertString((orderDetailResponse.getResult().getStatus())));
-                            tv_repair_group.setText("一组");
-                            tv_repair_man.setText("782526720958801921");
-                            tv_emergency_degree.setText(String.valueOf(orderDetailResponse.getResult().getLevel()));
-                            RepairCommonDetail.level=orderDetailResponse.getResult().getLevel();
-                            RepairCommonDetail.title=orderDetailResponse.getResult().getTitle();
-                            RepairCommonDetail.totalCost=orderDetailResponse.getResult().getTotalCost();
-                        } else {
-                            Toast.makeText(getContext(),orderDetailResponse.getMessage(),Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
     //待维修，填写方案
      private void initDiffDetailUnRepair(){

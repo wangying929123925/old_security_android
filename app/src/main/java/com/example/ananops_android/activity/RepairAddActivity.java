@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -56,8 +58,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -65,7 +65,6 @@ import retrofit2.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-
 
 public class RepairAddActivity extends AppCompatActivity implements View.OnClickListener {
     final private RepairAddContent repairAddContent=new RepairAddContent();
@@ -98,7 +97,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private ArrayList<String> imagePaths = new ArrayList<>();//图片
     ArrayList<String> imagePathUp = new ArrayList<>();//上传
     private int projectTmp=0;
-    private String tmp="";
+    private static int tmp=1;
     private String[] result = new String[4];
     private List<ProjectInfo> projectInfos = new ArrayList<>();
     private String[] projectArray;
@@ -108,14 +107,29 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
     private String[] troubleTypeArray;
     private int troubleTypeTmp=0;
     private Context mContext;
-
     private static String[] PERMISSION_STORAGE_PHOTO ={
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA
     };
-
     private static final int REQUEST_PLACE = 1;
+    private int compressFlag = 0;
+    private List<Long> attachmentIdList = new ArrayList<>();
+    private Handler mHandler = new Handler(){
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case 1:
+                   compressFlag=1;
+                    break;
+                case 2:
+                    break;
+                    default:
+                        break;
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -226,7 +240,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         et_repair_person.setText(SPUtils.getInstance().getString("user_id","111"));
         et_repair_tel.setText("18801162442");
         //获取项目信息
-        Net.instance.getProjectList(4L, SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getProjectList(Long.valueOf(SPUtils.getInstance().getString("groupId", "1")), SPUtils.getInstance().getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ProjectListResponse>() {
@@ -417,9 +431,28 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         Thread thread=new Thread(new Runnable() {
             @Override
             public void run() {
+                imagePathUp.clear();
+                    for (int i = 0; i < imagePaths.size(); i++) {
+                        String s = imagePaths.get(i);
+                        if (s.equals("paizhao")) {
+                            //continue;
+                        } else {
+                            File file = new File(s);
+                            long fileSize = FileUtils.getInstance().getFileSize(file);
+                            if (fileSize > 1048576L) {
+                                s = FileUtils.getInstance().compressReSave(s, mContext, 100);
+                                imagePathUp.add(s);
+                            } else {
+                                imagePathUp.add(s);
+                            }
 
-            }
+                        }
+                    }
+                mHandler.sendEmptyMessage(1);
+                }
         });
+        thread.start();
+
         gridAdapter  = new GridAdapter(this,imagePaths);
         gridView.setAdapter(gridAdapter);
         try{
@@ -437,7 +470,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                Toast.makeText(RepairAddActivity.this,troubleTypeArray[i],Toast.LENGTH_SHORT).show();
-               tmp=troubleTypeArray[i];
+             //  tmp=troubleTypeArray[i];
                troubleTypeTmp=i;
                fault_type.setText(troubleTypeArray[i]);
                 alertFaultType.dismiss();
@@ -501,10 +534,9 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                         Log.v("projectName", item[which]);
                         projectTmp = which;
                         if(projectInfos.size()>projectTmp){
-                                repair_listid.setText(projectInfos.get(projectTmp).getPartyAName());
+                            repair_listid.setText(projectInfos.get(projectTmp).getPartyAName());
                             et_repair_person.setText(projectInfos.get(projectTmp).getAoneName());
                             et_repair_tel.setText(projectInfos.get(projectTmp).getAleaderTel());
-
                         }
                         else {
                             repair_listid.setText("");
@@ -538,31 +570,42 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         });
         builder.create().show();
     }
-    private void showProgressBar() {
-        progressDialog=ProgressDialog.show(this,"提示","上传中",false);
+    private void showProgressBar(int tmp) {
+        progressDialog=ProgressDialog.show(this,"提示","正在上传第"+tmp+"张图片",false);
+        progressDialog.setCanceledOnTouchOutside(true);
     }
     private void hideProgressBar() {
         progressDialog.dismiss();
     }
     private void repairPicsSubmit() {
-        showProgressBar();
-        imagePathUp.clear();
-        imagePathUp.addAll(imagePaths);
-        if (imagePathUp.contains("paizhao")) {
-            imagePathUp.remove("paizhao");
-            Log.d("imagePathUp", imagePathUp+"");
+        if (compressFlag != 1) {
+            Toast.makeText(mContext, "请稍后再次点击图片提交按钮", Toast.LENGTH_SHORT).show();
+           // hideProgressBar();
+        } else {
+            subPics();
         }
+    }
+
+//        imagePathUp.clear();
+//        imagePathUp.addAll(imagePaths);
+//        if (imagePathUp.contains("paizhao")) {
+//            imagePathUp.remove("paizhao");
+//            Log.d("imagePathUp", imagePathUp+"");
+//        }
+private void subPics(){
+        attachmentIdList.clear();
         Long deviceId = new Date().getTime();
         if (imagePathUp.size() > 0) {
-            Log.d("imagePaths", imagePaths + "");
+            Log.d("imagePathUp上传", imagePathUp + "");
             for (int i = 0; i < imagePathUp.size(); i++) {
+                showProgressBar(tmp);
                 String string = imagePathUp.get(i);
                 File file = new File(string);
-                long fileSize = FileUtils.getInstance().getFileSize(file);
-                if (fileSize > 1048576L) {
-                           string = FileUtils.getInstance().compressReSave(string, mContext, 100);
-                           file = new File(string);
-                       }
+//                long fileSize = FileUtils.getInstance().getFileSize(file);
+//                if (fileSize > 1048576L) {
+//                           string = FileUtils.getInstance().compressReSave(string, mContext, 100);
+//                           file = new File(string);
+//                       }
                 String type = string.substring(string.lastIndexOf(".") + 1);
                 Log.d("imgType", type);
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/" + type), file);
@@ -574,14 +617,17 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                         .subscribe(new Subscriber<List<UpLoadFilesResponse>>() {
                             @Override
                             public void onCompleted() {
-                                FileUtils.getInstance().deleteCacheFile();
+                                Log.v("上传","第"+tmp+"张照片");
+                                hideProgressBar();
                             }
 
                             @Override
                             public void onError(Throwable e) {
+                                hideProgressBar();
                                 Log.v("UploadTime", System.currentTimeMillis() + "");
                                 //  e.printStackTrace();
-                                Toast.makeText(mContext, "提交失败", Toast.LENGTH_SHORT).show();
+                                attachmentIdList.clear();
+                                Toast.makeText(mContext, "提交失败,请重新上传图片", Toast.LENGTH_SHORT).show();
                                 if (e instanceof HttpException) {
                                     HttpException httpException = (HttpException) e;
                                     try {
@@ -594,18 +640,23 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                                     //ToastUtil.showLongToast("请求失败");
                                 }
                             }
-
                             @Override
                             public void onNext(List<UpLoadFilesResponse> upLoadFilesResponses) {
                                 Log.v("upLoadFilesResponses", upLoadFilesResponses + "");
                                 if (upLoadFilesResponses.size() > 0) {
                                     Toast.makeText(mContext, "提交照片成功！", Toast.LENGTH_SHORT).show();
                                     // BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
-                                    String[] strings = new String[upLoadFilesResponses.size()];
-                                    for (int i = 0; i < upLoadFilesResponses.size(); i++) {
-                                        UpLoadFilesResponse upLoadFilesResponse = upLoadFilesResponses.get(i);
-                                        strings[i] = upLoadFilesResponse.getAttachmentId();
-                                        Log.v("AttachmentIds", strings[i]);
+                                        Long s = upLoadFilesResponses.get(0).getAttachmentId();
+                                        //strings[i] = upLoadFilesResponse.getAttachmentId();
+                                        attachmentIdList.add(s);
+                                        Log.v("AttachmentLists", attachmentIdList+"");
+                                        Log.v("tmp", tmp+"");
+                                    if (tmp == imagePathUp.size()) {
+                                        FileUtils.getInstance().deleteCacheFile();
+                                        hideProgressBar();
+                                        tmp=1;
+                                    }else {
+                                        tmp++;
                                     }
                                 } else {
                                     Toast.makeText(mContext, "无返回！", Toast.LENGTH_SHORT).show();
@@ -617,38 +668,67 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
             else{
                 Toast.makeText(mContext, "无图片上传！", Toast.LENGTH_SHORT).show();
             }
-            hideProgressBar();
+         //   hideProgressBar();
         }
     private void addRepairSubmit(){
-       // repairAddContent.setAppointTime("1577160060000");
-        repairAddContent.setAppointTime(et_appointment_time.getText().toString().trim());//
-        repairAddContent.setContractId(1L);//
-        repairAddContent.setAddressName(et_repair_address.getText().toString().trim());//
-        repairAddContent.setFacilitatorId(projectInfos.get(projectTmp).getPartyAId());//
-        repairAddContent.setId(null);//
-        repairAddContent.setCall(et_repair_tel.getText().toString().trim());
-        repairAddContent.setObjectId(null);
-        repairAddContent.setObjectType(1);
-        repairAddContent.setLevel(changeLevel(et_emergency_degree.getText().toString().trim()));//
-        repairAddContent.setPrincipalId(projectInfos.get(projectTmp).getAleaderId());//
-        repairAddContent.setProjectId(projectInfos.get(projectTmp).getId());//
-        repairAddContent.setStatus(0);//
-        repairAddContent.setSuggestion("");//
-        repairAddContent.setTitle(addressArray[addressTmp]);//
-        repairAddContent.setTotalCost(0);//
-        repairAddContent.setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id","111")));//
-        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDescription(fault_description.getText().toString().trim());
-        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceId(0L);//
-        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceType(fault_type.getText().toString().trim());//设备类型
-        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLatitude(troubleAddresses.get(troubleTypeTmp).getTroubleLatitude());
-        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLongitude(troubleAddresses.get(troubleTypeTmp).getTroubleLongitude());
-        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setLevel(et_fault_degree.getText().toString().trim());
-        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setId(null);
-        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTaskId(0L);
-        repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTroubleType(troubleTypeTmp);//故障类型
-        Log.v("repairAddContent", repairAddContent + "");
-       // Net.instance.repairAddPost(repairAddContent, SPUtils.getInstance().getString("Token",""))
-        BaseUtils.getInstence().repairAdd(repairAddContent,mContext);
+       if(judgeRepair()) {
+           repairAddContent.setAttachmentIdList(attachmentIdList);
+           repairAddContent.setAppointTime(et_appointment_time.getText().toString().trim());//
+           repairAddContent.setContractId(1L);//
+           repairAddContent.setAddressName(et_repair_address.getText().toString().trim());//
+           repairAddContent.setFacilitatorId(projectInfos.get(projectTmp).getBleaderId());//
+           repairAddContent.setId(null);//
+           repairAddContent.setCall(et_repair_tel.getText().toString().trim());
+           repairAddContent.setObjectId(null);
+           repairAddContent.setObjectType(1);
+           repairAddContent.setLevel(changeLevel(et_emergency_degree.getText().toString().trim()));//
+           repairAddContent.setPrincipalId(projectInfos.get(projectTmp).getAleaderId());//
+           repairAddContent.setProjectId(projectInfos.get(projectTmp).getId());//
+           repairAddContent.setStatus(0);//
+           repairAddContent.setSuggestion("");//
+           repairAddContent.setTitle(addressArray[addressTmp]);//
+           repairAddContent.setTotalCost(0);//
+           repairAddContent.setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id", "111")));//
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDescription(fault_description.getText().toString().trim());
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceId(0L);//
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceType(fault_type.getText().toString().trim());//设备类型
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLatitude(troubleAddresses.get(troubleTypeTmp).getTroubleLatitude());
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLongitude(troubleAddresses.get(troubleTypeTmp).getTroubleLongitude());
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setLevel(et_fault_degree.getText().toString().trim());
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setId(null);
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTaskId(0L);
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTroubleType(troubleTypeTmp);//故障类型
+           Log.v("repairAddContent", repairAddContent + "");
+           BaseUtils.getInstence().repairAdd(repairAddContent, mContext);
+       }
+    }
+    private boolean judgeRepair(){
+        if (TextUtils.isEmpty(et_appointment_time.getText().toString().trim())) {
+            Toast.makeText(this,"请选择预约时间", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (TextUtils.isEmpty(et_repair_tel.getText().toString().trim())) {
+            Toast.makeText(this,"请填写联系方式", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (TextUtils.isEmpty(et_project_name.getText().toString().trim())) {
+            Toast.makeText(this,"请选择项目", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (TextUtils.isEmpty(et_repair_address.getText().toString().trim())) {
+            Toast.makeText(this,"请选择维修定位地点", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (TextUtils.isEmpty(et_emergency_degree.getText().toString().trim())) {
+            Toast.makeText(this,"请选择紧急程度", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if (TextUtils.isEmpty(fault_type.getText().toString().trim())) {
+            Toast.makeText(this,"请选择故障类型", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if (TextUtils.isEmpty(et_fault_degree.getText().toString().trim())) {
+            Toast.makeText(this,"请选择故障等级", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if (TextUtils.isEmpty(fault_addr.getText().toString().trim())) {
+            Toast.makeText(this,"请选择故障位置", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
     private int changeLevel(String string) {
         int level;

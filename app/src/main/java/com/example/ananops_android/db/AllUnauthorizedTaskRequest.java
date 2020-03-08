@@ -1,5 +1,7 @@
 package com.example.ananops_android.db;
 
+import org.json.JSONArray;
+
 public class AllUnauthorizedTaskRequest {
 
 

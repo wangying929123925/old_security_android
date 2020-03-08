@@ -50,7 +50,7 @@ public class ProjectListActivity extends AppCompatActivity {
         mContext =this;
         ActivityManager.getInstance().addActivity(this);
         //获取项目信息
-        Net.instance.getProjectList(4L, SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getProjectList(Long.valueOf(SPUtils.getInstance().getString("groupId", "1")), SPUtils.getInstance().getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ProjectListResponse>() {

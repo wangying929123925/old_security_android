@@ -51,10 +51,23 @@ public class OrderDetailReplacementFragment extends Fragment {
     private Button replacement_submit;
     private String whether_replace = "否";
     private Context mContext;
-    private List<Replacement> replacementList = new ArrayList<>();
+    private ArrayList<Replacement> replacementList = new ArrayList<>();
     private ListView lv_replacement;
     private ListCommonAdapter mAdapter;
-
+    private ArrayList<String> datas = new ArrayList<>();
+    private TextView tv1;
+    private TextView tv2;
+    private TextView tv3;
+    private TextView tv4;
+    public static OrderDetailReplacementFragment getInstance(ArrayList<String> datas,String orderId,String statusDo) {
+        OrderDetailReplacementFragment orderDetailReplacementFragment = new OrderDetailReplacementFragment();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("data", datas);
+        bundle.putString("order_id",orderId);
+        bundle.putString("statusDo",statusDo);
+        orderDetailReplacementFragment.setArguments(bundle);
+        return orderDetailReplacementFragment;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order_detail_replacement, container, false);
@@ -63,13 +76,16 @@ public class OrderDetailReplacementFragment extends Fragment {
         tv_choose_whether_replace = view.findViewById(R.id.tv_choose_whether_replace);
         fragment_order_choose_replacement = view.findViewById(R.id.fragment_order_choose_replacement);
         lv_replacement = view.findViewById(R.id.lv_replacement);
-        replacement_submit=view.findViewById(R.id.choose_replacement_button);
+        replacement_submit = view.findViewById(R.id.choose_replacement_button);
         tv_choose_whether_replace.setVisibility(View.INVISIBLE);
         fragment_order_choose_replacement.setVisibility(View.INVISIBLE);
+        tv1 = view.findViewById(R.id.tv_facilities_name);
+        tv2 = view.findViewById(R.id.tv_repairer_name);
+        tv3 = view.findViewById(R.id.tv_repair_result);
+        tv4 = view.findViewById(R.id.tv_fault_suggestion);
         initView();
         initData();
         mContext=getContext();
-       // setListener();
         return view;
     }
 
@@ -97,15 +113,22 @@ public class OrderDetailReplacementFragment extends Fragment {
 
     }
     private void initView(){
+
     }
-    
     private void initData() {
-        if(!(getArguments()==null)){
+        if (!(getArguments() == null)) {
             ORDER_ID = (String) getArguments().get("order_id");
-            STATUS_FLAG = (String) getArguments().get("str");}
-        if(STATUS_FLAG=="3-2"||STATUS_FLAG.equals("3-2")){
+            STATUS_FLAG = (String) getArguments().get("statusDo");
+            datas = getArguments().getStringArrayList("data");
+        }
+        tv1.setText(datas.get(0));
+        tv2.setText(datas.get(1));
+        tv3.setText(datas.get(2));
+        tv4.setText(datas.get(3));
+        if (STATUS_FLAG == "3-2" || STATUS_FLAG.equals("3-2")) {
             initDiffDetail();
-        }else {
+        } else {
+            //从后台拉取数据
             tv_whether_replace.setText("是");
             fragment_order_choose_replacement.setVisibility(View.INVISIBLE);
             replacement_submit.setVisibility(View.GONE);
@@ -115,15 +138,13 @@ public class OrderDetailReplacementFragment extends Fragment {
             replacement.setType("30*50*1");
             replacement.setPrice((float) 20.00);
             replacement.setCount(1);
-            Replacement replacement1=new Replacement();
+            Replacement replacement1 = new Replacement();
             replacement1.setName("易美吉双头锯-继电器（20*5*1）");
             replacement1.setId("4321");
             replacement1.setType("20*50*1");
             replacement1.setPrice((float) 40.00);
             replacement.setCount(1);
             replacementList.add(replacement);
-            // replacements.add(replacement);
-            // replacements.add(replacement1);
             replacementList.add(replacement1);
         }
         mAdapter=new ListCommonAdapter<Replacement>(getContext(),R.layout.item_replacement_table,replacementList) {

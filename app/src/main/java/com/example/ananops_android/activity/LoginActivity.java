@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.ananops_android.R;
+import com.example.ananops_android.db.GroupIdResponse;
 import com.example.ananops_android.db.LoginResponse;
 import com.example.ananops_android.db.PostResponse;
 import com.example.ananops_android.db.UserInformation;
@@ -28,8 +29,10 @@ import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
+import java.io.IOException;
 import java.util.Date;
 
+import retrofit2.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -210,13 +213,13 @@ public class LoginActivity extends AppCompatActivity {
                                     BaseUtils.getInstence().roleStringConvertNum(roleName);
                                     Log.v("role_num",SPUtils.getInstance().getInt("role_num",1)+"");
                                     SPUtils.getInstance().putString("role_code",userInfo.getResult().getRoles().get(0).getRoleCode());
-                                    Intent intent1 = new Intent(LoginActivity.this, UserMainActivity.class);
-                                    startActivity(intent1);
-                                    finish();
+                                    getGroupId();
+//                                    Intent intent1 = new Intent(LoginActivity.this, UserMainActivity.class);
+//                                    startActivity(intent1);
+//                                    finish();
                                 } else {
                                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.login_again), Toast.LENGTH_SHORT).show();
                                 }
-
                             }
                         }
                     }
@@ -255,6 +258,51 @@ public class LoginActivity extends AppCompatActivity {
                        }
 
                    });
-
        }
-}
+       private void getGroupId() {
+           Net.instance.getGroupId(Long.valueOf(SPUtils.getInstance().getString("user_id", "0")),SPUtils.getInstance().getString("Token", ""))
+                   .subscribeOn(Schedulers.newThread())
+                   .observeOn(AndroidSchedulers.mainThread())
+                   .subscribe(new Subscriber<GroupIdResponse>() {
+                       @Override
+                       public void onCompleted() {
+
+                       }
+
+                       @Override
+                       public void onError(Throwable e) {
+                           Log.v("getGroupId", System.currentTimeMillis() + "");
+                           //  e.printStackTrace();
+                         //  Toast.makeText(mContext, "提交失败", Toast.LENGTH_SHORT).show();
+                           if (e instanceof HttpException) {
+                               HttpException httpException = (HttpException) e;
+                               try{
+                                   String error = httpException.response().errorBody().string();
+                                   Log.v("getGroupIdError", error);
+                               }catch(IOException e1) {
+                                   e1.printStackTrace();
+                               }
+                           }
+                       }
+
+                       @Override
+                       public void onNext(GroupIdResponse groupIdResponse) {
+                           if (TextUtils.equals(groupIdResponse.getCode(), "200")) {
+                               String groupId = groupIdResponse.getResult();
+                               Log.v("group_id", groupId);
+                               if (groupId != null && groupId.length() != 0) {
+                                   SPUtils.getInstance().putString("groupId", groupId);
+
+                                   Intent intent1 = new Intent(LoginActivity.this, UserMainActivity.class);
+                                   startActivity(intent1);
+                                   finish();
+                               } else {
+                                   Toast.makeText(LoginActivity.this, getResources().getString(R.string.login_again), Toast.LENGTH_SHORT).show();
+                               }
+                           } else {
+                               Toast.makeText(LoginActivity.this,groupIdResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                           }
+                       }
+                   });
+       }
+       }

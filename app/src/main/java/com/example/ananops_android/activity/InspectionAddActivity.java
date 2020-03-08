@@ -247,7 +247,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
      获取项目列表
       */
     private List<ProjectInfo> getProjectList(final List<ProjectInfo> projectInfo) {
-        Net.instance.getProjectList(4L, SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getProjectList(Long.valueOf(SPUtils.getInstance().getString("groupId", "4")), SPUtils.getInstance().getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ProjectListResponse>() {

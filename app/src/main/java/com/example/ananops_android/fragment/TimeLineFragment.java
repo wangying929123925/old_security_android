@@ -33,6 +33,14 @@ public class TimeLineFragment extends Fragment {
     private TimeLineAdapter adapter;//适配器
     private ListView mListView;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    public static TimeLineFragment newInstance(String orderId) {
+        TimeLineFragment timeLineFragment = new TimeLineFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("orderId",orderId);
+        timeLineFragment.setArguments(bundle);
+        return timeLineFragment;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_order_time_line,container,false);
@@ -52,7 +60,7 @@ public class TimeLineFragment extends Fragment {
 
     private void initdata() {
         if(!(getArguments()==null)){
-            ORDER_ID=(String) getArguments().get("order_id");
+            ORDER_ID=(String) getArguments().get("orderId");
             Net.instance.getTimeLine(ORDER_ID, SPUtils.getInstance().getString("Token"," "))
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
