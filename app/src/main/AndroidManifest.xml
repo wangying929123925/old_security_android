@@ -2,20 +2,35 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ananops_android">
 
+    <!--允许程序打开网络套接字-->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--用于访问网络-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--用于读取手机当前的状态-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--写入扩展存储，向扩展卡写入数据，用于写入缓存定位数据-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 用于申请调用A-GPS模块 -->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> <!-- 用于申请获取蓝牙信息进行室内定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <!-- 用于申请获取蓝牙信息进行室内定位 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- 解锁屏幕需要的权限 -->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <!-- 申请电源锁需要的权限 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--震动权限-->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -31,13 +46,23 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="8a605283ec7b96f377e9acd6e46091d6" />
-
+        <!--高德地图-->
         <service android:name="com.amap.api.location.APSService" />
         <service
             android:name=".service.AutoUpdateService"
             android:enabled="true"
             android:exported="true" />
-
+        <!--MQTT服务-->
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
+        <service
+            android:name=".service.JWebSocketClientService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".service.JWebSocketClientService$GrayInnerService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":gray" />
         <activity android:name=".activity.LoginActivity1" />
         <activity android:name=".activity.ContactActivity" />
         <activity android:name=".activity.ContactPersonActivity" />
@@ -52,12 +77,14 @@
         <activity android:name=".activity.UerMessageActivity" />
         <activity android:name=".activity.UserOrderSearchActivitySpinner" />
         <activity android:name=".activity.InspectionAddActivity" />
+        <activity android:name=".activity.InspectionAddPicActicity"/>
         <activity android:name=".activity.InspectionSearchListActivity" />
         <activity android:name=".activity.InspectionItemDetailActivity" />
         <activity android:name=".activity.InspectionDetailActivity"></activity>
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.AddressSearchActivity" />
+        <activity android:name=".activity.AdrressNaviActivity"/>
         <activity android:name=".activity.RepairCommentActivity" />
         <activity android:name=".activity.ChooseReplacementActivity" />
         <activity android:name=".activity.InspectionItemListActivity" />

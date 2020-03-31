@@ -59,11 +59,11 @@ public class FlowTagLayout extends ViewGroup {
     public FlowTagLayout(Context context) {
         super(context);
     }
-
+//反射
     public FlowTagLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-
+//主题
     public FlowTagLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }

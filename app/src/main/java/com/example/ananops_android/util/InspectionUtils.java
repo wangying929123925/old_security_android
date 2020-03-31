@@ -1,31 +1,23 @@
 package com.example.ananops_android.util;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.alibaba.idst.nls.internal.utils.L;
-import com.example.ananops_android.activity.RepairAddActivity;
 import com.example.ananops_android.activity.UserMainActivity;
 import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.InspectionItemListImcRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
 import com.example.ananops_android.db.InspectionItemLogsRequest;
-import com.example.ananops_android.db.InspectionListByProjectRequest;
 import com.example.ananops_android.db.InspectionListResponse;
 import com.example.ananops_android.db.InspectionLogResponse;
 import com.example.ananops_android.db.InspectionLogsRequest;
-import com.example.ananops_android.db.ProjectListResponse;
 import com.example.ananops_android.entity.InspectionAddContent;
 import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.InspectionTaskItem;
 import com.example.ananops_android.entity.InspectionTaskLog;
-import com.example.ananops_android.entity.ProjectInfo;
-import com.example.ananops_android.fragment.InspectionItemTimeLineFragment;
 import com.example.ananops_android.net.Net;
 
 import java.io.IOException;
@@ -270,14 +262,14 @@ public List<InspectionTaskItem> getInspectionTaskItemsImc(final List<InspectionT
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.v("ErrorAddInspection", System.currentTimeMillis() + "");
+                        Log.e("ErrorAddInspection", System.currentTimeMillis() + "");
                         Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
                         //e.printStackTrace();
                         if (e instanceof HttpException) {
                             HttpException httpException = (HttpException) e;
                             try{
                                 String error = httpException.response().errorBody().string();
-                                Log.v("RepairAddError", error);
+                                Log.e("RepairAddError", error);
                                 //BaseErrorBean bean = new Gson().fromJson(error , BaseErrorBean.class);
                                 // ToastUtil.showLongToast(bean.getError());
                             }catch(IOException e1) {

@@ -1,11 +1,11 @@
 package com.example.ananops_android.activity;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -21,8 +21,6 @@ import com.example.ananops_android.db.AcceptImcTaskByPrincipalRequest;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.ConfirmWorkOrderRequest;
 import com.example.ananops_android.db.InspectionDetailResponse;
-import com.example.ananops_android.db.InspectionItemDetailResponse;
-import com.example.ananops_android.db.TestResponse;
 import com.example.ananops_android.fragment.InspectionItemClassifyFragment;
 import com.example.ananops_android.fragment.InspectionItemFragment;
 import com.example.ananops_android.fragment.InspectionTimeLineFragment;

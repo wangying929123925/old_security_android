@@ -243,9 +243,9 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
                                 String repairId = repairContent.getId();
                                 Bundle bundle = new Bundle();
                                 bundle.putString("typeId",repairId);
-                                bundle.putString("type","inspection");
+                                bundle.putString("type","repair");
                                 bundle.putString("projectId", String.valueOf(repairContent.getProjectId()));
-                                BaseUtils.getInstence().intent(mContext, ContactActivity.class,"repairId",repairId);
+                                BaseUtils.getInstence().intent(mContext, ContactActivity.class,bundle);
                                 break;
 
                             case 7:

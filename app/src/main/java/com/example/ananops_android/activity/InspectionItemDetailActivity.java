@@ -19,24 +19,22 @@ import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.FindTabAdapter;
 import com.example.ananops_android.adapter.MyFragmentPagerAdapter;
 import com.example.ananops_android.db.AcceptInspectionItemRequest;
-import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.CodeMessageResponse;
-import com.example.ananops_android.db.InspectionDetailResponse;
 import com.example.ananops_android.db.InspectionItemDetailResponse;
-import com.example.ananops_android.db.TestResponse;
+import com.example.ananops_android.db.InspectionPicRequest;
+import com.example.ananops_android.db.InspectionPicResponse;
 import com.example.ananops_android.fragment.InspectionItemFragment;
 import com.example.ananops_android.fragment.InspectionItemTimeLineFragment;
+import com.example.ananops_android.fragment.OrderDetailAppendix;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -57,8 +55,9 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
     private static String inspectionItemId;
     private Context mContext;
     private static String statusDo; //有几个角色就设置几个不同的状态 对应不同fragment数据的显示
-    private ArrayList<String> list_value1 = new ArrayList<>();
-    private ArrayList<String> list_value3 = new ArrayList<>();
+    private ArrayList<String> list_value1 = new ArrayList<>();//项目信息
+    private ArrayList<String> list_value3 = new ArrayList<>();//其他信息
+    private ArrayList<String> list_value4 = new ArrayList<>();//附件信息
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -72,6 +71,7 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
         }
         getInspectionItemInfo();
        // initFragment();
+        defaultArrayList();
         initViews();
         initDatas();
     }
@@ -81,6 +81,7 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
             list_title = new ArrayList<>();
             list_title.add("项目信息");list_title.add("子项日志");
             list_title.add("其他信息");
+            list_title.add("附件信息");
         }
         if (list_fragment == null) {
             list_fragment = new ArrayList<>();
@@ -119,6 +120,7 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
         list_fragment.add(InspectionItemFragment.newIntance("1",list_item1,list_value1));
         list_fragment.add(InspectionItemTimeLineFragment.newIntance(inspectionItemId));
         list_fragment.add(InspectionItemFragment.newIntance("1",list_item3,list_value3));
+        list_fragment.add(OrderDetailAppendix.newInstance(list_value4));
      //   list_fragment.add(InspectionItemFragment.newIntance("1",list_item4,list_value4));
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list_fragment,list_title);
         //viewPager设置adapter
@@ -240,6 +242,7 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
                     public void onError(Throwable e) {
                         Log.v("ErrorGetInspectionInfo", System.currentTimeMillis() + "");
                         e.printStackTrace();
+                        getInspectionPicsUrl();
                     }
 
                     @Override
@@ -256,24 +259,66 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
                             list_value3.add(" ");
                             list_value3.add(" ");
                             list_value3.add(" ");
-                            initFragment();
+                           // initFragment();
+                            getInspectionPicsUrl();
                         } else {
-                            list_value1.clear();
-                            list_value1.add(" ");
-                            list_value1.add(" ");
-                            list_value1.add(" ");
-                            list_value1.add(" ");
-                            list_value1.add(" ");
-                            list_value3.clear();
-                            list_value3.add(" ");
-                            list_value3.add(" ");
-                            list_value3.add(" ");
-                            list_value3.add(" ");
-                            initFragment();
+                            getInspectionPicsUrl();
+                         //   initFragment();
                             Toast.makeText(mContext, inspectionDetailResponse.getMessage(), Toast.LENGTH_LONG).show();
 
                         }
                     }
                 });
+    }
+    private void getInspectionPicsUrl() {
+        InspectionPicRequest inspectionPicRequest = new InspectionPicRequest();
+        inspectionPicRequest.setItemId(Long.valueOf(inspectionItemId));
+        inspectionPicRequest.setItemStatus(0);
+        Net.instance.getInspectionPicsUrl(inspectionPicRequest,SPUtils.getInstance().getString("Token", " "))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<InspectionPicResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        initFragment();
+                        Log.e("getInspectionUrls", System.currentTimeMillis() + "");
+                    }
+
+                    @Override
+                    public void onNext(InspectionPicResponse inspectionPicResponse) {
+                        if (TextUtils.equals(inspectionPicResponse.getCode(), "200")) {
+                            initFragment();
+                            int size = inspectionPicResponse.getResult().size();
+                            if (size > 0) {
+                                list_value4.clear();
+                                for (int i = 0; i < size; i++) {
+                                    list_value4.add(inspectionPicResponse.getResult().get(i).getUrl());
+                                }
+                            }
+                        } else {
+                            initFragment();
+                        }
+                    }
+                });
+    }
+
+    private void defaultArrayList() {
+        list_value1.clear();
+        list_value1.add(" ");
+        list_value1.add(" ");
+        list_value1.add(" ");
+        list_value1.add(" ");
+        list_value1.add(" ");
+        list_value3.clear();
+        list_value3.add(" ");
+        list_value3.add(" ");
+        list_value3.add(" ");
+        list_value3.add(" ");
+        list_value4.clear();
     }
 }

@@ -288,11 +288,10 @@ public class LoginActivity extends AppCompatActivity {
                        @Override
                        public void onNext(GroupIdResponse groupIdResponse) {
                            if (TextUtils.equals(groupIdResponse.getCode(), "200")) {
-                               String groupId = groupIdResponse.getResult();
+                               String groupId = groupIdResponse.getResult().getGroupId();
                                Log.v("group_id", groupId);
                                if (groupId != null && groupId.length() != 0) {
                                    SPUtils.getInstance().putString("groupId", groupId);
-
                                    Intent intent1 = new Intent(LoginActivity.this, UserMainActivity.class);
                                    startActivity(intent1);
                                    finish();

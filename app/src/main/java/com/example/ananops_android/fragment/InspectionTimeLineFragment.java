@@ -13,10 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ananops_android.R;
-import com.example.ananops_android.entity.InspectionTaskItem;
 import com.example.ananops_android.entity.InspectionTaskLog;
 import com.example.ananops_android.util.InspectionUtils;
 
@@ -28,6 +26,7 @@ public class InspectionTimeLineFragment extends Fragment {
     private List<InspectionTaskLog> taskLogs = new ArrayList<>();
     private static String inspectionId;
    private Context mContext;
+    private View mRootView;
     public static InspectionTimeLineFragment newIntance(String id) {
         InspectionTimeLineFragment inspectionDetailFragment = new InspectionTimeLineFragment();
         Bundle bundle = new Bundle();
@@ -38,14 +37,20 @@ public class InspectionTimeLineFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.view_show, container, false);
-        myRV = view.findViewById(R.id.rv_inspection);
+        mRootView = inflater.inflate(R.layout.view_show, container, false);
+        mContext = getActivity();
+        return mRootView;
+    }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        myRV = mRootView.findViewById(R.id.rv_inspection);
         Bundle bundle = getArguments();
-        mContext=getContext();
-        if(bundle!=null){
-        inspectionId = bundle.getString("id");}
+        if (bundle != null) {
+            inspectionId = bundle.getString("id");
+        }
         Log.v("inspectionTimeLine",inspectionId);
-       // taskItems= InspectionUtils.getInstence().getInspectionTaskItems(taskItems,Long.valueOf(inspectionId),mComtext);
+        // taskItems= InspectionUtils.getInstence().getInspectionTaskItems(taskItems,Long.valueOf(inspectionId),mComtext);
         myRV.setLayoutManager(new LinearLayoutManager(getContext()));
         taskLogs=InspectionUtils.getInstence().getInspectionLogs(taskLogs,Long.valueOf(inspectionId),mContext);
         try {
@@ -54,7 +59,7 @@ public class InspectionTimeLineFragment extends Fragment {
             e.printStackTrace();
         }
         myRV.setAdapter(new MyRecyclerViewAdapter(taskLogs, getContext()));
-        return view;
+
     }
     private class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.InnerHolder> {
 

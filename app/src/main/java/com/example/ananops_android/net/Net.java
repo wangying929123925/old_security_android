@@ -27,6 +27,8 @@ import com.example.ananops_android.db.InspectionListByUserIdAndStatusRequest;
 import com.example.ananops_android.db.InspectionListResponse;
 import com.example.ananops_android.db.InspectionLogResponse;
 import com.example.ananops_android.db.InspectionLogsRequest;
+import com.example.ananops_android.db.InspectionPicRequest;
+import com.example.ananops_android.db.InspectionPicResponse;
 import com.example.ananops_android.db.InspectionQueryByStatusAndIdRequest;
 import com.example.ananops_android.db.LoginResponse;
 import com.example.ananops_android.db.OrderDetailResponse;
@@ -51,6 +53,7 @@ import com.example.ananops_android.db.UpLoadFilesResponse;
 import com.example.ananops_android.db.UserInformation;
 import com.example.ananops_android.entity.InspectionAddContent;
 import com.example.ananops_android.entity.RepairAddContent;
+import com.example.ananops_android.util.BaseUtils;
 
 import java.util.List;
 
@@ -79,6 +82,7 @@ public interface Net {
             .baseUrl(base_url)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .client(BaseUtils.getInstence().getClient().build())
             .build()
             .create(Net.class);
     Net instance1 = new Retrofit.Builder()
@@ -105,7 +109,7 @@ public interface Net {
     @POST("/uac/user/queryUserInfo/{loginName}")
     Observable<UserInformation> getUserInfo(@Path("loginName") String loginName, @Header("Authorization") String postToken);
     //获取组织信息
-    @GET("/uac/user/getPGIdByUserId/{userId}")
+    @POST("/uac/user/getUacUserById/{userId}")
     Observable<GroupIdResponse> getGroupId(@Path("userId")Long userId,@Header("Authorization") String postToken);
     //获取工单列表
     @Headers("Content-Type:application/json")
@@ -213,7 +217,19 @@ public interface Net {
     //添加巡检
     @POST("/imc/inspectionTask/save")
     Observable<CodeMessageResponse> addInspectionInfo(@Body InspectionAddContent saveInspectionTask, @Header("Authorization") String postToken);
-
+   //巡检上传图片
+   @Multipart
+   @POST("/imc/inspectionItem/uploadImcItemPicture")
+   Observable<List<UpLoadFilesResponse>>upLoadFiles1(@Query("fileType")String fileType,
+                                                    @Query("filePath")String filePath,
+                                                    @Query("bucketName")String bucketName,
+                                                    @Part MultipartBody.Part file,
+                                                    @Header("Authorization") String postToken,
+                                                    @Header("deviceId") Long deviceId
+   );
+   // 获取巡检图片
+    @POST("/imc/inspectionItem/getImcPicListByTaskAndItemAndStatus")
+    Observable<InspectionPicResponse>getInspectionPicsUrl(@Body InspectionPicRequest imcPicQueryDto,@Header("Authorization") String postToken);
     //根据状态和用户ID查询巡检列表
     @POST("/imc/inspectionTask/getTaskByUserId")
     Observable<AllUnauthorizedTaskResponse> getInspectionTaskByUserIdAndStatus(@Body InspectionListByUserIdAndStatusRequest getTaskByUserId, @Header("Authorization") String postToken);
@@ -285,4 +301,6 @@ public interface Net {
     //修改巡检子项状态
     @POST("/imc/inspectionItem/modifyItemStatusByItemId")
     Observable<CodeMessageResponse> modifyItemStatusByItemId(@Body ChangeInspectionItemStatusRequest modifyItemStatus, @Header("Authorization") String postToken);
+
+
 }

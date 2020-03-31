@@ -35,13 +35,11 @@
             android:layout_alignParentBottom="true"
             android:background="#dbdbdb" />
     </RelativeLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_margin="5dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -376,10 +374,11 @@
             <ListView
                 android:id="@+id/dot_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="150dp" />
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
         </LinearLayout>
 
-    </ScrollView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"

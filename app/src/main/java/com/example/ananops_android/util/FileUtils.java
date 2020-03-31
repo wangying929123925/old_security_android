@@ -3,7 +3,6 @@ package com.example.ananops_android.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
@@ -14,8 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
 public class FileUtils {
     public static FileUtils instance;

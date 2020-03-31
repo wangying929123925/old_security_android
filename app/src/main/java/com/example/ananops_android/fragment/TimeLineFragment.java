@@ -1,6 +1,7 @@
 package com.example.ananops_android.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ananops_android.R;
@@ -33,6 +33,7 @@ public class TimeLineFragment extends Fragment {
     private TimeLineAdapter adapter;//适配器
     private ListView mListView;
     private RecyclerView.LayoutManager mLayoutManager;
+    private View mRootView;
 
     public static TimeLineFragment newInstance(String orderId) {
         TimeLineFragment timeLineFragment = new TimeLineFragment();
@@ -43,19 +44,19 @@ public class TimeLineFragment extends Fragment {
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_order_time_line,container,false);
-        mLayoutManager = new LinearLayoutManager(this.getActivity());
-        mListView=view.findViewById(R.id.lv_time_line);
-        adapter=new TimeLineAdapter(getContext(),timeLines);
-        mListView.setAdapter(adapter);
-        initdata();
-        return view;
+        mRootView = inflater.inflate(R.layout.fragment_order_time_line, container, false);
+        return mRootView;
     }
 
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mLayoutManager = new LinearLayoutManager(this.getActivity());
+        mListView=mRootView.findViewById(R.id.lv_time_line);
+        adapter=new TimeLineAdapter(getContext(),timeLines);
+        mListView.setAdapter(adapter);
+        initdata();
     }
 
     private void initdata() {

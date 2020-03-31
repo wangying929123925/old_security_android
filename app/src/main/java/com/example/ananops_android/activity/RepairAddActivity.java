@@ -56,8 +56,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -598,7 +598,8 @@ private void subPics(){
         if (imagePathUp.size() > 0) {
             Log.d("imagePathUp上传", imagePathUp + "");
             for (int i = 0; i < imagePathUp.size(); i++) {
-                showProgressBar(tmp);
+                int num = i+1;
+                showProgressBar(num);
                 String string = imagePathUp.get(i);
                 File file = new File(string);
 //                long fileSize = FileUtils.getInstance().getFileSize(file);
@@ -624,7 +625,7 @@ private void subPics(){
                             @Override
                             public void onError(Throwable e) {
                                 hideProgressBar();
-                                Log.v("UploadTime", System.currentTimeMillis() + "");
+                                Log.e("UploadTime", System.currentTimeMillis() + "");
                                 //  e.printStackTrace();
                                 attachmentIdList.clear();
                                 Toast.makeText(mContext, "提交失败,请重新上传图片", Toast.LENGTH_SHORT).show();
@@ -632,7 +633,7 @@ private void subPics(){
                                     HttpException httpException = (HttpException) e;
                                     try {
                                         String error = httpException.response().errorBody().string();
-                                        Log.e("RepairUpError", error);
+                                        Log.e("InspectionUpError", error);
                                     } catch (IOException e1) {
                                         e1.printStackTrace();
                                     }
@@ -657,6 +658,7 @@ private void subPics(){
                                         tmp=1;
                                     }else {
                                         tmp++;
+                                        Log.v("tmp+", tmp+"");
                                     }
                                 } else {
                                     Toast.makeText(mContext, "无返回！", Toast.LENGTH_SHORT).show();

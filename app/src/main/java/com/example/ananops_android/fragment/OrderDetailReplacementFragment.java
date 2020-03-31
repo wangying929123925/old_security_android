@@ -23,8 +23,6 @@ import android.widget.Toast;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.activity.ChooseReplacementActivity;
-import com.example.ananops_android.activity.RepairAddActivity;
-import com.example.ananops_android.activity.UserMainActivity;
 import com.example.ananops_android.adapter.ListCommonAdapter;
 import com.example.ananops_android.adapter.ListViewHolder;
 import com.example.ananops_android.db.CodeMessageResponse;
@@ -113,7 +111,6 @@ public class OrderDetailReplacementFragment extends Fragment {
 
     }
     private void initView(){
-
     }
     private void initData() {
         if (!(getArguments() == null)) {
@@ -189,48 +186,53 @@ public class OrderDetailReplacementFragment extends Fragment {
     }
     //维修工待接单,填写方案，提交备件选择
     private void initDiffDetail(){
+        String s = tv_whether_replace.getText().toString().trim();
         tv_choose_whether_replace.setVisibility(View.VISIBLE);
         replacement_submit.setVisibility(View.VISIBLE);
         replacement_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //提交备品备件申请
-                ReplacementOrderCreateRequest replacementOrderCreateRequest = new ReplacementOrderCreateRequest();
-                replacementOrderCreateRequest.setObjectId(Long.valueOf(ORDER_ID));
-                replacementOrderCreateRequest.setCurrentApproverId(782517846944000001L);
-                replacementOrderCreateRequest.setCurrentApprover("值机员");
-                replacementOrderCreateRequest.setApplicantId(782525013398923265L);
-                replacementOrderCreateRequest.setApplicant("服务商业务员");
-                replacementOrderCreateRequest.setItems(replacementList);
-                Net.instance.ReplacementOrderCreate(replacementOrderCreateRequest, SPUtils.getInstance().getString("Token", " "))
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<CodeMessageResponse>() {
-                            @Override
-                            public void onCompleted() {
+                Log.v("是否选择备品备件",s);
+                if (s.equals("是")) {
+                    ReplacementOrderCreateRequest replacementOrderCreateRequest = new ReplacementOrderCreateRequest();
+                    replacementOrderCreateRequest.setObjectId(Long.valueOf(ORDER_ID));
+                    replacementOrderCreateRequest.setCurrentApproverId(782517846944000001L);
+                    replacementOrderCreateRequest.setCurrentApprover("值机员");
+                    replacementOrderCreateRequest.setApplicantId(782525013398923265L);
+                    replacementOrderCreateRequest.setApplicant("服务商业务员");
+                    replacementOrderCreateRequest.setItems(replacementList);
+                    Net.instance.ReplacementOrderCreate(replacementOrderCreateRequest, SPUtils.getInstance().getString("Token", " "))
+                            .subscribeOn(Schedulers.newThread())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<CodeMessageResponse>() {
+                                @Override
+                                public void onCompleted() {
 
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.v("replacementAddTime", System.currentTimeMillis() + "");
-                                e.printStackTrace();
-                                Toast.makeText(mContext, "提交失败", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onNext(CodeMessageResponse codeMessageResponse) {
-                                if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
-                                    Toast.makeText(mContext,"提交成功！",Toast.LENGTH_SHORT).show();
-                                    BaseUtils.getInstence().changeStatus(7,ORDER_ID,"提交备件申请",mContext);
-                                  //  BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 }
-                                else{
-                                    Toast.makeText(mContext,"服务器故障！",Toast.LENGTH_SHORT).show();
-                                //    BaseUtils.getInstence().intent(getActivity(),UserMainActivity.class);
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Log.v("replacementAddTime", System.currentTimeMillis() + "");
+                                    e.printStackTrace();
+                                    Toast.makeText(mContext, "提交失败", Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                        });
+
+                                @Override
+                                public void onNext(CodeMessageResponse codeMessageResponse) {
+                                    if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
+                                        Toast.makeText(mContext, "提交成功！", Toast.LENGTH_SHORT).show();
+                                        BaseUtils.getInstence().changeStatus(7, ORDER_ID, "提交备件申请", mContext);
+                                        //  BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                                    } else {
+                                        Toast.makeText(mContext, "服务器故障！", Toast.LENGTH_SHORT).show();
+                                        //    BaseUtils.getInstence().intent(getActivity(),UserMainActivity.class);
+                                    }
+                                }
+                            });
+                } else {
+                    BaseUtils.getInstence().changeStatus(9,ORDER_ID,"不添加备件",mContext);
+                }
             }
         });
         tv_whether_replace.setOnClickListener(new View.OnClickListener() {

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
+    <TextView
+        android:id="@+id/inspection_sub_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="请上传巡检子项1图片信息"
+        android:textColor="#353535"
+        android:textSize="16sp" />
+    <GridView
+        android:id="@+id/gridView_photo"
+        android:layout_margin="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:horizontalSpacing="@dimen/space_size"
+        android:numColumns="3"
+        android:verticalSpacing="@dimen/space_size" />
+    <Button
+        android:id="@+id/inspection_submit_pics"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/deep_blue"
+        android:textColor="@color/state_selected"
+        android:text="上传图片"
+        android:textSize="25dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dbdbdb" />
+</LinearLayout>

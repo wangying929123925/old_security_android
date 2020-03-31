@@ -85,6 +85,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             ORDER_ID = bundle.getString("order_id","1");
             projectId = bundle.getString("projectId", "1");
         }
+        Log.e("projectId", projectId );
         switch (ACTIVITY_STATUS){
             case "1-1":
                 //审核不通过
@@ -214,6 +215,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 order_detail_button1.setVisibility(View.GONE);
                 order_detail_button2.setVisibility(View.VISIBLE);
                 order_detail_button2.setText("提交方案");
+
                 break;
             case "3-3":
                 //维修中
@@ -289,7 +291,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         title.setText("工单详情");
     }
     private void initDatas() {
-
         Net.instance.getOrderDetail(Long.valueOf(ORDER_ID), SPUtils.getInstance().getString("Token"," "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -385,7 +386,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         findTabAdapter=new FindTabAdapter(getSupportFragmentManager(),list_fragment,list_title);
         vp_search_order_pager.setAdapter(findTabAdapter);
         tab_search_order_title.setupWithViewPager(vp_search_order_pager);
-        vp_search_order_pager.setOffscreenPageLimit(4);
+        vp_search_order_pager.setOffscreenPageLimit(1);
     }
     private void getFileUrl() {
           Net.instance.getFilesUrl(Long.valueOf(ORDER_ID), SPUtils.getInstance().getString("Token"," "))

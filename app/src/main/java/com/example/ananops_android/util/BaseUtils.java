@@ -13,25 +13,24 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ananops_android.BuildConfig;
 import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
 import com.example.ananops_android.activity.InspectionSearchListActivity;
-import com.example.ananops_android.activity.RepairAddActivity;
 import com.example.ananops_android.activity.UserMainActivity;
-import com.example.ananops_android.db.AllUnauthorizedTaskRequest;
 import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.InspectionListByUserIdAndStatusRequest;
-import com.example.ananops_android.db.OrderDetailResponse;
 import com.example.ananops_android.db.OrderRequest;
 import com.example.ananops_android.db.OrderResponse;
-import com.example.ananops_android.db.UserInfo;
 import com.example.ananops_android.entity.InspectionContent;
 import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.RepairAddContent;
 import com.example.ananops_android.entity.RepairContent;
 import com.example.ananops_android.net.Net;
+import com.ihsanbal.logging.Level;
+import com.ihsanbal.logging.LoggingInterceptor;
 import com.zyyoona7.picker.DatePickerView;
 import com.zyyoona7.picker.base.BaseDatePickerView;
 import com.zyyoona7.picker.listener.OnDateSelectedListener;
@@ -45,9 +44,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.OkHttpClient;
+import okhttp3.internal.platform.Platform;
 import retrofit2.HttpException;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -167,6 +169,23 @@ public class BaseUtils {
             statusInt=1;
         }
         return statusInt;
+    }
+    public OkHttpClient.Builder getClient(){
+        OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
+        httpClientBuilder.connectTimeout(15, TimeUnit.SECONDS);
+        //add log record
+        if (BuildConfig.DEBUG) {
+            //打印网络请求日志
+            LoggingInterceptor httpLoggingInterceptor = new LoggingInterceptor.Builder()
+                    .loggable(BuildConfig.DEBUG)
+                    .setLevel(Level.BASIC)
+                    .log(Platform.INFO)
+                    .request("请求")
+                    .response("响应")
+                    .build();
+            httpClientBuilder.addInterceptor(httpLoggingInterceptor);
+        }
+        return httpClientBuilder;
     }
     public void roleStringConvertNum(String roleName){
         switch (roleName){

@@ -1,6 +1,6 @@
 package com.example.ananops_android.entity;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 public class InspectionTaskItem {
     /**
@@ -78,6 +78,15 @@ public class InspectionTaskItem {
     private Double itemLatitude;
     private Double itemLongitude;
     private Float count;
+    private List<String> attachmentIds;
+
+    public List<String> getAttachmentIds() {
+        return attachmentIds;
+    }
+
+    public void setAttachmentIds(List<String> attachmentIds) {
+        this.attachmentIds = attachmentIds;
+    }
 
     public Long getUserId() {
         return userId;

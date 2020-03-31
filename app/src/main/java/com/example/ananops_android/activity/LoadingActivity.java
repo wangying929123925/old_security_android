@@ -48,6 +48,7 @@ public class LoadingActivity extends AppCompatActivity {
     }
 
     private void skip() {
+       // startActivity(new Intent(this,LoginActivity.class));
         startActivity(new Intent(this,LoginActivity.class));
         finish();
     }
