@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -17,12 +16,11 @@ import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.FindTabAdapter;
 import com.example.ananops_android.fragment.ContactDetailFragment;
 import com.example.ananops_android.fragment.TimeLineFragment;
-import com.example.ananops_android.util.ActivityManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactPersonActivity extends AppCompatActivity {
+public class ContactPersonActivity extends BaseActivity {
     public static final String CONTACT_ID="contact_id";
     public static final String CONTACT_NAME="contact_name";
     public static final String DEPART="depart";
@@ -42,7 +40,7 @@ public class ContactPersonActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityManager.getInstance().addActivity(this);
+      //  ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_contacts_person);
         initViews();
         initDatas();

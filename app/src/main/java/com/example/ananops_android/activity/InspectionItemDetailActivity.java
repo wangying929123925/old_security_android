@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -27,7 +26,6 @@ import com.example.ananops_android.fragment.InspectionItemFragment;
 import com.example.ananops_android.fragment.InspectionItemTimeLineFragment;
 import com.example.ananops_android.fragment.OrderDetailAppendix;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
@@ -39,7 +37,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class InspectionItemDetailActivity extends AppCompatActivity {
+public class InspectionItemDetailActivity extends BaseActivity {
     private TabLayout tab_search_order_title;                            //定义TabLayout
     private ViewPager vp_search_order_pager;  //内容
     private List<Fragment> list_fragment;                                //定义要装fragment的列表
@@ -63,7 +61,7 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspection_item_detail);
         mContext=this;
-        ActivityManager.getInstance().addActivity(this);
+      //  ActivityManager.getInstance().addActivity(this);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             inspectionItemId = bundle.getString("inspectionItemId","1");
@@ -169,7 +167,7 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
                         //确认接单
                         AcceptInspectionItemRequest acceptInspectionItemRequest=new AcceptInspectionItemRequest();
                         acceptInspectionItemRequest.setItemId(Long.valueOf(inspectionItemId));
-                    Net.instance.acceptItemByMaintainer(acceptInspectionItemRequest,SPUtils.getInstance().getString("Token", " "))
+                    Net.instance.acceptItemByMaintainer(acceptInspectionItemRequest,SPUtils.getInstance(mContext).getString("Token", " "))
                             .subscribeOn(Schedulers.newThread())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Subscriber<CodeMessageResponse>() {
@@ -229,7 +227,7 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
     }
 
     private void getInspectionItemInfo() {
-        Net.instance.getInspectionItemDetails(Long.valueOf(inspectionItemId), SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getInspectionItemDetails(Long.valueOf(inspectionItemId), SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<InspectionItemDetailResponse>() {
@@ -274,7 +272,7 @@ public class InspectionItemDetailActivity extends AppCompatActivity {
         InspectionPicRequest inspectionPicRequest = new InspectionPicRequest();
         inspectionPicRequest.setItemId(Long.valueOf(inspectionItemId));
         inspectionPicRequest.setItemStatus(0);
-        Net.instance.getInspectionPicsUrl(inspectionPicRequest,SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getInspectionPicsUrl(inspectionPicRequest,SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<InspectionPicResponse>() {

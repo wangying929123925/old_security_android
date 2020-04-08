@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -21,7 +20,6 @@ import com.example.ananops_android.adapter.ListViewHolder;
 import com.example.ananops_android.db.ReplacementListResponse;
 import com.example.ananops_android.entity.Replacement;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.SPUtils;
 
 import java.io.Serializable;
@@ -32,7 +30,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ChooseReplacementActivity extends AppCompatActivity {
+public class ChooseReplacementActivity extends BaseActivity {
     private ListView lv_choose_replacement;
     private List<Replacement> replacements=new ArrayList<>();
     private TextView title;
@@ -44,7 +42,7 @@ public class ChooseReplacementActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityManager.getInstance().addActivity(this);
+      //  ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_replacement_choose);
         mContext=this;
         initViews();
@@ -90,7 +88,7 @@ public class ChooseReplacementActivity extends AppCompatActivity {
         replacements.add(replacement1);
         replacements.add(replacement);
         replacements.add(replacement1);
-        Net.instance.getReplacementList(SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getReplacementList(SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ReplacementListResponse>() {

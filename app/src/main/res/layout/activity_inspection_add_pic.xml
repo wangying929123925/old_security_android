@@ -20,6 +20,13 @@
         android:horizontalSpacing="@dimen/space_size"
         android:numColumns="3"
         android:verticalSpacing="@dimen/space_size" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:text="请尽量上传大小不超过1M的图片"
+        android:textSize="14dp"/>
     <Button
         android:id="@+id/inspection_submit_pics"
         android:layout_width="100dp"

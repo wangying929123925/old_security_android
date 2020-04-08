@@ -15,7 +15,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -44,7 +43,6 @@ import com.example.ananops_android.photopicker.PhotoPreviewActivity;
 import com.example.ananops_android.photopicker.SelectModel;
 import com.example.ananops_android.photopicker.intent.PhotoPickerIntent;
 import com.example.ananops_android.photopicker.intent.PhotoPreviewIntent;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.FileUtils;
 import com.example.ananops_android.util.SPUtils;
@@ -66,7 +64,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class RepairAddActivity extends AppCompatActivity implements View.OnClickListener {
+public class RepairAddActivity extends BaseActivity implements View.OnClickListener {
     final private RepairAddContent repairAddContent=new RepairAddContent();
     private TextView et_project_name;//项目名
     private TextView et_repair_person;//报修人
@@ -136,7 +134,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_repair_add);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mContext = this;
-        ActivityManager.getInstance().addActivity(this);
+       // ActivityManager.getInstance().addActivity(this);
        // List<RepairAddContent.TaskItemDtoListBean>
         repairAddContent.setMdmcAddTaskItemDtoList(new ArrayList<>(Arrays.asList(new RepairAddContent.MdmcAddTaskItemDtoListBean())));
         initViews();
@@ -237,10 +235,10 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
       //  take_photo=findViewById(R.id.et_fault_photo);
     }
     private void initDatas() {
-        et_repair_person.setText(SPUtils.getInstance().getString("user_id","111"));
+        et_repair_person.setText(SPUtils.getInstance(mContext).getString("user_id","111"));
         et_repair_tel.setText("18801162442");
         //获取项目信息
-        Net.instance.getProjectList(Long.valueOf(SPUtils.getInstance().getString("groupId", "1")), SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getProjectList(Long.valueOf(SPUtils.getInstance(mContext).getString("groupId", "1")), SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ProjectListResponse>() {
@@ -276,7 +274,7 @@ public class RepairAddActivity extends AppCompatActivity implements View.OnClick
                     }
                 });
         //获取类型和位置列表
-        Net.instance.getTroubleTypeListAndAddressList(Long.valueOf(SPUtils.getInstance().getString("user_id","111")),SPUtils.getInstance().getString("Token","111"))
+        Net.instance.getTroubleTypeListAndAddressList(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id","111")),SPUtils.getInstance(mContext).getString("Token","111"))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<TroubleTypeAndAddressListResponse>() {
@@ -612,7 +610,7 @@ private void subPics(){
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/" + type), file);
                 Log.d("RequestBody", requestFile+"");
                 MultipartBody.Part body = MultipartBody.Part.createFormData("file", string, requestFile);
-                Net.instance.upLoadFiles(type, "mdmcTaskAndroid", "ananops", body, SPUtils.getInstance().getString("Token", ""), deviceId)
+                Net.instance.upLoadFiles(type, "mdmcTaskAndroid", "ananops", body, SPUtils.getInstance(mContext).getString("Token", ""), deviceId)
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<List<UpLoadFilesResponse>>() {
@@ -690,7 +688,7 @@ private void subPics(){
            repairAddContent.setSuggestion("");//
            repairAddContent.setTitle(addressArray[addressTmp]);//
            repairAddContent.setTotalCost(0);//
-           repairAddContent.setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id", "111")));//
+           repairAddContent.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "111")));//
            repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDescription(fault_description.getText().toString().trim());
            repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceId(0L);//
            repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceType(fault_type.getText().toString().trim());//设备类型
@@ -702,6 +700,10 @@ private void subPics(){
            repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTroubleType(troubleTypeTmp);//故障类型
            Log.v("repairAddContent", repairAddContent + "");
            BaseUtils.getInstence().repairAdd(repairAddContent, mContext);
+//           BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
+//           Intent intent = new Intent(mContext,UserMainActivity.class);
+//           finish();
+//           mContext.startActivity(intent);
        }
     }
     private boolean judgeRepair(){

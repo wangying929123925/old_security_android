@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +19,6 @@ import com.example.ananops_android.R;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.InspectionCommentRequest;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
@@ -28,7 +26,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class InspectionCommentActivity extends AppCompatActivity implements View.OnClickListener {
+public class InspectionCommentActivity extends BaseActivity implements View.OnClickListener {
     private TextView title;
     private ImageView back_img;
     private Button repair_commit_button;
@@ -43,7 +41,7 @@ public class InspectionCommentActivity extends AppCompatActivity implements View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        ActivityManager.getInstance().addActivity(this);
+      //  ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_repair_comment);
         initView();
         setOnListener();
@@ -92,9 +90,9 @@ public class InspectionCommentActivity extends AppCompatActivity implements View
             InspectionCommentRequest inspectionCommentRequest = new InspectionCommentRequest();
             inspectionCommentRequest.setContents(et_comment.getText().toString().trim());
             inspectionCommentRequest.setScore(general_comment_mum);
-            inspectionCommentRequest.setPrincipalId(Long.valueOf(SPUtils.getInstance().getString("user_id"," ")));
+            inspectionCommentRequest.setPrincipalId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id"," ")));
             inspectionCommentRequest.setInspectionTaskId(Long.valueOf(ORDER_ID));
-            Net.instance.InspectionCommentAdd(inspectionCommentRequest, SPUtils.getInstance().getString("Token", " "))
+            Net.instance.InspectionCommentAdd(inspectionCommentRequest, SPUtils.getInstance(mContext).getString("Token", " "))
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<CodeMessageResponse>() {

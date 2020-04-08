@@ -18,13 +18,12 @@ import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
 import com.example.ananops_android.activity.InspectionSearchListActivity;
 import com.example.ananops_android.activity.UserMainActivity;
-import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
+import com.example.ananops_android.db.AllUnDistributedWorkOrdersResponse;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.InspectionListByUserIdAndStatusRequest;
 import com.example.ananops_android.db.OrderRequest;
 import com.example.ananops_android.db.OrderResponse;
-import com.example.ananops_android.entity.InspectionContent;
 import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.RepairAddContent;
 import com.example.ananops_android.entity.RepairContent;
@@ -187,27 +186,27 @@ public class BaseUtils {
         }
         return httpClientBuilder;
     }
-    public void roleStringConvertNum(String roleName){
+    public void roleStringConvertNum(String roleName,Context mContext){
         switch (roleName){
             case "用户负责人":
-                SPUtils.getInstance().putInt("role_num",4);
+                SPUtils.getInstance(mContext).putInt("role_num",4);
                 break;
             case "用户值机员":
-                SPUtils.getInstance().putInt("role_num",1);
+                SPUtils.getInstance(mContext).putInt("role_num",1);
                 break;
             case "维修工程师":
-                SPUtils.getInstance().putInt("role_num",3);
+                SPUtils.getInstance(mContext).putInt("role_num",3);
                 break;
             case "服务商负责人":
-                SPUtils.getInstance().putInt("role_num",2);
+                SPUtils.getInstance(mContext).putInt("role_num",2);
                 break;
                  default:
-                 SPUtils.getInstance().putInt("role_num",1);
+                 SPUtils.getInstance(mContext).putInt("role_num",1);
 
         }
     }
     public List<RepairContent> getRepairList(final List<RepairContent> repairContents, OrderRequest orderRequest, final Context mContext){
-        Net.instance.getRepairList(orderRequest, SPUtils.getInstance().getString("Token"," "))
+        Net.instance.getRepairList(orderRequest, SPUtils.getInstance(mContext).getString("Token"," "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<OrderResponse>() {
@@ -240,36 +239,10 @@ public class BaseUtils {
                 });
         return repairContents;
     }
-    public List<InspectionContent> initInspectionContent(List<InspectionContent>inspectionContents){
-        InspectionContent inspectionContent=new InspectionContent();
-        inspectionContent.setInspection_id("000000001");
-        inspectionContent.setInspection_name("邮政储蓄银行北京邮电大学支行巡检");
-        inspectionContent.setDevice_name("ATM机");
-        inspectionContent.setInspection_status("待执行");
-        InspectionContent inspectionContent1=new InspectionContent();
-        inspectionContent1.setInspection_id("000000001");
-        inspectionContent1.setInspection_name("邮政储蓄银行北京邮电大学支行巡检");
-        inspectionContent1.setDevice_name("ATM机");
-        inspectionContent1.setInspection_status("已完成");
-        inspectionContents.add(inspectionContent);
-        inspectionContents.add(inspectionContent);
-        inspectionContents.add(inspectionContent);
-        inspectionContents.add(inspectionContent);
-        inspectionContents.add(inspectionContent);
-        inspectionContents.add(inspectionContent);
-        inspectionContents.add(inspectionContent1);
-        inspectionContents.add(inspectionContent1);
-        inspectionContents.add(inspectionContent1);
-        inspectionContents.add(inspectionContent1);
-        inspectionContents.add(inspectionContent1);
-        inspectionContents.add(inspectionContent1);
-        inspectionContents.add(inspectionContent1);
-        return inspectionContents;
-    }
 
     //维修add
     public void repairAdd(RepairAddContent repairAddContent, final Context mContext) {
-        Net.instance.repairAddPost(repairAddContent,SPUtils.getInstance().getString("Token",""))
+        Net.instance.repairAddPost(repairAddContent,SPUtils.getInstance(mContext).getString("Token",""))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<CodeMessageResponse>(){
@@ -317,7 +290,7 @@ public class BaseUtils {
         changeStatusDto.setStatus(status);
         changeStatusDto.setStatusMsg(statusMsg);
         changeStatusDto.setTaskId(orderId);
-      Net.instance.changeStatus(changeStatusDto,SPUtils.getInstance().getString("Token"," "))
+      Net.instance.changeStatus(changeStatusDto,SPUtils.getInstance(mContext).getString("Token"," "))
               .subscribeOn(Schedulers.newThread())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(new Subscriber<CodeMessageResponse>() {
@@ -351,17 +324,17 @@ public class BaseUtils {
     }
 
     /*
-     获取巡检列表
+     根据巡检状态获取巡检列表
      */
     public void getAndPassInspectionList(int status, final String statusDo, final Context mContext) {
         InspectionListByUserIdAndStatusRequest inspectionListByUserIdAndStatusRequest = new InspectionListByUserIdAndStatusRequest();
         inspectionListByUserIdAndStatusRequest.setRole(1);
         inspectionListByUserIdAndStatusRequest.setStatus(status);
-        inspectionListByUserIdAndStatusRequest.setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id", "")));
-        Net.instance.getInspectionTaskByUserIdAndStatus(inspectionListByUserIdAndStatusRequest, SPUtils.getInstance().getString("Token", " "))
+        inspectionListByUserIdAndStatusRequest.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "")));
+        Net.instance.getInspectionTaskByUserIdAndStatus(inspectionListByUserIdAndStatusRequest, SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<AllUnauthorizedTaskResponse>() {
+                .subscribe(new Subscriber<AllUnDistributedWorkOrdersResponse>() {
                     @Override
                     public void onCompleted() {
 
@@ -371,13 +344,13 @@ public class BaseUtils {
                     public void onError(Throwable e) {
                         Log.v("ErrorGetInsTaskById", System.currentTimeMillis() + "");
                         e.printStackTrace();
-                        Toast.makeText(mContext, "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "获取巡检信息失败", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onNext(AllUnauthorizedTaskResponse allUnauthorizedTaskResponse) {
+                    public void onNext(AllUnDistributedWorkOrdersResponse allUnauthorizedTaskResponse) {
                         if (TextUtils.equals(allUnauthorizedTaskResponse.getCode(),"200")) {
-                            ArrayList<InspectionInfo> result = allUnauthorizedTaskResponse.getResult();
+                            ArrayList<InspectionInfo> result = allUnauthorizedTaskResponse.getResult().getList();
                             if (result != null) {
                                 Bundle bundle = new Bundle();
                                 bundle.putParcelableArrayList("result", result);
@@ -397,8 +370,10 @@ public class BaseUtils {
      */
     public void intent(Context fromContext, Class<?> cls) {
         Intent intent = new Intent(fromContext, cls);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         // ActivityManager.getInstance().finishActivity();
         fromContext.startActivity(intent);
+      //  fromContext.finish
     }
     /**
      * 带一个参数的跳转

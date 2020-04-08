@@ -9,8 +9,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -21,14 +19,7 @@ import android.widget.Toast;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.db.LoginRequest;
-import com.example.ananops_android.db.LoginResponse;
 import com.example.ananops_android.db.UserDataManager;
-import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.SPUtils;
-
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class LoginActivity1 extends AppCompatActivity {
     public int pwdresetFlag=0;
@@ -52,7 +43,7 @@ public class LoginActivity1 extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login1);
-        SPUtils.getInstance().init(this);
+      //  SPUtils.getInstance().init(this);
         mAccount = (EditText) findViewById(R.id.login_edit_account);
         mPwd = (EditText) findViewById(R.id.login_edit_pwd);
         mRegisterButton = (Button) findViewById(R.id.login_btn_register);

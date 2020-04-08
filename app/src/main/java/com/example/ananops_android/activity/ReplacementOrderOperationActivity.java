@@ -3,7 +3,6 @@ package com.example.ananops_android.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +16,6 @@ import com.example.ananops_android.R;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.RelacementOrderOperationRequest;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
@@ -25,7 +23,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ReplacementOrderOperationActivity extends AppCompatActivity {
+public class ReplacementOrderOperationActivity extends BaseActivity {
     private ImageView back_img;
     private TextView et_replacement_order_id;
     private TextView order_type;
@@ -43,7 +41,7 @@ public class ReplacementOrderOperationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        ActivityManager.getInstance().addActivity(this);
+      //  ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_replacement_order_operation);
         initViews();
         setListeners();
@@ -109,7 +107,7 @@ public class ReplacementOrderOperationActivity extends AppCompatActivity {
             relacementOrderOperationRequest.setSuggestion(replacement_suggestion.getText().toString().trim());
             relacementOrderOperationRequest.setStatus(8);
             relacementOrderOperationRequest.setTotalPrice(10.0f);
-            Net.instance.ReplacementOrderOperation(relacementOrderOperationRequest, SPUtils.getInstance().getString("Token"," "))
+            Net.instance.ReplacementOrderOperation(relacementOrderOperationRequest, SPUtils.getInstance(mContext).getString("Token"," "))
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<CodeMessageResponse>() {

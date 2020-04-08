@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +19,6 @@ import com.example.ananops_android.R;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.RepairCommentRequest;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
@@ -28,7 +26,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class RepairCommentActivity extends AppCompatActivity implements View.OnClickListener {
+public class RepairCommentActivity extends BaseActivity implements View.OnClickListener {
     private TextView title;
     private ImageView back_img;
     private Button repair_commit_button;
@@ -48,7 +46,7 @@ public class RepairCommentActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        ActivityManager.getInstance().addActivity(this);
+     //   ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_repair_comment);
         initView();
         setOnListener();
@@ -117,9 +115,9 @@ public class RepairCommentActivity extends AppCompatActivity implements View.OnC
          repairCommentRequest.setTaskId(Long.valueOf(ORDER_ID));
          repairCommentRequest.setContents(et_comment.getText().toString().trim());
          repairCommentRequest.setScore(general_comment_mum);
-         repairCommentRequest.setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id"," ")));
+         repairCommentRequest.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id"," ")));
          repairCommentRequest.setPrincipalId(782525013398923265L);
-         Net.instance.RepairCommentAdd(repairCommentRequest,SPUtils.getInstance().getString("Token"," "))
+         Net.instance.RepairCommentAdd(repairCommentRequest,SPUtils.getInstance(mContext).getString("Token"," "))
                  .subscribeOn(Schedulers.newThread())
                  .observeOn(AndroidSchedulers.mainThread())
                  .subscribe(new Subscriber<CodeMessageResponse>() {

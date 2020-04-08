@@ -3,7 +3,6 @@ package com.example.ananops_android.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,20 +12,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.RepairAdapter;
 import com.example.ananops_android.db.OrderRequest;
 import com.example.ananops_android.entity.RepairContent;
-import com.example.ananops_android.db.UserInfo;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderSearchListActivity extends AppCompatActivity implements View.OnClickListener {
+public class OrderSearchListActivity extends BaseActivity implements View.OnClickListener {
     private String searchType;
     private  String searchContent;
     private List<RepairContent> repairContents=new ArrayList<>();
@@ -44,7 +40,7 @@ public class OrderSearchListActivity extends AppCompatActivity implements View.O
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         mContext=this;
-        ActivityManager.getInstance().addActivity(this);
+      //  ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_research_order_list);
         initDatas();
         initViews();
@@ -63,9 +59,9 @@ public class OrderSearchListActivity extends AppCompatActivity implements View.O
         int status = Integer.parseInt(TITLE);
         Log.v("Status",String.valueOf(status));
         OrderRequest orderRequest=new OrderRequest();
-        orderRequest.setId(SPUtils.getInstance().getString("user_id",""));
+        orderRequest.setId(SPUtils.getInstance(mContext).getString("user_id",""));
         orderRequest.setStatus(status);
-        orderRequest.setRoleCode(SPUtils.getInstance().getString("role_code",""));
+        orderRequest.setRoleCode(SPUtils.getInstance(mContext).getString("role_code",""));
         repairContents = BaseUtils.getInstence().getRepairList(repairContents,orderRequest,mContext);
         adapter = new RepairAdapter(repairContents);
         mLayoutManager = new LinearLayoutManager(this);

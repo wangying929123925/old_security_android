@@ -1,5 +1,6 @@
 package com.example.ananops_android.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,7 @@ public class InspectionItemClassifyFragment extends Fragment implements View.OnC
     private RelativeLayout rl5;
     private String inspectionId;
     private String statusDo;
+    private Context mContext;
 
     public static InspectionItemClassifyFragment newInstance(String inspectionId,String statusDo) {
         InspectionItemClassifyFragment inspectionItemClassifyFragment = new InspectionItemClassifyFragment();
@@ -40,6 +42,7 @@ public class InspectionItemClassifyFragment extends Fragment implements View.OnC
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @android.support.annotation.Nullable ViewGroup container, @android.support.annotation.Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inspection_item_classify, container, false);
+        mContext = getActivity();
         Bundle bundle = getArguments();
         if (bundle != null) {
             inspectionId = bundle.getString("inspectionId");
@@ -61,7 +64,7 @@ public class InspectionItemClassifyFragment extends Fragment implements View.OnC
     }
 
     private void initView() {
-        switch (SPUtils.getInstance().getInt("role_num",1)){
+        switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
             case 1:
                 rl1.setVisibility(View.INVISIBLE);
                 rl1.setVisibility(View.INVISIBLE);

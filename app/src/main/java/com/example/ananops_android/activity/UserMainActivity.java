@@ -22,7 +22,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,25 +38,11 @@ import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft_6455;
-import org.java_websocket.handshake.ServerHandshake;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-public class UserMainActivity extends AppCompatActivity implements View.OnClickListener {
+public class UserMainActivity extends BaseActivity implements View.OnClickListener {
     private Fragment[] fragments;
     private ImageView[] imagebuttons;
     private TextView[] textviews;
@@ -99,7 +84,7 @@ public class UserMainActivity extends AppCompatActivity implements View.OnClickL
         doRegisterReceiver();
         checkNotification(this);
         setContentView(R.layout.activity_user_main);
-        ActivityManager.getInstance().addActivity(this);
+      //  ActivityManager.getInstance().addActivity(this);
        // final Context mContext=this;
        // linkSocket("wss://www.ananops.com/wss/ws");
       //  imageBack=findViewById(R.id.img_back);
@@ -236,56 +221,6 @@ public class UserMainActivity extends AppCompatActivity implements View.OnClickL
         currentTabIndex=index;
     }
 
-    public void linkSocket(String url) {
-        try {
-            client1 = new WebSocketClient(new URI(url), new Draft_6455()) {
-                @Override
-                public void onOpen(ServerHandshake handshakedata) {
-                    Log.e("onOpen:", "------连接成功!!!");
-                }
-                @Override
-                public void onMessage(String message) {
-                    Log.e("onMessage:", message);
-                }
-                @Override
-                public void onClose(int code, String reason, boolean remote) {
-                    Log.e("onClose:", "------连接关闭!!!" + reason);
-                }
-                @Override
-                public void onError(Exception ex) {
-                    Log.d("onError:", ex.toString());
-                }
-            };
-            // wss需添加
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, new TrustManager[] { new X509TrustManager(){
-                @Override
-                public void checkClientTrusted(X509Certificate[] chain, String authType) {
-
-                }
-                @Override
-                public void checkServerTrusted(X509Certificate[] chain,String authType) {
-
-                }
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-            }
-            }, new SecureRandom());
-            SSLSocketFactory factory = sslContext.getSocketFactory();
-            client1.setSocket(factory.createSocket());
-            client1.connect();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     /**
      * 检测是否开启通知
      *
@@ -370,4 +305,14 @@ public class UserMainActivity extends AppCompatActivity implements View.OnClickL
         return false;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(chatMessageReceiver);
+        super.onDestroy();
+    }
 }

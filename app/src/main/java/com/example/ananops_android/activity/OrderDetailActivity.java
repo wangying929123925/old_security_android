@@ -8,7 +8,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.FindTabAdapter;
 import com.example.ananops_android.db.OrderDetailResponse;
@@ -26,7 +26,6 @@ import com.example.ananops_android.fragment.OrderDetailContentFragment;
 import com.example.ananops_android.fragment.OrderDetailReplacementFragment;
 import com.example.ananops_android.fragment.TimeLineFragment;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
@@ -39,7 +38,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class OrderDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class OrderDetailActivity extends BaseActivity implements View.OnClickListener {
     private TabLayout tab_search_order_title;                            //定义TabLayout
     private ViewPager vp_search_order_pager;  //内容
     private List<Fragment> list_fragment;                                //定义要装fragment的列表
@@ -62,7 +61,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState){
           super.onCreate(savedInstanceState);
           setContentView(R.layout.activity_order_detail);
-          ActivityManager.getInstance().addActivity(this);
+        //  ActivityManager.getInstance().addActivity(this);
           mContext=this;
           defaultArrayLists();
           initViews();
@@ -291,7 +290,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         title.setText("工单详情");
     }
     private void initDatas() {
-        Net.instance.getOrderDetail(Long.valueOf(ORDER_ID), SPUtils.getInstance().getString("Token"," "))
+        Net.instance.getOrderDetail(Long.valueOf(ORDER_ID), SPUtils.getInstance(mContext).getString("Token"," "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<OrderDetailResponse>() {
@@ -389,7 +388,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         vp_search_order_pager.setOffscreenPageLimit(1);
     }
     private void getFileUrl() {
-          Net.instance.getFilesUrl(Long.valueOf(ORDER_ID), SPUtils.getInstance().getString("Token"," "))
+          Net.instance.getFilesUrl(Long.valueOf(ORDER_ID), SPUtils.getInstance(mContext).getString("Token"," "))
                   .subscribeOn(Schedulers.newThread())
                   .observeOn(AndroidSchedulers.mainThread())
                   .subscribe(new Subscriber<RepairFileUrlResponse>() {

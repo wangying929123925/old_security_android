@@ -4,131 +4,38 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<include layout="@layout/layout_title"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="15dp"/>
+    <RadioGroup
+        android:id="@+id/rg_tab"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:background="#fafafa"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+        <RadioButton
+            android:id="@+id/rb_all"
+            style="@style/RadioButtonBottomTab"
+            android:checked="true"
+            android:text="全部消息" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/state_selected"
-       >
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/system_message_img"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_message_system"
-            android:layout_centerVertical="true"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_toRightOf="@+id/system_message_img"
-            android:layout_alignTop="@+id/system_message_img"
-            android:text="系统消息"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
-        <TextView
-            android:id="@+id/system_message_text"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_toRightOf="@+id/system_message_img"
-            android:layout_alignBottom="@+id/system_message_img"
-            android:text="您暂未有未读的系统消息~"
-            android:textColor="@color/black"
-            android:textSize="14sp"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_alignParentBottom="true"
-            android:background="#dbdbdb" />
-    </RelativeLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="15dp"/>
+        <RadioButton
+            android:id="@+id/rb_repair"
+            style="@style/RadioButtonBottomTab"
+            android:checked="false"
+            android:text="维修消息" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/state_selected"
-        >
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/order_message_img"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_message_orange"
-            android:layout_centerVertical="true"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_toRightOf="@+id/order_message_img"
-            android:layout_alignTop="@+id/order_message_img"
-            android:text="工单消息"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
-        <TextView
-            android:id="@+id/order_message_text"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_toRightOf="@+id/order_message_img"
-            android:layout_alignBottom="@+id/order_message_img"
-            android:text="您暂未有最新工单消息~"
-            android:textColor="@color/black"
-            android:textSize="14sp"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_alignParentBottom="true"
-            android:background="#dbdbdb" />
-    </RelativeLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="15dp"/>
+        <RadioButton
+            android:id="@+id/rb_inspection"
+            style="@style/RadioButtonBottomTab"
+            android:text="巡检消息" />
 
-    <RelativeLayout
+        <RadioButton
+            android:id="@+id/rb_pay"
+            style="@style/RadioButtonBottomTab"
+            android:text="支付消息" />
+    </RadioGroup>
+    <ListView
+        android:id="@+id/message_list"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/state_selected"
-        >
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/train_message_img"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_board_normal"
-            android:layout_centerVertical="true"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_toRightOf="@+id/train_message_img"
-            android:layout_alignTop="@+id/train_message_img"
-            android:text="巡检消息"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
-        <TextView
-            android:id="@+id/train_message_text"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_toRightOf="@+id/train_message_img"
-            android:layout_alignBottom="@+id/train_message_img"
-            android:text="您暂未有最新巡检消息~"
-            android:textColor="@color/black"
-            android:textSize="14sp"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_alignParentBottom="true"
-            android:background="#dbdbdb" />
-    </RelativeLayout>
+        android:layout_height="match_parent"/>
 </LinearLayout>

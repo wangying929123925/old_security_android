@@ -3,7 +3,6 @@ package com.example.ananops_android.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -23,7 +22,7 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserOrderSearchActivitySpinner extends AppCompatActivity implements View.OnClickListener {
+public class UserOrderSearchActivitySpinner extends BaseActivity implements View.OnClickListener {
     private static final String[] STATUS = {"状态", "计划中", "待接单", "待维修", "待审核", "维修中", "待验收", "待评价"};
     private static final String[] TIMES = {"时间", "今天", "本周", "一个月", "半年", "一年", "更多"};
     private static final String[] ALL = {"全部", "我申请",};
@@ -84,9 +83,9 @@ public class UserOrderSearchActivitySpinner extends AppCompatActivity implements
         mRecyclerView = findViewById(R.id.contact_recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);
         OrderRequest orderRequest=new OrderRequest();
-        orderRequest.setId(SPUtils.getInstance().getString("user_id",""));
+        orderRequest.setId(SPUtils.getInstance(mContext).getString("user_id",""));
         orderRequest.setStatus(null);
-        orderRequest.setRoleCode(SPUtils.getInstance().getString("role_code",""));
+        orderRequest.setRoleCode(SPUtils.getInstance(mContext).getString("role_code",""));
         repairContents= BaseUtils.getInstence().getRepairList(repairContents,orderRequest,mContext);
        adapter = new RepairAdapter(repairContents);
         mRecyclerView.setAdapter(adapter);

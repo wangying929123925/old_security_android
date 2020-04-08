@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -24,9 +23,7 @@ import com.example.ananops_android.db.ProjectInfoResponse;
 import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.fragment.InspectionItemFragment;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
-import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
 
 import java.util.ArrayList;
@@ -36,7 +33,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ProjectDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProjectDetailActivity extends BaseActivity implements View.OnClickListener {
     private TabLayout tab_search_order_title;                            //定义TabLayout
     private ViewPager vp_search_order_pager;  //内容
     private List<Fragment> list_fragment;                                //定义要装fragment的列表
@@ -54,7 +51,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        ActivityManager.getInstance().addActivity(this);
+       //ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_order_detail);
         mContext=this;
         initViews();
@@ -80,7 +77,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
         list_item2.add("甲方负责人2");list_item2.add("联系电话");
         list_item2.add("甲方负责人2");list_item2.add("联系电话");
         list_item2.add("乙方");list_item2.add("乙方负责人");list_item2.add("联系电话");
-        Net.instance.getProjectInfo(Long.valueOf(PROJECT_ID), SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getProjectInfo(Long.valueOf(PROJECT_ID), SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ProjectInfoResponse>() {
@@ -163,7 +160,7 @@ public class ProjectDetailActivity extends AppCompatActivity implements View.OnC
                 if (projectId != null) {
                     InspectionListByProjectRequest inspectionListByProjectRequest=new InspectionListByProjectRequest();
                     inspectionListByProjectRequest.setProjectId(projectId);
-                    Net.instance.getInspectionListByProjectId(inspectionListByProjectRequest, SPUtils.getInstance().getString("Token", " "))
+                    Net.instance.getInspectionListByProjectId(inspectionListByProjectRequest, SPUtils.getInstance(mContext).getString("Token", " "))
                             .subscribeOn(Schedulers.newThread())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Subscriber<InspectionListResponse>() {

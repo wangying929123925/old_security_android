@@ -1,7 +1,5 @@
 package com.example.ananops_android.entity;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class InspectionAddContent {
@@ -39,7 +37,6 @@ public class InspectionAddContent {
     private Long id;
     private Integer inspectionType;
     private String location;
-    private LoginAuthDtoBean loginAuthDto;
     private Float maintenanceCost;
     private Long principalId;
     private Long projectId;
@@ -127,14 +124,6 @@ public class InspectionAddContent {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public LoginAuthDtoBean getLoginAuthDto() {
-        return loginAuthDto;
-    }
-
-    public void setLoginAuthDto(LoginAuthDtoBean loginAuthDto) {
-        this.loginAuthDto = loginAuthDto;
     }
 
     public Float getMaintenanceCost() {

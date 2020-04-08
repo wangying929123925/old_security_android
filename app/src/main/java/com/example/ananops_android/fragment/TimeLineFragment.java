@@ -1,5 +1,6 @@
 package com.example.ananops_android.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,7 @@ public class TimeLineFragment extends Fragment {
     private ListView mListView;
     private RecyclerView.LayoutManager mLayoutManager;
     private View mRootView;
+    private Context mContext;
 
     public static TimeLineFragment newInstance(String orderId) {
         TimeLineFragment timeLineFragment = new TimeLineFragment();
@@ -45,6 +47,7 @@ public class TimeLineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_order_time_line, container, false);
+        mContext = getActivity();
         return mRootView;
     }
 
@@ -54,15 +57,13 @@ public class TimeLineFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mLayoutManager = new LinearLayoutManager(this.getActivity());
         mListView=mRootView.findViewById(R.id.lv_time_line);
-        adapter=new TimeLineAdapter(getContext(),timeLines);
-        mListView.setAdapter(adapter);
         initdata();
     }
 
     private void initdata() {
         if(!(getArguments()==null)){
             ORDER_ID=(String) getArguments().get("orderId");
-            Net.instance.getTimeLine(ORDER_ID, SPUtils.getInstance().getString("Token"," "))
+            Net.instance.getTimeLine(ORDER_ID, SPUtils.getInstance(mContext).getString("Token"," "))
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<OrderTimelineResponse>() {
@@ -82,7 +83,9 @@ public class TimeLineFragment extends Fragment {
                         public void onNext(OrderTimelineResponse orderTimelineResponse) {
                             if (TextUtils.equals(orderTimelineResponse.getCode(), "200")) {
                                 timeLines.addAll(orderTimelineResponse.getResult());
-                                Toast.makeText(getContext(),"repairContents"+orderTimelineResponse.getResult().get(0).getLastOperator(), Toast.LENGTH_SHORT).show();
+                                adapter=new TimeLineAdapter(getContext(),timeLines);
+                                mListView.setAdapter(adapter);
+                              //  Toast.makeText(getContext(),"repairContents"+orderTimelineResponse.getResult().get(0).getLastOperator(), Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(getContext(), orderTimelineResponse.getMessage(), Toast.LENGTH_LONG).show();
                             }

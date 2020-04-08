@@ -202,7 +202,7 @@ public class OrderDetailReplacementFragment extends Fragment {
                     replacementOrderCreateRequest.setApplicantId(782525013398923265L);
                     replacementOrderCreateRequest.setApplicant("服务商业务员");
                     replacementOrderCreateRequest.setItems(replacementList);
-                    Net.instance.ReplacementOrderCreate(replacementOrderCreateRequest, SPUtils.getInstance().getString("Token", " "))
+                    Net.instance.ReplacementOrderCreate(replacementOrderCreateRequest, SPUtils.getInstance(mContext).getString("Token", " "))
                             .subscribeOn(Schedulers.newThread())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Subscriber<CodeMessageResponse>() {

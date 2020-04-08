@@ -28,11 +28,10 @@ import com.example.ananops_android.activity.UserOrderSearchActivitySpinner;
 import com.example.ananops_android.adapter.RepairAdapter;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersRequest;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersResponse;
-import com.example.ananops_android.db.AllUnauthorizedTaskRequest;
 import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
-import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersRequset;
-import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersResponse;
+import com.example.ananops_android.db.InspectionListByUserIdAndStatusRequest;
 import com.example.ananops_android.db.OrderRequest;
+import com.example.ananops_android.db.OrderResponse;
 import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.RepairContent;
 import com.example.ananops_android.entity.UnReadNum;
@@ -40,11 +39,11 @@ import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observer;
-import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -98,73 +97,75 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
     private RepairAdapter adapter;//适配器
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private int[] repairStatus = new int[16];
-    private int[] inspectionStatus=new int[16];
-    private List<RepairContent> repairContents=new ArrayList<>();
+    private int[] repairStatus = new int[5];
+    private int[] inspectionStatus=new int[5];
+    private List<RepairContent> repairContents = new ArrayList<>();
+    private List<InspectionInfo> inspectionInfos = new ArrayList<>();
    private Context mContext;
+  private static String token;
+  private static int role_num;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       View view=inflater.inflate(R.layout.fragment_user_main,container,false);
         //mLayoutManager = new LinearLayoutManager(this.getActivity());
        // mRecyclerView=view.findViewById(R.id.contact_recycler_view);
      //   uer_message=view.findViewById(R.id.main_user_message);
         //init
-        mContext=getContext();
-        user_Type=view.findViewById(R.id.user_type);
-        main_repair=view.findViewById(R.id.main_repair);
-        main_inspection=view.findViewById(R.id.main_inspection);
-        main_repair_1=view.findViewById(R.id.main_repair_1);
-        main_repair_2=view.findViewById(R.id.main_repair_2);
-        main_repair_3=view.findViewById(R.id.main_repair_3);
-        main_repair_4=view.findViewById(R.id.main_repair_4);
-        main_repair_5=view.findViewById(R.id.main_repair_5);
-        main_repair_img1=view.findViewById(R.id.main_repair_img1);
-        main_repair_img2=view.findViewById(R.id.main_repair_img2);
-        main_repair_img3=view.findViewById(R.id.main_repair_img3);
-        main_repair_img4=view.findViewById(R.id.main_repair_img4);
-        main_repair_img5=view.findViewById(R.id.main_repair_img5);
-        main_repair_text1=view.findViewById(R.id.main_order_text1);
-        main_repair_text2=view.findViewById(R.id.main_order_text2);
-        main_repair_text3=view.findViewById(R.id.main_order_text3);
-        main_repair_text4=view.findViewById(R.id.main_order_text4);
-        main_repair_text5=view.findViewById(R.id.main_order_text5);
-        main_repair_num1=view.findViewById(R.id.main_order_num1);
-        main_repair_num2=view.findViewById(R.id.main_order_num2);
-        main_repair_num3=view.findViewById(R.id.main_order_num3);
-        main_repair_num4=view.findViewById(R.id.main_order_num4);
-        main_repair_num5=view.findViewById(R.id.main_order_num5);
-        main_inspection_1=view.findViewById(R.id.main_inspection_1);
-        main_inspection_2=view.findViewById(R.id.main_inspection_2);
-        main_inspection_3=view.findViewById(R.id.main_inspection_3);
-        main_inspection_4=view.findViewById(R.id.main_inspection_4);
-        main_inspection_5=view.findViewById(R.id.main_inspection_5);
-        main_inspection_img1=view.findViewById(R.id.main_inspection_img1);
-        main_inspection_img2=view.findViewById(R.id.main_inspection_img2);
-        main_inspection_img3=view.findViewById(R.id.main_inspection_img3);
-        main_inspection_img4=view.findViewById(R.id.main_inspection_img4);
-        main_inspection_img5=view.findViewById(R.id.main_inspection_img5);
-        main_inspection_text1=view.findViewById(R.id.main_inspection_text1);
-        main_inspection_text2=view.findViewById(R.id.main_inspection_text2);
-        main_inspection_text3=view.findViewById(R.id.main_inspection_text3);
-        main_inspection_text4=view.findViewById(R.id.main_inspection_text4);
-        main_inspection_text5=view.findViewById(R.id.main_inspection_text5);
-        main_inspection_num1=view.findViewById(R.id.main_inspection_num1);
-        main_inspection_num2=view.findViewById(R.id.main_inspection_num2);
-        main_inspection_num3=view.findViewById(R.id.main_inspection_num3);
-        main_inspection_num4=view.findViewById(R.id.main_inspection_num4);
-        main_inspection_num5=view.findViewById(R.id.main_inspection_num5);
+        mContext = getContext();
+        role_num = SPUtils.getInstance(mContext).getInt("role_num", 0);
+        token = SPUtils.getInstance(mContext).getString("Token", " ");
+        if (!(role_num == 1)) {
+            getInspctionList();
+        }
+        getRepairList();
+       // token = SPUtils.getInstance(mContext).getString("Token", "");
+        user_Type = view.findViewById(R.id.user_type);
+        main_repair = view.findViewById(R.id.main_repair);
+        main_inspection = view.findViewById(R.id.main_inspection);
+        main_repair_1 = view.findViewById(R.id.main_repair_1);
+        main_repair_2 = view.findViewById(R.id.main_repair_2);
+        main_repair_3 = view.findViewById(R.id.main_repair_3);
+        main_repair_4 = view.findViewById(R.id.main_repair_4);
+        main_repair_5 = view.findViewById(R.id.main_repair_5);
+        main_repair_img1 = view.findViewById(R.id.main_repair_img1);
+        main_repair_img2 = view.findViewById(R.id.main_repair_img2);
+        main_repair_img3 = view.findViewById(R.id.main_repair_img3);
+        main_repair_img4 = view.findViewById(R.id.main_repair_img4);
+        main_repair_img5 = view.findViewById(R.id.main_repair_img5);
+        main_repair_text1 = view.findViewById(R.id.main_order_text1);
+        main_repair_text2 = view.findViewById(R.id.main_order_text2);
+        main_repair_text3 = view.findViewById(R.id.main_order_text3);
+        main_repair_text4 = view.findViewById(R.id.main_order_text4);
+        main_repair_text5 = view.findViewById(R.id.main_order_text5);
+        main_repair_num1 = view.findViewById(R.id.main_order_num1);
+        main_repair_num2 = view.findViewById(R.id.main_order_num2);
+        main_repair_num3 = view.findViewById(R.id.main_order_num3);
+        main_repair_num4 = view.findViewById(R.id.main_order_num4);
+        main_repair_num5 = view.findViewById(R.id.main_order_num5);
+        main_inspection_1 = view.findViewById(R.id.main_inspection_1);
+        main_inspection_2 = view.findViewById(R.id.main_inspection_2);
+        main_inspection_3 = view.findViewById(R.id.main_inspection_3);
+        main_inspection_4 = view.findViewById(R.id.main_inspection_4);
+        main_inspection_5 = view.findViewById(R.id.main_inspection_5);
+        main_inspection_img1 = view.findViewById(R.id.main_inspection_img1);
+        main_inspection_img2 = view.findViewById(R.id.main_inspection_img2);
+        main_inspection_img3 = view.findViewById(R.id.main_inspection_img3);
+        main_inspection_img4 = view.findViewById(R.id.main_inspection_img4);
+        main_inspection_img5 = view.findViewById(R.id.main_inspection_img5);
+        main_inspection_text1 = view.findViewById(R.id.main_inspection_text1);
+        main_inspection_text2 = view.findViewById(R.id.main_inspection_text2);
+        main_inspection_text3 = view.findViewById(R.id.main_inspection_text3);
+        main_inspection_text4 = view.findViewById(R.id.main_inspection_text4);
+        main_inspection_text5 = view.findViewById(R.id.main_inspection_text5);
+        main_inspection_num1 = view.findViewById(R.id.main_inspection_num1);
+        main_inspection_num2 = view.findViewById(R.id.main_inspection_num2);
+        main_inspection_num3 = view.findViewById(R.id.main_inspection_num3);
+        main_inspection_num4 = view.findViewById(R.id.main_inspection_num4);
+        main_inspection_num5 = view.findViewById(R.id.main_inspection_num5);
         repair_all = view.findViewById(R.id.main_repair_all);
         inspection_all = view.findViewById(R.id.main_inspection_all);
-        mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView = view.findViewById(R.id.contact_recycler_view);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        OrderRequest orderRequest = new OrderRequest();
-        orderRequest.setId(SPUtils.getInstance().getString("user_id",""));
-        orderRequest.setStatus(null);
-        orderRequest.setRoleCode(SPUtils.getInstance().getString("role_code",""));
-        repairContents=BaseUtils.getInstence().getRepairList(repairContents,orderRequest,mContext);
-        adapter=new RepairAdapter(repairContents);
-        mRecyclerView.setAdapter(adapter);
         main_repair_num1.setVisibility(View.INVISIBLE);
         main_repair_num2.setVisibility(View.INVISIBLE);
         main_repair_num3.setVisibility(View.INVISIBLE);
@@ -175,13 +176,14 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         main_inspection_num3.setVisibility(View.INVISIBLE);
         main_inspection_num4.setVisibility(View.INVISIBLE);
         main_inspection_num5.setVisibility(View.INVISIBLE);
-        initData();
+      //  initData();
        // mRecyclerView.setLayoutManager(new GridLayoutManager(this,4,VERTICAL,false));
         return view;
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initData();
         setOnListener();
     }
     private void initData() {
@@ -189,7 +191,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
 //        userLogin.setUseCode(2);
        // UserLogin.useCode = 2;
         //switch (SPUtils.getInstance().getInt("role_code",1)){
-        switch (SPUtils.getInstance().getInt("role_num",1)){
+        switch (role_num){
             case 1:
                 initUserData();
                 break;
@@ -231,6 +233,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         main_inspection_text1.setText(getResources().getString(R.string.worker_main_inspection1));//待巡检
         main_inspection_text2.setText(getResources().getString(R.string.worker_main_inspection2));//巡检中
         main_inspection_text3.setText(getResources().getString(R.string.worker_main_inspection3));//巡检中
+
     }
 
     private void initServiceData() {
@@ -246,18 +249,16 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         main_repair_text1.setText(getResources().getString(R.string.service_main_repair1));//待接单
         main_repair_text2.setText(getResources().getString(R.string.service_main_repair2));//审核备件
         main_repair_text3.setText(getResources().getString(R.string.service_main_repair3));//审核备件
-        main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
-        main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
-        main_repair_num3.setText(String.valueOf(UnReadNum.main_repair_num3));
         main_inspection_img1.setImageResource(R.drawable.ic_workorder);
         main_inspection_img2.setImageResource(R.drawable.ic_workorder);
         main_inspection_img3.setImageResource(R.drawable.ic_workorder);
         main_inspection_text1.setText(getResources().getString(R.string.service_main_inspection1));//新建巡检
         main_inspection_text2.setText(getResources().getString(R.string.service_main_inspection2));//验收
         main_inspection_text3.setText(getResources().getString(R.string.service_main_inspection3));//验收
-        main_inspection_num1.setText(String.valueOf(UnReadNum.main_inspection_num1));
-        main_inspection_num2.setText(String.valueOf(UnReadNum.main_inspection_num2));
-        main_inspection_num3.setText(String.valueOf(UnReadNum.main_inspection_num3));
+//        main_inspection_num1.setText(String.valueOf(UnReadNum.main_inspection_num1));
+//        main_inspection_num2.setText(String.valueOf(UnReadNum.main_inspection_num2));
+//        main_inspection_num3.setText(String.valueOf(UnReadNum.main_inspection_num3));
+
     }
 
     private void initUserData() {
@@ -272,12 +273,9 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         main_repair_text2.setText(getResources().getString(R.string.user_main_repair2));//验收
         main_repair_text3.setText(getResources().getString(R.string.user_main_repair3));//评价
         main_repair_text4.setText(getResources().getString(R.string.user_main_repair4));//评价
-        main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
-        main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
-        main_repair_num3.setText(String.valueOf(UnReadNum.main_repair_num3));
-        main_repair_num4.setText(String.valueOf(UnReadNum.main_repair_num4));
+
     }
-private void initUserManagerData(){
+    private void initUserManagerData(){
     user_Type.setText(getResources().getString(R.string.USER_MANAGER));//用户管理员
    // main_repair_3.setVisibility(View.GONE);//1.3为空
     main_repair_4.setVisibility(View.GONE);//1.3为空
@@ -288,9 +286,9 @@ private void initUserManagerData(){
     main_repair_text1.setText(getResources().getString(R.string.userManager_main_repair1));//添加
     main_repair_text2.setText(getResources().getString(R.string.userManager_main_repair2));//验收
     main_repair_text3.setText(getResources().getString(R.string.userManager_main_repair3));//验收
-    main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
-    main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
-    main_repair_num3.setText(String.valueOf(UnReadNum.main_repair_num3));
+//    main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
+//    main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
+//    main_repair_num3.setText(String.valueOf(UnReadNum.main_repair_num3));
     main_inspection_img1.setImageResource(R.drawable.ic_workorder);
     main_inspection_img2.setImageResource(R.drawable.ic_workorder);
     main_inspection_img3.setImageResource(R.drawable.ic_workorder);
@@ -301,11 +299,7 @@ private void initUserManagerData(){
     main_inspection_text3.setText(getResources().getString(R.string.userManager_main_inspection3));//查看巡检结果
     main_inspection_text4.setText(getResources().getString(R.string.userManager_main_inspection4));//查看巡检结果
     main_inspection_text5.setText(getResources().getString(R.string.userManager_main_inspection5));//查看巡检结果
-    main_inspection_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
-    main_inspection_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
-    main_inspection_num3.setText(String.valueOf(UnReadNum.main_repair_num3));
-    main_inspection_num4.setText(String.valueOf(UnReadNum.main_repair_num4));
-    main_inspection_num5.setText(String.valueOf(UnReadNum.main_repair_num5));
+
 }
     private void setOnListener(){
      //my_repair.setOnClickListener(this);
@@ -331,7 +325,7 @@ private void initUserManagerData(){
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.main_repair_1:
-                switch  (SPUtils.getInstance().getInt("role_num",1)){
+                switch  (SPUtils.getInstance(mContext).getInt("role_num",1)){
                     case 1://报修
                         BaseUtils.getInstence().intent(getContext(),RepairAddActivity.class);
                         break;
@@ -349,7 +343,7 @@ private void initUserManagerData(){
                 }
                 break;
             case R.id.main_repair_2:
-                switch (SPUtils.getInstance().getInt("role_num",1)){
+                switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
                     case 1://维修中
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","9");
                         break;
@@ -369,7 +363,7 @@ private void initUserManagerData(){
                 }
                 break;
             case R.id.main_repair_3:
-                switch (SPUtils.getInstance().getInt("role_num",1)){
+                switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
                     case 1://用户确认完成
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","10");
                         break;
@@ -387,7 +381,7 @@ private void initUserManagerData(){
                 }
                 break;
             case R.id.main_repair_4:
-                switch (SPUtils.getInstance().getInt("role_num",1)){
+                switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
                     case 1://待评价
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","12");
                        // BaseUtils.getInstence().intent(getContext(),ContactActivity.class);
@@ -402,46 +396,47 @@ private void initUserManagerData(){
                 BaseUtils.getInstence().intent(getContext(),UserOrderSearchActivitySpinner.class);
                 break;
             case R.id.main_inspection_1:
-                switch (SPUtils.getInstance().getInt("role_num",1)){
+                switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
                     case 1://
                        // Toast.makeText(getContext(),"Ops,巡检全部查看正在开发中",Toast.LENGTH_LONG).show();
                         break;
                     case 2://服务商待接单//fuwushangchakan
-                        GetAllUnConfirmedWorkOrdersRequset requset = new GetAllUnConfirmedWorkOrdersRequset();
-                        requset.setPageNum(100);
-                        requset.setPageSize(0);
-                        Net.instance.getAllUnConfirmedWorkOrders(requset, SPUtils.getInstance().getString("Token", " "))
-                                .subscribeOn(Schedulers.newThread())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Observer<GetAllUnConfirmedWorkOrdersResponse>() {
-                                    @Override
-                                    public void onCompleted() {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                        Log.v("ErrorGetUnauthorWork", System.currentTimeMillis() + "");
-                                        e.printStackTrace();
-                                        Toast.makeText(mContext, "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
-
-                                    }
-
-                                    @Override
-                                    public void onNext(GetAllUnConfirmedWorkOrdersResponse response) {
-                                        if (TextUtils.equals(response.getCode(), "200")) {
-                                            ArrayList<InspectionInfo> result = (ArrayList<InspectionInfo>) response.getResult().getList();
-                                            if (result != null) {
-                                                Bundle bundle = new Bundle();
-                                                bundle.putParcelableArrayList("result", result);
-                                                bundle.putString("statusDo","2-1");
-                                                BaseUtils.getInstence().intent(getContext(), InspectionSearchListActivity.class, bundle);
-                                            }
-                                        }
-                                    }
-                                });
+//                        GetAllUnConfirmedWorkOrdersRequset requset = new GetAllUnConfirmedWorkOrdersRequset();
+//                        requset.setPageNum(100);
+//                        requset.setPageSize(0);
+//                        Net.instance.getAllUnConfirmedWorkOrders(requset, SPUtils.getInstance(mContext).getString("Token", " "))
+//                                .subscribeOn(Schedulers.newThread())
+//                                .observeOn(AndroidSchedulers.mainThread())
+//                                .subscribe(new Observer<GetAllUnConfirmedWorkOrdersResponse>() {
+//                                    @Override
+//                                    public void onCompleted() {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onError(Throwable e) {
+//
+//                                        Log.v("ErrorGetUnauthorWork", System.currentTimeMillis() + "");
+//                                        e.printStackTrace();
+//                                        Toast.makeText(mContext, "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onNext(GetAllUnConfirmedWorkOrdersResponse response) {
+//                                        if (TextUtils.equals(response.getCode(), "200")) {
+//                                            ArrayList<InspectionInfo> result = (ArrayList<InspectionInfo>) response.getResult().getList();
+//                                            if (result != null) {
+//                                                Bundle bundle = new Bundle();
+//                                                bundle.putParcelableArrayList("result", result);
+//                                                bundle.putString("statusDo","2-1");
+//                                                BaseUtils.getInstence().intent(getContext(), InspectionSearchListActivity.class, bundle);
+//                                            }
+//                                        }
+//                                    }
+//                                });
                      //   BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待确认");
+                        BaseUtils.getInstence().getAndPassInspectionList(2,"2-1",getContext());
                         break;
                     case 3://维修工待接单
                         Bundle bundle = new Bundle();
@@ -457,13 +452,13 @@ private void initUserManagerData(){
                 }
                 break;
             case R.id.main_inspection_2:
-                switch (SPUtils.getInstance().getInt("role_num",1)){
+                switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
                     case 1://
                         break;
                     case 2://服务商待分配工程师
-                        Toast.makeText(getContext(), "待分配", Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(getContext(), "待分配", Toast.LENGTH_SHORT).show();
                          AllUnDistributedWorkOrdersRequest allUnDistributedWorkOrdersRequest = new AllUnDistributedWorkOrdersRequest();
-                        Net.instance.getAllUnDistributedWorkOrder(allUnDistributedWorkOrdersRequest, SPUtils.getInstance().getString("Token", " "))
+                        Net.instance.getAllUnDistributedWorkOrder(allUnDistributedWorkOrdersRequest, SPUtils.getInstance(mContext).getString("Token", " "))
                                 .subscribeOn(Schedulers.newThread())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(new Subscriber<AllUnDistributedWorkOrdersResponse>() {
@@ -515,7 +510,7 @@ private void initUserManagerData(){
                 }
                 break;
             case R.id.main_inspection_3:
-                switch (SPUtils.getInstance().getInt("role_num",1)){
+                switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
                     case 2://服务商待审查
                        // BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待审查");
                         break;
@@ -560,7 +555,7 @@ private void initUserManagerData(){
                 }
                 break;
             case R.id.main_inspection_4:
-                switch (SPUtils.getInstance().getInt("role_num",1)){
+                switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
                     case 3://
                         break;
                     case 4://甲方待付款
@@ -570,7 +565,7 @@ private void initUserManagerData(){
                 }
                 break;
             case R.id.main_inspection_5:
-                switch (SPUtils.getInstance().getInt("role_num",1)){
+                switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
                     case 3://无
                         break;
                     case 4://甲方待评价
@@ -583,6 +578,317 @@ private void initUserManagerData(){
                 break;
                 default:
                     break;
+        }
+    }
+
+    private void getInspctionList() {
+        InspectionListByUserIdAndStatusRequest inspectionListByUserIdAndStatusRequest = new InspectionListByUserIdAndStatusRequest();
+        inspectionListByUserIdAndStatusRequest.setRole(1);
+        inspectionListByUserIdAndStatusRequest.setUserId(Long.valueOf(getContext().getSharedPreferences("GeneralStore",Context.MODE_PRIVATE).getString("user_id", "")));
+        //getContext().getSharedPreferences("GeneralStore",Context.MODE_PRIVATE).getString("Token", " ")
+        Net.instance.getInspectionTaskByUserId(inspectionListByUserIdAndStatusRequest, token)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<AllUnauthorizedTaskResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("ErrorGetInsTaskById", System.currentTimeMillis() + "");
+                        e.printStackTrace();
+                        Toast.makeText(mContext, "获取巡检列表失败", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(AllUnauthorizedTaskResponse allUnauthorizedTaskResponse) {
+                        if (TextUtils.equals(allUnauthorizedTaskResponse.getCode(),"200")) {
+                            if (allUnauthorizedTaskResponse.getResult() != null) {
+                               inspectionInfos=allUnauthorizedTaskResponse.getResult();
+                            }
+                        }
+                       setMainPageInspectionNum();
+                     //  initData();
+                    }
+                });
+    }
+
+    private void getRepairList() {
+        OrderRequest orderRequest = new OrderRequest();
+        orderRequest.setId(SPUtils.getInstance(mContext).getString("user_id",""));
+        orderRequest.setStatus(null);
+        orderRequest.setRoleCode(SPUtils.getInstance(mContext).getString("role_code",""));
+      //  repairContents = BaseUtils.getInstence().getRepairList(repairContents, orderRequest, mContext);
+        Net.instance.getRepairList(orderRequest, token)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<OrderResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("LoginTime", "getErrorRepair"+System.currentTimeMillis() + "");
+                        e.printStackTrace();
+                        Toast.makeText(mContext, "获取维修列表失败", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(OrderResponse orderResponse) {
+                        if(TextUtils.equals(orderResponse.getCode(),"200")){
+                            repairContents.clear();
+                            repairContents.addAll(orderResponse.getResult());
+                            // Toast.makeText(mContext,"repairContents", Toast.LENGTH_SHORT).show();
+                            mLayoutManager = new LinearLayoutManager(getContext());
+                            mRecyclerView.setLayoutManager(mLayoutManager);
+                            adapter=new RepairAdapter(repairContents);
+                            mRecyclerView.setAdapter(adapter);
+                            setMainPageRepairNum();
+                         //   initData();
+                        }
+                        else{
+                            Toast.makeText(mContext, orderResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+
+    }
+    private void setMainPageRepairNum() {
+        //数组初始化
+        for (int i = 0; i < repairStatus.length; i++) {
+            repairStatus[i] = 0;
+        }
+        if (repairContents.size() > 0) {
+            for (RepairContent repairContent:repairContents) {
+                int status = repairContent.getStatus();
+                switch (role_num) {
+                    case 1:
+                        switch (status) {
+                            case 10://待确认
+                                repairStatus[2]++;
+                                break;
+                            case 13://待评价
+                                repairStatus[3]++;
+                                break;
+                                default:
+                                    break;
+                        }
+                        break;
+                    case 2:
+                        switch (status) {
+                            case 3://待接单
+                                repairStatus[0]++;
+                                break;
+                            case 4://待派工
+                                repairStatus[1]++;
+                                break;
+                            case 7://待审核备件
+                                repairStatus[2]++;
+                            default:
+                                break;
+                        }
+                        break;
+                    case 3:
+                        switch (status) {
+                            case 5://待接单
+                                repairStatus[0]++;
+                                break;
+                            case 6://待填方案
+                                repairStatus[1]++;
+                                break;
+                            case 9://确认完成
+                                repairStatus[2]++;
+                            default:
+                                break;
+                        }
+                        break;
+                    case 4:
+                        switch (status) {
+                            case 2://审核
+                                repairStatus[0]++;
+                                break;
+                            case 8://待审核备件
+                                repairStatus[1]++;
+                                break;
+                            case 11://确认完成
+                                repairStatus[2]++;
+                            case 12://支付
+                                repairStatus[3]++;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        }
+        showMainPageRepairNum();
+    }
+
+    private void showMainPageRepairNum() {
+        switch (role_num) {
+            case 1:
+                if (repairStatus[0] > 0) {
+                    main_repair_num1.setVisibility(View.VISIBLE);
+                    main_repair_num1.setText(String.valueOf(repairStatus[0]));
+                }
+                if (repairStatus[1] > 0) {
+                    main_repair_num2.setVisibility(View.VISIBLE);
+                    main_repair_num2.setText(String.valueOf(repairStatus[1]));
+                }
+                if (repairStatus[2] > 0) {
+                    main_repair_num3.setVisibility(View.VISIBLE);
+                    main_repair_num3.setText(String.valueOf(repairStatus[2]));
+                }
+                if (repairStatus[3] > 0) {
+                    main_repair_num4.setVisibility(View.VISIBLE);
+                    main_repair_num4.setText(String.valueOf(repairStatus[3]));
+                }
+                break;
+            case 2:
+                if (repairStatus[0] > 0) {
+                    main_repair_num1.setVisibility(View.VISIBLE);
+                    main_repair_num1.setText(String.valueOf(repairStatus[0]));
+                }
+                if (repairStatus[1] > 0) {
+                    main_repair_num2.setVisibility(View.VISIBLE);
+                    main_repair_num2.setText(String.valueOf(repairStatus[1]));
+                }
+                if (repairStatus[2] > 0) {
+                    main_repair_num3.setVisibility(View.VISIBLE);
+                    main_repair_num3.setText(String.valueOf(repairStatus[2]));
+                }
+                break;
+            case 3:
+                if (repairStatus[0] > 0) {
+                    main_repair_num1.setVisibility(View.VISIBLE);
+                    main_repair_num1.setText(String.valueOf(repairStatus[0]));
+                }
+                if (repairStatus[1] > 0) {
+                    main_repair_num2.setVisibility(View.VISIBLE);
+                    main_repair_num2.setText(String.valueOf(repairStatus[1]));
+                }
+                if (repairStatus[2] > 0) {
+                    main_repair_num3.setVisibility(View.VISIBLE);
+                    main_repair_num3.setText(String.valueOf(repairStatus[2]));
+                }
+                break;
+            case 4:
+                if (repairStatus[0] > 0) {
+                    main_repair_num1.setVisibility(View.VISIBLE);
+                    main_repair_num1.setText(String.valueOf(repairStatus[0]));
+                }
+                if (repairStatus[1] > 0) {
+                    main_repair_num2.setVisibility(View.VISIBLE);
+                    main_repair_num2.setText(String.valueOf(repairStatus[1]));
+                }
+                if (repairStatus[2] > 0) {
+                    main_repair_num3.setVisibility(View.VISIBLE);
+                    main_repair_num3.setText(String.valueOf(repairStatus[2]));
+                }
+                break;
+                default:
+                    break;
+        }
+
+    }
+    private void setMainPageInspectionNum() {
+        for (int i = 0; i < inspectionStatus.length; i++) {
+            inspectionStatus[i] = 0;
+        }
+        if (inspectionInfos.size() > 0) {
+            for (InspectionInfo inspectionInfo : inspectionInfos) {
+                int status = inspectionInfo.getStatus();
+                switch (role_num) {
+                    case 2:
+                        switch (status) {
+                            case 2://待接单
+                                inspectionStatus[0]++;
+                                break;
+                            case 3://待派工
+                                inspectionStatus[1]++;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case 4:
+                        switch (status) {
+                            case 0://审核
+                                inspectionStatus[1]++;
+                                break;
+                            case 4://待确认
+                                inspectionStatus[2]++;
+                                break;
+                            case 5://付款
+                                inspectionStatus[3]++;
+                            case 6://评论
+                                inspectionStatus[4]++;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        showMainPageInspectionNum();
+    }
+
+    private void showMainPageInspectionNum() {
+        switch (role_num) {
+            case 1:
+
+                break;
+            case 2:
+                if (inspectionStatus[0] > 0) {
+                    main_inspection_num1.setVisibility(View.VISIBLE);
+                    main_inspection_num1.setText(String.valueOf(inspectionStatus[0]));
+                }
+                if (inspectionStatus[1] > 0) {
+                    main_inspection_num2.setVisibility(View.VISIBLE);
+                    main_inspection_num2.setText(String.valueOf(inspectionStatus[1]));
+                }
+                if (inspectionStatus[2] > 0) {
+                    main_inspection_num3.setVisibility(View.VISIBLE);
+                    main_inspection_num3.setText(String.valueOf(inspectionStatus[2]));
+                }
+                break;
+            case 3:
+
+                break;
+            case 4:
+                if (inspectionStatus[0] > 0) {
+                    main_inspection_num1.setVisibility(View.VISIBLE);
+                    main_inspection_num1.setText(String.valueOf(inspectionStatus[0]));
+                }
+                if (inspectionStatus[1] > 0) {
+                    main_inspection_num2.setVisibility(View.VISIBLE);
+                    main_inspection_num2.setText(String.valueOf(inspectionStatus[1]));
+                }
+                if (inspectionStatus[2] > 0) {
+                    main_inspection_num3.setVisibility(View.VISIBLE);
+                    main_inspection_num3.setText(String.valueOf(inspectionStatus[2]));
+                }
+                if (inspectionStatus[3] > 0) {
+                    main_inspection_num4.setVisibility(View.VISIBLE);
+                    main_inspection_num4.setText(String.valueOf(inspectionStatus[3]));
+                }
+                if (inspectionStatus[4] > 0) {
+                    main_inspection_num5.setVisibility(View.VISIBLE);
+                    main_inspection_num5.setText(String.valueOf(inspectionStatus[4]));
+                }
+                break;
+            default:
+                break;
         }
     }
     }

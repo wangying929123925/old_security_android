@@ -7,19 +7,28 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ananops_android.R;
+import com.example.ananops_android.db.InspectionItemLogsRequest;
+import com.example.ananops_android.db.InspectionLogResponse;
 import com.example.ananops_android.entity.InspectionTaskLog;
-import com.example.ananops_android.util.InspectionUtils;
+import com.example.ananops_android.net.Net;
+import com.example.ananops_android.util.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class InspectionItemTimeLineFragment extends Fragment {
     private RecyclerView myRV;
@@ -43,23 +52,53 @@ public class InspectionItemTimeLineFragment extends Fragment {
         if(bundle!=null){
             inspectionItemId = bundle.getString("id");}
         Log.v("inspectionTimeLine",inspectionItemId);
+        getInspectionItemLogs();
         // taskItems= InspectionUtils.getInstence().getInspectionTaskItems(taskItems,Long.valueOf(inspectionId),mComtext);
         myRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        taskLogs= InspectionUtils.getInstence().getInspectionItemLogs(taskLogs,Long.valueOf(inspectionItemId),mContext);
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        myRV.setAdapter(new InspectionItemTimeLineFragment.MyRecyclerViewAdapter(taskLogs, getContext()));
+    //    taskLogs= InspectionUtils.getInstence().getInspectionItemLogs(taskLogs,Long.valueOf(inspectionItemId),mContext);
         return view;
     }
+    //获取巡检日志
+    private void getInspectionItemLogs() {
+        InspectionItemLogsRequest inspectionItemLogsRequest = new InspectionItemLogsRequest();
+        inspectionItemLogsRequest.setItemId(Long.valueOf(inspectionItemId));
+        Net.instance.getInspectionItemLog(inspectionItemLogsRequest, SPUtils.getInstance(mContext).getString("Token", " "))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<InspectionLogResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("ErrorGetInspectItemLog", System.currentTimeMillis() + "");
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(InspectionLogResponse inspectionLogResponse) {
+                        if (TextUtils.equals(inspectionLogResponse.getCode(), "200")) {
+                           taskLogs.clear();
+                            if (inspectionLogResponse.getResult().size() > 0) {
+                                taskLogs.addAll(inspectionLogResponse.getResult());
+                                myRV.setAdapter(new InspectionItemTimeLineFragment.MyRecyclerViewAdapter(taskLogs, getContext()));
+                                Log.v("巡检日志列表1", inspectionLogResponse.getResult().get(0).getId() + "");
+                            } else {
+                                Toast.makeText(mContext, "无巡检日志列表！", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(mContext, inspectionLogResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
     private class MyRecyclerViewAdapter extends RecyclerView.Adapter<InspectionItemTimeLineFragment.MyRecyclerViewAdapter.InnerHolder> {
 
         private List<InspectionTaskLog> taskLogs;
         private Context mContext;
-
-
         public class InnerHolder extends RecyclerView.ViewHolder {
 
             private TextView tvDirector;

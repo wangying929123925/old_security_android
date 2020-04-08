@@ -51,7 +51,7 @@ public class UserMineFragment extends Fragment implements View.OnClickListener {
     }
 
     private void inirDatas() {
-        mine_text.setText("您好"+ SPUtils.getInstance().getString("role_name","111"));
+        mine_text.setText("您好"+ SPUtils.getInstance(getActivity()).getString("role_name","111"));
         today_order_num.setText(String.valueOf(0));
         toweek_order_num.setText(String.valueOf(0));
         tomonth_order_num.setText(String.valueOf(0));
@@ -68,14 +68,14 @@ public class UserMineFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.mine_my_join:
-                Toast.makeText(this.getContext(),"Ops,我的加入正在开发中",Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getContext(),"Ops,正在开发中",Toast.LENGTH_LONG).show();
                 break;
             case  R.id.mine_my_message:
                 Intent intent=new Intent(this.getContext(), UerMessageActivity.class);
                 startActivity(intent);
                 break;
             case R.id.mine_my_wallet:
-                Toast.makeText(this.getContext(),"Ops,我的钱包正在开发中",Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getContext(),"Ops,正在开发中",Toast.LENGTH_LONG).show();
                 break;
             case  R.id.mine_my_config:
                 BaseUtils.getInstence().intent(getContext(), LoginActivity.class);

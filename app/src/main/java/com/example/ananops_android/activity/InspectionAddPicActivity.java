@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,7 +28,6 @@ import com.example.ananops_android.photopicker.PhotoPreviewActivity;
 import com.example.ananops_android.photopicker.SelectModel;
 import com.example.ananops_android.photopicker.intent.PhotoPickerIntent;
 import com.example.ananops_android.photopicker.intent.PhotoPreviewIntent;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.FileUtils;
 import com.example.ananops_android.util.SPUtils;
 
@@ -49,7 +47,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class InspectionAddPicActicity extends AppCompatActivity {
+public class InspectionAddPicActivity extends BaseActivity {
     private ProgressDialog progressDialog;
     private GridView gridView;
     private GridAdapter gridAdapter;
@@ -108,8 +106,9 @@ public class InspectionAddPicActicity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,PERMISSION_STORAGE_PHOTO,1);
         }
         mContext = this;
-        ActivityManager.getInstance().addActivity(this);
+      //  ActivityManager.getInstance().addActivity(this);
         num = getIntent().getIntExtra("num", 0);
+        Log.v("InsAddPicActivity---", num + "");
         initView();
     }
     @Override
@@ -142,15 +141,15 @@ public class InspectionAddPicActicity extends AppCompatActivity {
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED) {
                         String imgs = (String) parent.getItemAtPosition(position);
                         if ("paizhao".equals(imgs) ){
-                            PhotoPickerIntent intent = new PhotoPickerIntent(InspectionAddPicActicity.this);
+                            PhotoPickerIntent intent = new PhotoPickerIntent(InspectionAddPicActivity.this);
                             intent.setSelectModel(SelectModel.MULTI);
                             intent.setShowCarema(true); // 是否显示拍照
                             intent.setMaxTotal(6); // 最多选择照片数量，默认为6
                             intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
                             startActivityForResult(intent, REQUEST_CAMERA_CODE);
                         }else{
-                            Toast.makeText(InspectionAddPicActicity.this,"1"+position,Toast.LENGTH_SHORT).show();
-                            PhotoPreviewIntent intent = new PhotoPreviewIntent(InspectionAddPicActicity.this);
+                            Toast.makeText(InspectionAddPicActivity.this,"1"+position,Toast.LENGTH_SHORT).show();
+                            PhotoPreviewIntent intent = new PhotoPreviewIntent(InspectionAddPicActivity.this);
                             intent.setCurrentItem(position);
                             intent.setPhotoPaths(imagePaths);
                             startActivityForResult(intent, REQUEST_PREVIEW_CODE);
@@ -250,8 +249,8 @@ public class InspectionAddPicActicity extends AppCompatActivity {
         if (imagePathUp.size() > 0) {
             Log.d("imagePathUp上传", imagePathUp + "");
             for (int i = 0; i < imagePathUp.size(); i++) {
-                int num = i+1;
-                showProgressBar(num);
+                int num1 = i+1;
+                showProgressBar(num1);
                 String string = imagePathUp.get(i);
                 File file = new File(string);
 //                long fileSize = FileUtils.getInstance().getFileSize(file);
@@ -264,7 +263,7 @@ public class InspectionAddPicActicity extends AppCompatActivity {
                 RequestBody requestFile = RequestBody.create(MediaType.parse("image/" + type), file);
                 Log.d("RequestBody", requestFile+"");
                 MultipartBody.Part body = MultipartBody.Part.createFormData("file", string, requestFile);
-                Net.instance.upLoadFiles1(type, "imcTaskAndroid", "ananops", body, SPUtils.getInstance().getString("Token", ""), deviceId)
+                Net.instance.upLoadFiles1(type, "imcTaskAndroid", "ananops", body, SPUtils.getInstance(mContext).getString("Token", ""), deviceId)
                         //上游分配线程
                         .subscribeOn(Schedulers.newThread())
                         //下游分配线程

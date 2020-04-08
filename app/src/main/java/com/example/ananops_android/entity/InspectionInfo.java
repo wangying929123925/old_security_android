@@ -34,7 +34,7 @@ public class InspectionInfo implements Parcelable {
 
     private String createdTime;
     private String creator;
-    private Long creatorId;
+    private long creatorId;
     private int cycleTime;
     private String deadlineTime;
     private String dealResult;
@@ -44,9 +44,9 @@ public class InspectionInfo implements Parcelable {
     private String inspectionContent;
     private int isNow;
     private String lastOperator;
-    private Long lastOperatorId;
+    private long lastOperatorId;
     private String orderBy;
-    private Long projectId;
+    private long projectId;
     private String projectName;
     private String scheduledFinishTime;
     private String scheduledStartTime;
@@ -75,8 +75,8 @@ public class InspectionInfo implements Parcelable {
      * frequency : 30
      */
 
-    private Long principalId;
-    private Long facilitatorId;
+    private long principalId;
+    private long facilitatorId;
     private String location;
     private int status;
     private float totalCost;
@@ -104,11 +104,11 @@ public class InspectionInfo implements Parcelable {
         this.creator = creator;
     }
 
-    public Long getCreatorId() {
+    public long getCreatorId() {
         return creatorId;
     }
 
-    public void setCreatorId(Long creatorId) {
+    public void setCreatorId(long creatorId) {
         this.creatorId = creatorId;
     }
 
@@ -184,11 +184,11 @@ public class InspectionInfo implements Parcelable {
         this.lastOperator = lastOperator;
     }
 
-    public Long getLastOperatorId() {
+    public long getLastOperatorId() {
         return lastOperatorId;
     }
 
-    public void setLastOperatorId(Long lastOperatorId) {
+    public void setLastOperatorId(long lastOperatorId) {
         this.lastOperatorId = lastOperatorId;
     }
 
@@ -200,11 +200,11 @@ public class InspectionInfo implements Parcelable {
         this.orderBy = orderBy;
     }
 
-    public Long getProjectId() {
+    public long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(long projectId) {
         this.projectId = projectId;
     }
 
@@ -256,19 +256,19 @@ public class InspectionInfo implements Parcelable {
         this.updateTime = updateTime;
     }
 
-    public Long getPrincipalId() {
+    public long getPrincipalId() {
         return principalId;
     }
 
-    public void setPrincipalId(Long principalId) {
+    public void setPrincipalId(long principalId) {
         this.principalId = principalId;
     }
 
-    public Long getFacilitatorId() {
+    public long getFacilitatorId() {
         return facilitatorId;
     }
 
-    public void setFacilitatorId(Long facilitatorId) {
+    public void setFacilitatorId(long facilitatorId) {
         this.facilitatorId = facilitatorId;
     }
 

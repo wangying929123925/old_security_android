@@ -19,9 +19,11 @@ import android.util.Log;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.activity.UserMainActivity;
+import com.example.ananops_android.entity.MessageEntity;
 import com.example.ananops_android.entity.URL;
 import com.example.ananops_android.net.JWebSocketClient;
 import com.example.ananops_android.util.SPUtils;
+import com.google.gson.Gson;
 
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -149,7 +151,8 @@ public class JWebSocketClientService extends Service {
     private void initStompClient() {
         mStompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, URL.ws);
         List<StompHeader> headers = new ArrayList<>();
-        headers.add(new StompHeader("userId", SPUtils.getInstance().getString("user_id", "111")));
+      //  SPUtils.getInstance().init(this);
+        headers.add(new StompHeader("userId", this.getSharedPreferences("GeneralStore",Context.MODE_PRIVATE).getString("user_id", "111")));
         resetSubscriptions();
         mStompClient.connect(headers);
         mStompClient.withClientHeartbeat(1000).withServerHeartbeat(1000);
@@ -207,7 +210,7 @@ public class JWebSocketClientService extends Service {
     private void initSocketClient() {
         URI uri = URI.create(URL.ws);
         HashMap<String, String> map = new HashMap<>();
-        map.put("userId", SPUtils.getInstance().getString("user_id", "111"));
+        map.put("userId", SPUtils.getInstance(this).getString("user_id", "111"));
         client = new JWebSocketClient(uri,map) {
             @Override
             public void onMessage(String message) {
@@ -334,6 +337,9 @@ public class JWebSocketClientService extends Service {
      * @param content
      */
     private void sendNotification(String content) {
+        Gson gson = new Gson();
+        MessageEntity messageEntity = gson.fromJson(content, MessageEntity.class);
+        String messageContent = messageEntity.getContent().getMsgBodyDto().getStatusMsg();
         Intent intent = new Intent();
         intent.setClass(this, UserMainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -342,9 +348,9 @@ public class JWebSocketClientService extends Service {
                 .setAutoCancel(true)
                 // 设置该通知优先级
                 .setPriority(Notification.PRIORITY_MAX)
-                .setSmallIcon(R.drawable.haoyue)
-                .setContentTitle("ananops")
-                .setContentText(content)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("安安运维：您的工单有更新")
+                .setContentText(messageContent)
                 .setVisibility(VISIBILITY_PUBLIC)
                 .setWhen(System.currentTimeMillis())
                 // 向通知添加声音、闪灯和振动效果

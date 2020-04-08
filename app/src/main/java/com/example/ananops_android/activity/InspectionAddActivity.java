@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -28,7 +27,6 @@ import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.InspectionTaskItem;
 import com.example.ananops_android.entity.ProjectInfo;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
 
@@ -39,7 +37,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class InspectionAddActivity extends AppCompatActivity implements View.OnClickListener {
+public class InspectionAddActivity extends BaseActivity implements View.OnClickListener {
     private TextView et_project_name;//项目
     private TextView et_inspection_name;//巡检名
     private TextView et_inspection_time;//周期
@@ -74,7 +72,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspection_add);
-        ActivityManager.getInstance().addActivity(this);
+      //  ActivityManager.getInstance().addActivity(this);
         mContext = this;
         initViews();
         // initDatas();
@@ -85,11 +83,11 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LOADPIC) {
-            if (resultCode == InspectionAddPicActicity.RESULT_CODE_INSPICS && data != null) {
+            if (resultCode == InspectionAddPicActivity.RESULT_CODE_INSPICS && data != null) {
                 ArrayList<String> strings = new ArrayList<>();
                 strings = data.getStringArrayListExtra("attachmentIds");
                  Log.v("获取到的strings：",strings+"");
-                int i = data.getIntExtra("num", 1);
+                int i = data.getIntExtra("num", 0);
                 if (null != inspectionTaskItemList1.get(i)) {
                     inspectionTaskItemList1.get(i).setAttachmentIds(strings);
                 }
@@ -194,7 +192,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
                                         viewHolder.setOnClickListener(R.id.btn_add_pic, new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                Intent intent = new Intent(InspectionAddActivity.this,InspectionAddPicActicity.class);
+                                                Intent intent = new Intent(InspectionAddActivity.this, InspectionAddPicActivity.class);
                                                 intent.putExtra("num",position);
                                                 startActivityForResult(intent, REQUEST_LOADPIC);
                                             }
@@ -266,7 +264,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
      获取项目列表
       */
     private List<ProjectInfo> getProjectList(final List<ProjectInfo> projectInfo) {
-        Net.instance.getProjectList(Long.valueOf(SPUtils.getInstance().getString("groupId", "1")), SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getProjectList(Long.valueOf(SPUtils.getInstance(mContext).getString("groupId", "1")), SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ProjectListResponse>() {
@@ -309,7 +307,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
      */
     private List<InspectionInfo> getInspectionList(final List<InspectionInfo> inspectionInfoList, Long projectId) {
         if (projectId != null) {
-            Net.instance.getInspectionList(projectId, SPUtils.getInstance().getString("Token", " "))
+            Net.instance.getInspectionList(projectId, SPUtils.getInstance(mContext).getString("Token", " "))
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<InspectionListResponse>() {
@@ -361,7 +359,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
                  */
     private List<InspectionTaskItem> getInspectionTaskItems(final List<InspectionTaskItem> inspectionTaskItemList, Long inspectTaskId) {
         if (inspectTaskId != null) {
-            Net.instance.getInspectionItemList(inspectTaskId, SPUtils.getInstance().getString("Token", " "))
+            Net.instance.getInspectionItemList(inspectTaskId, SPUtils.getInstance(mContext).getString("Token", " "))
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<InspectionItemListResponse>() {
@@ -461,7 +459,7 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
             for (int i = 0; i < checkedArray.size(); i++) {
                 if (checkedArray.valueAt(i)) {
                     //添加巡检子项
-                    inspectionTaskItems.get(i).setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id", "")));
+                    inspectionTaskItems.get(i).setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "")));
                     inspectionTaskItemList1.add(inspectionTaskItems.get(i));
                     Log.v("选中的位置：", i+ "");
                 }
@@ -481,19 +479,20 @@ public class InspectionAddActivity extends AppCompatActivity implements View.OnC
         }
         inspectionAddContent.setImcAddInspectionItemDtoList(inspectionTaskItemList1);
         Log.v("inspectionTaskItemList", inspectionTaskItemList1.size() + "");
-        inspectionAddContent.setLoginAuthDto(new InspectionAddContent.LoginAuthDtoBean());
+       // inspectionAddContent.setLoginAuthDto(new InspectionAddContent.LoginAuthDtoBean());
         inspectionAddContent.setProjectId(projectInfos.get(projectTemp).getId());
-        inspectionAddContent.setFacilitatorGroupId(4L);
-        inspectionAddContent.setFacilitatorId(projectInfos.get(projectTemp).getBleaderId());
+        inspectionAddContent.setFacilitatorGroupId(projectInfos.get(projectTemp).getPartyBId());
+        inspectionAddContent.setFacilitatorId(projectInfos.get(projectTemp).getPartyBId());
         inspectionAddContent.setScheduledStartTime(inspectionInfos.get(inspectionTemp).getScheduledStartTime());
         inspectionAddContent.setTaskName(inspectionInfos.get(inspectionTemp).getTaskName());
         inspectionAddContent.setTotalCost(inspectionInfos.get(inspectionTemp).getTotalCost());
         inspectionAddContent.setFacilitatorManagerId(projectInfos.get(projectTemp).getAleaderId());
-        inspectionAddContent.setPrincipalId(Long.valueOf(SPUtils.getInstance().getString("user_id", "")));
+        inspectionAddContent.setPrincipalId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "")));
         inspectionAddContent.setFrequency(inspectionInfos.get(inspectionTemp).getCycleTime());
         inspectionAddContent.setInspectionType(1);
         inspectionAddContent.setStatus(0);
-        inspectionAddContent.setUserId(Long.valueOf(SPUtils.getInstance().getString("user_id", "")));
+        inspectionAddContent.setDays(Integer.valueOf(et_plan_time.getText().toString().trim()));
+        inspectionAddContent.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "")));
         Log.v("inspectionAddContent", inspectionAddContent+ "");
         InspectionUtils.getInstence().addInspection(inspectionAddContent,mContext);
     }

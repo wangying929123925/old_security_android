@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -25,7 +24,6 @@ import com.example.ananops_android.db.LoginResponse;
 import com.example.ananops_android.db.PostResponse;
 import com.example.ananops_android.db.UserInformation;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
@@ -37,7 +35,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
     private EditText mAccount;                        //用户名编辑
     private EditText mPwd;                            //密码编辑
     private Button mLoginButton;                      //登录按钮
@@ -46,14 +44,15 @@ public class LoginActivity extends AppCompatActivity {
     private ImageView validate_img;
     private Button refresh_button;
     private Long deviceId;
+    private Context mContext;
     Bitmap bitmap;
   //  private SharedPreferences login_sp;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityManager.getInstance().addActivity(this);
+     //   ActivityManager.getInstance().addActivity(this);
+        mContext = this;
         setContentView(R.layout.activity_login1);
-       SPUtils.getInstance().init(this);
         mAccount = (EditText) findViewById(R.id.login_edit_account);
         mPwd = (EditText) findViewById(R.id.login_edit_pwd);
         mLoginButton = (Button) findViewById(R.id.login_btn_login);
@@ -63,11 +62,11 @@ public class LoginActivity extends AppCompatActivity {
         refresh_button=findViewById(R.id.refresh_button);
       //  login_sp = getSharedPrefereces("userInfo", 0);
       //  String name=login_sp.getString("USER_NAME", "");
-        String name = SPUtils.getInstance().getString("USER_NAME", "");
-        String pwd = SPUtils.getInstance().getString("PASSWORD", "");
+        String name = SPUtils.getInstance(mContext).getString("USER_NAME", "");
+        String pwd = SPUtils.getInstance(mContext).getString("PASSWORD", "");
 
        // String pwd =login_sp.getString("PASSWORD", "");
-        boolean choseRemember = SPUtils.getInstance().getBoolean("mRememberCheck", false);
+        boolean choseRemember = SPUtils.getInstance(mContext).getBoolean("mRememberCheck", false);
       //  boolean choseRemember =login_sp.getBoolean("mRememberCheck", false);
         if(choseRemember){
             mAccount.setText(name);
@@ -99,17 +98,17 @@ public class LoginActivity extends AppCompatActivity {
             final String userName = mAccount.getText().toString().trim();    //获取当前输入的用户名和密码信息
             final String userPwd = mPwd.getText().toString().trim();
             final String imgCode = validate_input.getText().toString().trim();
-            SPUtils.getInstance().putString("USER_NAME",userName);
-            SPUtils.getInstance().putString("PASSWORD",userPwd);
+            SPUtils.getInstance(mContext).putString("USER_NAME",userName);
+            SPUtils.getInstance(mContext).putString("PASSWORD",userPwd);
           //  final SharedPreferences.Editor editor =login_sp.edit();
            // editor.putString("USER_NAME", userName);
           //  editor.putString("PASSWORD", userPwd);
             //是否记住密码
             if(mRememberCheck.isChecked()){
                 //editor.putBoolean("mRememberCheck", true);
-                SPUtils.getInstance().putBoolean("mRememberCheck", true);
+                SPUtils.getInstance(mContext).putBoolean("mRememberCheck", true);
             }else{
-                SPUtils.getInstance().putBoolean("mRememberCheck", false);
+                SPUtils.getInstance(mContext).putBoolean("mRememberCheck", false);
                // editor.putBoolean("mRememberCheck", false);
             }
 
@@ -128,7 +127,8 @@ public class LoginActivity extends AppCompatActivity {
                             Log.v("LoginTime", System.currentTimeMillis() + "");
                             Log.v("deviceIdLogin", deviceId + "");
                             e.printStackTrace();
-                            Toast.makeText(getApplicationContext(), "网络异常，请检查网络状态login", Toast.LENGTH_SHORT).show();
+                            getImg();
+                            Toast.makeText(getApplicationContext(), "用户名密码错误或验证码错误", Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -138,9 +138,9 @@ public class LoginActivity extends AppCompatActivity {
                               String TOKEN = loginResponse.getResult().getAccess_token();
                               if (TOKEN != null && TOKEN.length()!=0) {
                                   Toast.makeText(getApplicationContext(), loginResponse.getResult().getLoginName(), Toast.LENGTH_SHORT).show();
-                                  SPUtils.getInstance().putString("LoginName", loginResponse.getResult().getLoginName());
+                                  SPUtils.getInstance(mContext).putString("LoginName", loginResponse.getResult().getLoginName());
                                   Log.v("Token", loginResponse.getResult().getAccess_token());
-                                  SPUtils.getInstance().putString("Token", "Bearer" + " " + TOKEN);
+                                  SPUtils.getInstance(mContext).putString("Token", "Bearer" + " " + TOKEN);
                                   getUserinfo();
                               }
                           }
@@ -180,8 +180,8 @@ public class LoginActivity extends AppCompatActivity {
         } return true;
     }
     private void getUserinfo(){
-        String userName = SPUtils.getInstance().getString("LoginName", "0");
-       Net.instance.getUserInfo(userName,SPUtils.getInstance().getString("Token"," "))
+        String userName = SPUtils.getInstance(mContext).getString("LoginName", "0");
+       Net.instance.getUserInfo(userName,SPUtils.getInstance(mContext).getString("Token"," "))
 //        Net.instance1.getUserInfo(userName,UserInfo.TOKEN)
                  .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -195,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onError(Throwable e) {
                         Log.v("errorGetUserInfo", System.currentTimeMillis() + "");
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "网络异常，请检查网络状态getuserInfo", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "获取用户信息失败", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -204,15 +204,15 @@ public class LoginActivity extends AppCompatActivity {
                             String USERID = userInfo.getResult().getId();
                             Log.v("user_id",USERID);
                             if (USERID != null && USERID.length() != 0) {
-                                SPUtils.getInstance().putString("user_id", USERID);
+                                SPUtils.getInstance(mContext).putString("user_id", USERID);
                                 if (!userInfo.getResult().getRoles().isEmpty()) {
                                     String roleName = userInfo.getResult().getRoles().get(0).getRoleName();
                                     Log.v("role_name",roleName);
                                     Log.v("role_code",userInfo.getResult().getRoles().get(0).getRoleCode());
-                                    SPUtils.getInstance().putString("role_name", roleName);
-                                    BaseUtils.getInstence().roleStringConvertNum(roleName);
-                                    Log.v("role_num",SPUtils.getInstance().getInt("role_num",1)+"");
-                                    SPUtils.getInstance().putString("role_code",userInfo.getResult().getRoles().get(0).getRoleCode());
+                                    SPUtils.getInstance(mContext).putString("role_name", roleName);
+                                    BaseUtils.getInstence().roleStringConvertNum(roleName,mContext);
+                                    Log.v("role_num",SPUtils.getInstance(mContext).getInt("role_num",1)+"");
+                                    SPUtils.getInstance(mContext).putString("role_code",userInfo.getResult().getRoles().get(0).getRoleCode());
                                     getGroupId();
 //                                    Intent intent1 = new Intent(LoginActivity.this, UserMainActivity.class);
 //                                    startActivity(intent1);
@@ -248,7 +248,7 @@ public class LoginActivity extends AppCompatActivity {
                        @Override
                        public void onNext(PostResponse postResponse) {
                            if (TextUtils.equals(postResponse.getCode(), "200")) {
-                               Toast.makeText(LoginActivity.this," "+deviceId, Toast.LENGTH_SHORT).show();
+                         //      Toast.makeText(LoginActivity.this," "+deviceId, Toast.LENGTH_SHORT).show();
                                byte[] input = Base64.decode(postResponse.getResult(), Base64.DEFAULT);
                                bitmap = BitmapFactory.decodeByteArray(input, 0, input.length);
                                validate_img.setImageBitmap(bitmap);
@@ -260,7 +260,7 @@ public class LoginActivity extends AppCompatActivity {
                    });
        }
        private void getGroupId() {
-           Net.instance.getGroupId(Long.valueOf(SPUtils.getInstance().getString("user_id", "0")),SPUtils.getInstance().getString("Token", ""))
+           Net.instance.getGroupId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "0")),SPUtils.getInstance(mContext).getString("Token", ""))
                    .subscribeOn(Schedulers.newThread())
                    .observeOn(AndroidSchedulers.mainThread())
                    .subscribe(new Subscriber<GroupIdResponse>() {
@@ -291,7 +291,7 @@ public class LoginActivity extends AppCompatActivity {
                                String groupId = groupIdResponse.getResult().getGroupId();
                                Log.v("group_id", groupId);
                                if (groupId != null && groupId.length() != 0) {
-                                   SPUtils.getInstance().putString("groupId", groupId);
+                                   SPUtils.getInstance(mContext).putString("groupId", groupId);
                                    Intent intent1 = new Intent(LoginActivity.this, UserMainActivity.class);
                                    startActivity(intent1);
                                    finish();

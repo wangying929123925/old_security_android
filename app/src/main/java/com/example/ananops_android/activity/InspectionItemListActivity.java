@@ -2,7 +2,6 @@ package com.example.ananops_android.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -32,7 +31,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class InspectionItemListActivity extends AppCompatActivity {
+public class InspectionItemListActivity extends BaseActivity {
     private ListView sortListView;
     private TextView title;
     private TextView noResult;
@@ -65,7 +64,7 @@ public class InspectionItemListActivity extends AppCompatActivity {
             InspectionQueryByStatusAndIdRequest inspectionQueryByStatusAndIdRequest = new InspectionQueryByStatusAndIdRequest();
             inspectionQueryByStatusAndIdRequest.setStatus(status);
             inspectionQueryByStatusAndIdRequest.setUserId(1L);
-            Net.instance.getInspectionItemByMaintainerIdAndStatus(inspectionQueryByStatusAndIdRequest, SPUtils.getInstance().getString("Token", " "))
+            Net.instance.getInspectionItemByMaintainerIdAndStatus(inspectionQueryByStatusAndIdRequest, SPUtils.getInstance(mContext).getString("Token", " "))
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<InspectionItemListResponse>() {
@@ -98,8 +97,8 @@ public class InspectionItemListActivity extends AppCompatActivity {
                     });
         } else if (statusDo.equals("3-2")) {
             AllAcceptedItemByMaintainerRequest allAcceptedItemByMaintainerRequest = new AllAcceptedItemByMaintainerRequest();
-            allAcceptedItemByMaintainerRequest.setMaintainerId(Long.valueOf(SPUtils.getInstance().getString("user_id", "")));
-            Net.instance.getAllAcceptedItemByMaintainer(allAcceptedItemByMaintainerRequest, SPUtils.getInstance().getString("Token", " "))
+            allAcceptedItemByMaintainerRequest.setMaintainerId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "")));
+            Net.instance.getAllAcceptedItemByMaintainer(allAcceptedItemByMaintainerRequest, SPUtils.getInstance(mContext).getString("Token", " "))
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<InspectionItemListResponse>() {
@@ -112,6 +111,7 @@ public class InspectionItemListActivity extends AppCompatActivity {
                         public void onError(Throwable e) {
                             Log.v("ErrorInspectionListTime", System.currentTimeMillis() + "");
                             e.printStackTrace();
+                            initViews();//
                         }
 
                         @Override
@@ -121,13 +121,14 @@ public class InspectionItemListActivity extends AppCompatActivity {
                                 if (inspectionItemListResponse.getResult().size() > 0) {
                                     inspectionTaskItems.addAll(inspectionItemListResponse.getResult());
                                     Log.v("巡检子项列表1", inspectionItemListResponse.getResult().get(0).getId() + "");
-                                    initViews();//
+
                                 } else {
                                     Toast.makeText(mContext, "无巡检子项列表！", Toast.LENGTH_LONG).show();
                                 }
                             } else {
                                 Toast.makeText(mContext, inspectionItemListResponse.getMessage(), Toast.LENGTH_LONG).show();
                             }
+                            initViews();//
                         }
                     });
         }else {
@@ -197,7 +198,7 @@ public class InspectionItemListActivity extends AppCompatActivity {
         AllItemByTaskIdAndStatuRequest allItemByTaskIdAndStatuRequest = new AllItemByTaskIdAndStatuRequest();
         allItemByTaskIdAndStatuRequest.setStatus(status);
         allItemByTaskIdAndStatuRequest.setTaskId(inspectionId);
-        Net.instance.getAllItemByTaskIdAndStatus(allItemByTaskIdAndStatuRequest,SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getAllItemByTaskIdAndStatus(allItemByTaskIdAndStatuRequest,SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<InspectionItemListResponse>() {

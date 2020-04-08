@@ -2,7 +2,6 @@ package com.example.ananops_android.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +17,6 @@ import com.example.ananops_android.adapter.ListViewHolder;
 import com.example.ananops_android.db.RelacementOrderListUndoResult;
 import com.example.ananops_android.entity.ReplacementOrder;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 import com.example.ananops_android.view.EditTextWithDel;
@@ -30,7 +28,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ReplacementOrderListActivity extends AppCompatActivity {
+public class ReplacementOrderListActivity extends BaseActivity {
     private ListView sortListView;
     private TextView title;
     private ImageView imageBack;
@@ -43,13 +41,13 @@ public class ReplacementOrderListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mComtext = this;
-        ActivityManager.getInstance().addActivity(this);
+     //   ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_contacts_main);
         initViews();
         initDatas();
     }
     private void initDatas(){
-        Net.instance.getRelacementOrderListUndo(Long.valueOf(SPUtils.getInstance().getString("user_id","")),SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getRelacementOrderListUndo(Long.valueOf(SPUtils.getInstance(mComtext).getString("user_id","")),SPUtils.getInstance(mComtext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<RelacementOrderListUndoResult>() {

@@ -43,7 +43,7 @@ public class InspectionUtils {
 //新建获取项目巡检列表
 public List<InspectionInfo> getInspectionList(final List<InspectionInfo> inspectionInfoList, Long projectId,final Context mContext) {
     if (projectId != null) {
-        Net.instance.getInspectionList(projectId, SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getInspectionList(projectId, SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<InspectionListResponse>() {
@@ -89,7 +89,7 @@ public List<InspectionInfo> getInspectionList(final List<InspectionInfo> inspect
     //获取巡检子项
  public List<InspectionTaskItem> getInspectionTaskItems(final List<InspectionTaskItem> inspectionTaskItemList, Long inspectTaskId,final Context mContext) {
      if (inspectTaskId != null) {
-         Net.instance.getInspectionItemList(inspectTaskId, SPUtils.getInstance().getString("Token", " "))
+         Net.instance.getInspectionItemList(inspectTaskId, SPUtils.getInstance(mContext).getString("Token", " "))
                  .subscribeOn(Schedulers.newThread())
                  .observeOn(AndroidSchedulers.mainThread())
                  .subscribe(new Subscriber<InspectionItemListResponse>() {
@@ -130,7 +130,7 @@ public List<InspectionTaskItem> getInspectionTaskItemsImc(final List<InspectionT
     if (inspectTaskId != null) {
         InspectionItemListImcRequest inspectionItemListImcRequest=new InspectionItemListImcRequest();
         inspectionItemListImcRequest.setTaskId(inspectTaskId);
-      Net.instance.getInspectionItemListImc(inspectionItemListImcRequest, SPUtils.getInstance().getString("Token", " "))
+      Net.instance.getInspectionItemListImc(inspectionItemListImcRequest, SPUtils.getInstance(mContext).getString("Token", " "))
               .subscribeOn(Schedulers.newThread())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(new Subscriber<InspectionItemListResponse>() {
@@ -174,7 +174,7 @@ public List<InspectionTaskItem> getInspectionTaskItemsImc(final List<InspectionT
             InspectionLogsRequest inspectionLogsRequest=new InspectionLogsRequest();
             inspectionLogsRequest.setTaskId(inspectTaskId);
             inspectionLogsRequest.setOrderBy("string");
-            Net.instance.getInspectionLog(inspectionLogsRequest, SPUtils.getInstance().getString("Token", " "))
+            Net.instance.getInspectionLog(inspectionLogsRequest, SPUtils.getInstance(mContext).getString("Token", " "))
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<InspectionLogResponse>() {
@@ -208,50 +208,10 @@ public List<InspectionTaskItem> getInspectionTaskItemsImc(final List<InspectionT
         return inspectionTaskLogs;
         }
 
-    //获取巡检日志
-    public List<InspectionTaskLog> getInspectionItemLogs(final List<InspectionTaskLog> inspectionTaskLogs, Long inspectTaskItemId, final Context mContext) {
-        if (inspectTaskItemId != null) {
-            InspectionItemLogsRequest inspectionItemLogsRequest = new InspectionItemLogsRequest();
-            inspectionItemLogsRequest.setItemId(inspectTaskItemId);
-            Net.instance.getInspectionItemLog(inspectionItemLogsRequest, SPUtils.getInstance().getString("Token", " "))
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<InspectionLogResponse>() {
-                        @Override
-                        public void onCompleted() {
 
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.v("ErrorGetInspectItemLog", System.currentTimeMillis() + "");
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onNext(InspectionLogResponse inspectionLogResponse) {
-                            if (TextUtils.equals(inspectionLogResponse.getCode(), "200")) {
-
-                                inspectionTaskLogs.clear();
-                                if (inspectionLogResponse.getResult().size() > 0) {
-                                    inspectionTaskLogs.addAll(inspectionLogResponse.getResult());
-                                    Log.v("巡检日志列表1", inspectionLogResponse.getResult().get(0).getId() + "");
-                                } else {
-                                    Toast.makeText(mContext, "无巡检日志列表！", Toast.LENGTH_LONG).show();
-                                }
-                            } else {
-                                Toast.makeText(mContext, inspectionLogResponse.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-        }else {
-            Toast.makeText(mContext, "没有巡检子项单号！", Toast.LENGTH_LONG).show();
-        }
-        return inspectionTaskLogs;
-    }
 //添加巡检任务
     public void addInspection(InspectionAddContent inspectionAddContent, final Context mContext) {
-        Net.instance.addInspectionInfo(inspectionAddContent, SPUtils.getInstance().getString("Token", " "))
+        Net.instance.addInspectionInfo(inspectionAddContent, SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<CodeMessageResponse>() {
@@ -296,7 +256,7 @@ public List<InspectionTaskItem> getInspectionTaskItemsImc(final List<InspectionT
         ChangeInspectionItemStatusRequest changeInspectionItemStatusRequest = new ChangeInspectionItemStatusRequest();
         changeInspectionItemStatusRequest.setStatus(status);
         changeInspectionItemStatusRequest.setItemId(Long.valueOf(inspectionItemId));
-        Net.instance.modifyItemStatusByItemId(changeInspectionItemStatusRequest, SPUtils.getInstance().getString("Token", " "))
+        Net.instance.modifyItemStatusByItemId(changeInspectionItemStatusRequest, SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<CodeMessageResponse>() {

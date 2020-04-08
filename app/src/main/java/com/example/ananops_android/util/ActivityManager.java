@@ -22,7 +22,8 @@ public class ActivityManager {
         if (activityStack == null) {
             activityStack = new Stack<Activity>();
         }
-        activityStack.add(activity);
+            activityStack.add(activity);
+
     }
 
     /**
@@ -47,7 +48,7 @@ public class ActivityManager {
     public void finishActivity(Activity activity) {
         if (activity != null) {
             activityStack.remove(activity);
-            activity.finish();
+          //  activity.finish();
             activity = null;
         }
     }
@@ -82,8 +83,9 @@ public class ActivityManager {
     public void AppExit(Context context) {
         try {
             finishAllActivity();
-          //  ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-           // activityManager.restartPackage(context.getPackageName());
+            android.os.Process.killProcess(android.os.Process.myPid());
+           //ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+           //activityManager.restartPackage(context.getPackageName());
             System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();

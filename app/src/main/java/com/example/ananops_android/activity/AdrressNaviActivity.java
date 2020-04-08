@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,9 +18,8 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.example.ananops_android.R;
-import com.example.ananops_android.util.ActivityManager;
 
-public class AdrressNaviActivity extends AppCompatActivity {
+public class AdrressNaviActivity extends BaseActivity {
     MapView mMapView = null;
     private AMap aMap;
     private ImageView back_img;
@@ -32,7 +30,7 @@ public class AdrressNaviActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityManager.getInstance().addActivity(this);
+       // ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_address_navigation);
         mMapView = (MapView) findViewById(R.id.mapSearch);
         mMapView.onCreate(savedInstanceState);

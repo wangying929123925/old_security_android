@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ananops_android</string>
+    <string name="app_name">安安运维</string>
     <!--支付-->
     <string name="face_book_apiid">8a605283ec7b96f377e9acd6e46091d6</string>
     <string name="pay_result_tip">这个界面用于显示第三方app通过微信支付的结果</string>
@@ -40,8 +40,8 @@
     <string name="userManager_main_repair2">待确认</string>
     <string name="userManager_main_repair3">待支付</string>
     <string name="userManager_main_inspection1">巡检申请</string>
-    <string name="userManager_main_inspection2">待确认</string>
-    <string name="userManager_main_inspection3">巡检中</string>
+    <string name="userManager_main_inspection2">待审核</string>
+    <string name="userManager_main_inspection3">待确认</string>
     <string name="userManager_main_inspection4">待付款</string>
     <string name="userManager_main_inspection5">待评价</string>
     <string name="userManager_main_manage1">全部成员</string>
@@ -60,8 +60,8 @@
     <string name="service_main_inspection2">待分配</string>
     <string name="service_main_inspection3">巡检中</string>
     <string name="service_main_repair1">待接单</string>
-    <string name="service_main_repair2">待审核</string>
-    <string name="service_main_repair3">待确认</string>
+    <string name="service_main_repair2">待分配</string>
+    <string name="service_main_repair3">待审核</string>
     <string name="service_main_manage1">全部成员</string>
     <string name="service_main_manage2">设备管理</string>
     <string name="service_main_manage3">故障统计</string>

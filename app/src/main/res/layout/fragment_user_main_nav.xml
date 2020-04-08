@@ -122,7 +122,7 @@
                     android:layout_height="48dp"
                     android:layout_centerHorizontal="true"
                     android:background="#ffffff"
-                    android:src="@drawable/ic_device"
+                    android:src="@drawable/ic_workorder"
                     android:focusable="false"
                     android:clickable="false"
                     android:scaleType="fitXY"/>

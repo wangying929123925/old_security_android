@@ -1,15 +1,10 @@
 package com.example.ananops_android.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,20 +12,14 @@ import android.widget.Toast;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.BaseRecyclerAdapter;
-import com.example.ananops_android.adapter.BaseViewHolder;
 import com.example.ananops_android.adapter.InspectionAdapter;
-import com.example.ananops_android.adapter.RepairAdapter;
-import com.example.ananops_android.entity.InspectionContent;
 import com.example.ananops_android.entity.InspectionInfo;
-import com.example.ananops_android.entity.UserLogin;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
-import com.example.ananops_android.util.InspectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InspectionSearchListActivity extends AppCompatActivity implements View.OnClickListener{
+public class InspectionSearchListActivity extends BaseActivity implements View.OnClickListener{
     private  String searchContent;
     private List<InspectionInfo> inspectionInfos=new ArrayList<>();
     private RecyclerView mRecyclerView;
@@ -48,7 +37,7 @@ public class InspectionSearchListActivity extends AppCompatActivity implements V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_research_order_list);
         mContext=this;
-        ActivityManager.getInstance().addActivity(this);
+       // ActivityManager.getInstance().addActivity(this);
         initDatas();
         initViews();
         setOnListener();

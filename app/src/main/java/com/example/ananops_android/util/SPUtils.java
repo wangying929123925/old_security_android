@@ -1,7 +1,6 @@
 package com.example.ananops_android.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 
 /**
@@ -15,21 +14,24 @@ public class SPUtils {
     public static final String FILE_NAME = "GeneralStore";
     public static final String SAFE_FILE_NAME = "SafeStore";
     private SharedPreferences.Editor mEitor, mSafeEidtor;
+    private Context mContext;
 
-    public synchronized static SPUtils getInstance() {
+    public synchronized static SPUtils getInstance(Context context) {
         if (instance == null) {
-            instance = new SPUtils();
+            instance = new SPUtils(context);
         }
         return instance;
     }
 
-    public void init(Context context) {
-        if (context == null) {
-            return;
-        }
-        mSharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+
+    private SPUtils(Context context) {
+        this.mContext = context;
+        init();
+    }
+    public void init() {
+        mSharedPreferences = mContext.getApplicationContext().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         mEitor = mSharedPreferences.edit();
-        mSafePreferences = context.getSharedPreferences(SAFE_FILE_NAME, Context.MODE_PRIVATE);
+        mSafePreferences = mContext.getSharedPreferences(SAFE_FILE_NAME, Context.MODE_PRIVATE);
         mSafeEidtor = mSafePreferences.edit();
     }
 

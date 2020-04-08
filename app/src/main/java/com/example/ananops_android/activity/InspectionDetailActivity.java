@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -25,7 +24,6 @@ import com.example.ananops_android.fragment.InspectionItemClassifyFragment;
 import com.example.ananops_android.fragment.InspectionItemFragment;
 import com.example.ananops_android.fragment.InspectionTimeLineFragment;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 
@@ -38,7 +36,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class InspectionDetailActivity extends AppCompatActivity {
+public class InspectionDetailActivity extends BaseActivity {
 
     private TabLayout tab_search_order_title;                            //定义TabLayout
     private ViewPager vp_search_order_pager;  //内容
@@ -62,7 +60,7 @@ public class InspectionDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inspection_item_detail);
         mContext = this;
-        ActivityManager.getInstance().addActivity(this);
+    //    ActivityManager.getInstance().addActivity(this);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             inspectionId = bundle.getString("inspectionId");
@@ -76,7 +74,7 @@ public class InspectionDetailActivity extends AppCompatActivity {
     }
 
     private void initFragment() {
-        userCode = SPUtils.getInstance().getInt("role_num", 1);
+        userCode = SPUtils.getInstance(mContext).getInt("role_num", 1);
         if (list_title == null) {
             list_title = new ArrayList<>();
             list_title.add("巡检信息");
@@ -152,7 +150,7 @@ public class InspectionDetailActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             AcceptImcTaskByPrincipalRequest acc = new AcceptImcTaskByPrincipalRequest();
                             acc.setTaskId(Long.parseLong(inspectionId));
-                            Net.instance.acceptImcTaskByPrincipal(acc, SPUtils.getInstance().getString("Token", " "))
+                            Net.instance.acceptImcTaskByPrincipal(acc, SPUtils.getInstance(mContext).getString("Token", " "))
                                     .subscribeOn(Schedulers.newThread())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(new Subscriber<CodeMessageResponse>() {
@@ -189,7 +187,7 @@ public class InspectionDetailActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             AcceptImcTaskByPrincipalRequest acc = new AcceptImcTaskByPrincipalRequest();
                             acc.setTaskId(Long.parseLong(inspectionId));
-                            Net.instance.denyImcTaskByPrincipal(acc, SPUtils.getInstance().getString("Token", " "))
+                            Net.instance.denyImcTaskByPrincipal(acc, SPUtils.getInstance(mContext).getString("Token", " "))
                                     .subscribeOn(Schedulers.newThread())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(new Subscriber<CodeMessageResponse>() {
@@ -234,7 +232,7 @@ public class InspectionDetailActivity extends AppCompatActivity {
                             inner.setPageSize(0);
                             inner.setType("inspection");
                             request.setWorkOrderQueryDto(inner);
-                            Net.instance.confirmWorkOrder(request, SPUtils.getInstance().getString("Token", " "))
+                            Net.instance.confirmWorkOrder(request, SPUtils.getInstance(mContext).getString("Token", " "))
                                     .subscribeOn(Schedulers.newThread())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(new Subscriber<CodeMessageResponse>() {
@@ -308,7 +306,7 @@ public class InspectionDetailActivity extends AppCompatActivity {
     }
 
     private void getInspectionInfo() {
-        Net.instance.getInspectionDetails(Long.valueOf(inspectionId), SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getInspectionDetails(Long.valueOf(inspectionId), SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<InspectionDetailResponse>() {

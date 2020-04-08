@@ -2,10 +2,8 @@ package com.example.ananops_android.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -27,7 +25,6 @@ import com.example.ananops_android.db.RepairerListResponse;
 import com.example.ananops_android.entity.Contacts;
 import com.example.ananops_android.entity.RepairAddContent;
 import com.example.ananops_android.net.Net;
-import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
@@ -44,7 +41,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ContactActivity extends AppCompatActivity implements View.OnClickListener {
+public class ContactActivity extends BaseActivity implements View.OnClickListener {
     private ListView sortListView;
     private List<Contacts> SourceDateList = new ArrayList<>();
     private ContactAdapter adapter;
@@ -65,7 +62,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext=this;
-        ActivityManager.getInstance().addActivity(this);
+      //  ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_contacts_main);
         initViews();
     }
@@ -95,7 +92,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
 
     }
     private void getResource(){
-        Net.instance.getRepairerList(Long.valueOf(projectId), SPUtils.getInstance().getString("Token", " "))
+        Net.instance.getRepairerList(Long.valueOf(projectId), SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<RepairerListResponse>() {
@@ -203,7 +200,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 repairAddContent.setDeadline(deadline);
                 repairAddContent.setStatus(5);
                 //repairAddContent.setDeadline(deadline);
-                Net.instance.repairAddPost(repairAddContent, SPUtils.getInstance().getString("Token", ""))
+                Net.instance.repairAddPost(repairAddContent, SPUtils.getInstance(mContext).getString("Token", ""))
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<CodeMessageResponse>() {
@@ -259,7 +256,7 @@ private void submitInspectionRepairer(View view, int i) {
             InspectionEngineerDistributeRequest inspectionEngineerDistributeRequest = new InspectionEngineerDistributeRequest();
             inspectionEngineerDistributeRequest.setTaskId(Long.valueOf(typeId));
             inspectionEngineerDistributeRequest.setEngineerId(Long.valueOf(contacts.getId()));
-            Net.instance.inspectionDistributeEngineer(inspectionEngineerDistributeRequest,SPUtils.getInstance().getString("Token", " "))
+            Net.instance.inspectionDistributeEngineer(inspectionEngineerDistributeRequest,SPUtils.getInstance(mContext).getString("Token", " "))
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<CodeMessageResponse>() {
