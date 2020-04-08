@@ -129,7 +129,13 @@ public class UserMainActivity extends BaseActivity implements View.OnClickListen
      */
     private void startJWebSClientService() {
         Intent intent = new Intent(mContext, JWebSocketClientService.class);
-        startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //android8.0以上通过startForegroundService启动service
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
+        //startService(intent);
     }
     //广播接收类
     private class ChatMessageReceiver extends BroadcastReceiver {

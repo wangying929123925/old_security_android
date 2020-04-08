@@ -526,7 +526,7 @@ public class BaseUtils {
         TextView textTitle = view.findViewById(R.id.textTitle);
 //        TextView textContent=view.findViewById(R.id.textContent);
         TextView textConfirm = view.findViewById(R.id.textConfirm);
-        textConfirm.setText("确定报修");
+        textConfirm.setText("确定");
         TextView textCancel = view.findViewById(R.id.textCancel);
         textCancel.setText("取消");
 
@@ -591,6 +591,7 @@ public class BaseUtils {
         list.add("24:00:00");
         //泛型为数据类型
         final WheelView<String> newWheelView = view.findViewById(R.id.newwheelview);
+
         //设置数据
         newWheelView.setData(list);
         newWheelView.setOnItemSelectedListener(new WheelView.OnItemSelectedListener<String>() {
