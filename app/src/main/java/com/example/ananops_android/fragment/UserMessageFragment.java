@@ -14,13 +14,17 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 
 import com.example.ananops_android.R;
+import com.example.ananops_android.activity.MessageDetailActivity;
 import com.example.ananops_android.adapter.ListCommonAdapter;
 import com.example.ananops_android.adapter.ListViewHolder;
+import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.MessageListRequest;
 import com.example.ananops_android.db.MessageListResponse;
+import com.example.ananops_android.db.MessageStatusChangeRequest;
 import com.example.ananops_android.entity.MessageContent;
 import com.example.ananops_android.gson.MessageBodyGson;
 import com.example.ananops_android.net.Net;
+import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
 import com.google.gson.Gson;
 
@@ -85,6 +89,7 @@ public class UserMessageFragment extends Fragment  {
         //获取列表
         MessageListRequest messageListRequest = new MessageListRequest();
         messageListRequest.setMessageTopic(topicType);
+        //messageListRequest.setStatus(null);
         messageListRequest.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "")));
         Net.instance.getMessageList(messageListRequest,SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
@@ -128,13 +133,19 @@ public class UserMessageFragment extends Fragment  {
                 viewHolder.setText(R.id.message_item_text, String.valueOf(messageEntity.getMsgBodyDto().getStatusMsg()));
                 if (messageContent.getMessageTopic().equals("MDMC_TOPIC")) {
                     viewHolder.setImageResource(R.id.order_message_img,R.drawable.ic_message_orange);
-                    viewHolder.setText(R.id.message_item_title,"您的维修维修工单状态有更新");
+                    viewHolder.setText(R.id.message_item_title,"维修维护消息");
                 } else if (messageContent.getMessageTopic().equals("IMC_TOPIC")) {
-                    viewHolder.setText(R.id.message_item_title,"您的巡检工单状态有更新");
+                    viewHolder.setText(R.id.message_item_title,"巡检消息");
                     viewHolder.setImageResource(R.id.order_message_img,R.drawable.ic_message);
                 } else {
                     viewHolder.setImageResource(R.id.order_message_img,R.drawable.ic_message_system);
-                    viewHolder.setText(R.id.message_item_title,"您的支付状态有更新");
+                    viewHolder.setText(R.id.message_item_title,"支付消息");
+                }
+                if (messageContent.getStatus() == 0) {
+                    viewHolder.setText(R.id.message_item_status, "未读");
+                } else {
+                    viewHolder.setText(R.id.message_item_status, "已读");
+
                 }
             }
         };
@@ -142,8 +153,45 @@ public class UserMessageFragment extends Fragment  {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle bundle = new Bundle();
-                bundle.putString("messageId",String.valueOf(messageContents.get(position).getId()));
+                MessageContent messageContent = messageContents.get(position);
+                Gson gson = new Gson();
+                MessageBodyGson messageEntity = gson.fromJson(messageContent.getMessageBody(), MessageBodyGson.class);
+                MessageStatusChangeRequest messageStatusChangeRequest = new MessageStatusChangeRequest();
+                messageStatusChangeRequest.setStatus(1);
+                messageStatusChangeRequest.setMessageId(messageContent.getId());
+                Net.instance.changeMessageStatus(messageStatusChangeRequest,SPUtils.getInstance(mContext).getString("Token"," "))
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<CodeMessageResponse>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.v("UserMessageFragment","修改消息状态失败");
+                                Bundle bundle = new Bundle();
+                                bundle.putString("messageType",messageContent.getMessageTopic());
+                                bundle.putString("messageContent",messageEntity.getMsgBodyDto().getStatusMsg());
+                                bundle.putString("orderId",messageEntity.getMsgBodyDto().getTaskId());
+                                BaseUtils.getInstence().intent(mContext, MessageDetailActivity.class,bundle);
+                            }
+
+                            @Override
+                            public void onNext(CodeMessageResponse codeMessageResponse) {
+                                if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
+                                    Log.v("UserMessageFragment","修改消息状态成功");
+                                }
+                                Bundle bundle = new Bundle();
+                                bundle.putString("messageType",messageContent.getMessageTopic());
+                                bundle.putString("messageContent",messageEntity.getMsgBodyDto().getStatusMsg());
+                                bundle.putString("orderId",messageEntity.getMsgBodyDto().getTaskId());
+                                BaseUtils.getInstence().intent(mContext, MessageDetailActivity.class,bundle);
+                            }
+                        });
+
+
             }
         });
     }

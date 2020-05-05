@@ -48,6 +48,7 @@ public class ProjectDetailActivity extends BaseActivity implements View.OnClickL
     private LinearLayout fragment_order_commit;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
     private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);

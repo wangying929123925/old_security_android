@@ -7,26 +7,43 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.example.ananops_android.R;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class LoadingActivity extends BaseActivity {
     private ImageView welcomeImg = null;
+    private static final long DELAY = 3000;
+    private TimerTask task;
+    private RelativeLayout introduction_title;
     @Override
     protected  void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-     //   ActivityManager.getInstance().addActivity(this);
-        setContentView(R.layout.activity_loading);
-        setTransparentStatusBar();
-        welcomeImg=findViewById(R.id.welcome_img);
-        AlphaAnimation anima = new AlphaAnimation(0.3f, 1.0f);
-        anima.setDuration(1500);// 设置动画显示时间
-        welcomeImg.startAnimation(anima);
-        anima.setAnimationListener(new AnimationImpl());
+//        setContentView(R.layout.activity_loading);
+//        setTransparentStatusBar();
+//        welcomeImg=findViewById(R.id.welcome_img);
+//        AlphaAnimation anima = new AlphaAnimation(0.3f, 1.0f);
+//        anima.setDuration(1500);// 设置动画显示时间
+//        welcomeImg.startAnimation(anima);
+//        anima.setAnimationListener(new AnimationImpl());
+        setContentView(R.layout.activity_introduction);
+        introduction_title = findViewById(R.id.introduction_title);
+        introduction_title.setVisibility(View.GONE);
+        Timer timer=new Timer();
+        TimerTask tast=new TimerTask() {
+            @Override
+            public void run(){
+              //  startActivity(localIntent);//执行
+                skip();
+            }
+        };
+        timer.schedule(tast,DELAY);//10秒后
     }
 
     private class AnimationImpl implements Animation.AnimationListener {

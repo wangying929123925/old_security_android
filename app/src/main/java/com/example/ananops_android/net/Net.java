@@ -12,6 +12,7 @@ import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.ConfirmWorkOrderRequest;
+import com.example.ananops_android.db.DeviceOrderResult;
 import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersRequset;
 import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersResponse;
 import com.example.ananops_android.db.GroupIdResponse;
@@ -84,6 +85,7 @@ public interface Net {
     Net instance = new Retrofit.Builder()
             .baseUrl(base_url1)
             .addConverterFactory(GsonConverterFactory.create())
+            //网络请求适配器，结合RXjava
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .client(BaseUtils.getInstence().getClient().build())
             .build()
@@ -119,9 +121,9 @@ public interface Net {
     @POST("mdmc/mdmcTask/getTaskListByIdAndStatus")
     Observable<OrderResponse> getRepairList(@Body OrderRequest queryDto, @Header("Authorization") String postToken);
 
-    //获取巡检地址和设备列表
-    @GET("mdmc/mdmcTask/getTroubleTypeListAndAddressList")
-    Observable<TroubleTypeAndAddressListResponse> getTroubleTypeListAndAddressList(@Query("userId") Long userId, @Header("Authorization") String postToken);
+    //获取维修子项地址和设备列表
+    @GET("mdc/dictItem/getSysDictItemList")
+    Observable<TroubleTypeAndAddressListResponse> getTroubleTypeListAndAddressList(@Header("Authorization") String postToken);
 
     //工单填写提交
     @Headers("Content-Type:application/json")
@@ -148,7 +150,7 @@ public interface Net {
     //改变工单状态
     @Headers("Content-Type:application/json")
     @POST("mdmc/mdmcTask/modifyTaskStatusByTaskId/{taskId}")
-    Observable<CodeMessageResponse> changeStatus(@Body ChangeStatusDto modifyTaskStatus, @Header("Authorization") String postToken);
+    Observable<CodeMessageResponse> changeStatus(@Body ChangeStatusDto modifyTaskStatus,@Path("taskId")String taskId, @Header("Authorization") String postToken);
 
     //获取工单进度
     @Headers("Content-Type:application/json")
@@ -180,6 +182,10 @@ public interface Net {
     //服务商获取待处理备品备件单据列表
    @GET("rdc/deviceOrder/todo/{userId}")
    Observable<RelacementOrderListUndoResult>getRelacementOrderListUndo(@Path("userId") Long userId, @Header("Authorization") String postToken);
+
+   //获取备品备件单据信息
+   @GET("rdc/deviceOrder/all/object/{objectId}/{objectType}")
+   Observable<DeviceOrderResult>getDeviceOrderInfo(@Path("objectId")Long objectId,@Path("objectType")Integer objectType,@Header("Authorization") String postToken);
 
    //服务商业务员处理备件申请
    @POST("rdc/deviceOrder/operation")

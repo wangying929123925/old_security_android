@@ -127,7 +127,8 @@ public class ReplacementOrderOperationActivity extends BaseActivity {
                         public void onNext(CodeMessageResponse codeMessageResponse) {
                             if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
                                 Toast.makeText(mContext,"提交成功！",Toast.LENGTH_SHORT).show();
-                                BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
+                                BaseUtils.getInstence().changeStatus(8,orderId,"审核备品备件",mContext);
+                              //  BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
                             }
                             else{
                                 Toast.makeText(mContext,"服务器故障！",Toast.LENGTH_SHORT).show();

@@ -103,7 +103,7 @@
             android:layout_below="@+id/order_item_status"
             android:layout_toRightOf="@+id/order_item_img"
             android:layout_width="wrap_content"
-            android:layout_height="18dp"
+            android:layout_height="20dp"
             android:layout_marginTop="3dp"
             android:text="单据详情 >>>"
             android:textColor="@color/link"/>
@@ -136,21 +136,22 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:focusable="true"
+    android:visibility="gone"
     >
     <Button
         android:id="@+id/order_item_button2"
-        android:layout_width="60dp"
+        android:layout_width="80dp"
         android:layout_height="30dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
         android:background="@drawable/button_selector"
-        android:text="我接受"
+        android:text="我接受了"
         android:textColor="@color/black"
         />
     <Button
         android:id="@+id/order_item_button1"
-        android:layout_width="60dp"
+        android:layout_width="80dp"
         android:layout_height="30dp"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/order_item_button2"

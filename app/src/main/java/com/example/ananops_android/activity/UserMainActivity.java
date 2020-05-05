@@ -37,8 +37,6 @@ import com.example.ananops_android.service.JWebSocketClientService;
 import com.example.ananops_android.util.ActivityManager;
 import com.example.ananops_android.util.BaseUtils;
 
-import org.java_websocket.client.WebSocketClient;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -57,7 +55,8 @@ public class UserMainActivity extends BaseActivity implements View.OnClickListen
     private JWebSocketClientService jWebSClientService;
     private ChatMessageReceiver chatMessageReceiver;
     private Context mContext;
-    WebSocketClient client1;
+    private int fragmentIndexChange;
+    //WebSocketClient client1;
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder ibinder) {
@@ -90,9 +89,9 @@ public class UserMainActivity extends BaseActivity implements View.OnClickListen
       //  imageBack=findViewById(R.id.img_back);
       //  imageRight=findViewById(R.id.img_right);
       //  title_text=findViewById(R.id.txt_title);//标题
-        main_nav_button=findViewById(R.id.main_nav_button);
-        drawerLayout1=findViewById(R.id.drawer_layout_main);
-        NavigationView navigationView=findViewById(R.id.nav_view);
+        main_nav_button = findViewById(R.id.main_nav_button);
+        drawerLayout1 = findViewById(R.id.drawer_layout_main);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setCheckedItem(R.id.type_manage);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -111,6 +110,13 @@ public class UserMainActivity extends BaseActivity implements View.OnClickListen
             }
         });
      //   initViews();
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            index = bundle.getInt("fragmentIndex");
+            Log.v("fragmentIndex", index + "");
+        } else {
+            index = 0;
+        }
         initTabView();
     }
     @Override
@@ -191,6 +197,7 @@ public class UserMainActivity extends BaseActivity implements View.OnClickListen
                 .add(R.id.fragment_container,mineFragment)
                 .hide(userTrainFragment).hide(mineFragment)
                 .show(boardFragment).commit();
+        changeFragment(index);
     }
     public void onTabClicked(View view) {
         switch (view.getId()){
@@ -209,24 +216,28 @@ public class UserMainActivity extends BaseActivity implements View.OnClickListen
                 index=2;
              //   title_text.setText("工作");
                 break;
-
+            default:
+                break;
         }
-        if(currentTabIndex!=index){
-            FragmentTransaction fragmentTransaction= getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.hide(fragments[currentTabIndex]);
-            if(!fragments[index].isAdded()){
-                fragmentTransaction.add(R.id.fragment_container,fragments[index]);
-            }
-           // fragmentTransaction..commit();
-            fragmentTransaction.hide(fragments[currentTabIndex]).show(fragments[index]).commit();
-        }
-        imagebuttons[currentTabIndex].setSelected(false);
-        imagebuttons[index].setSelected(true);
-        textviews[currentTabIndex].setTextColor(0xFF999999);
-        textviews[index].setTextColor(0xFF45C01A);
-        currentTabIndex=index;
+        changeFragment(index);
     }
 
+    private void changeFragment(int i) {
+        if (currentTabIndex != i) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.hide(fragments[currentTabIndex]);
+            if (!fragments[i].isAdded()) {
+                fragmentTransaction.add(R.id.fragment_container, fragments[i]);
+            }
+            // fragmentTransaction..commit();
+            fragmentTransaction.hide(fragments[currentTabIndex]).show(fragments[i]).commit();
+        }
+        imagebuttons[currentTabIndex].setSelected(false);
+        imagebuttons[i].setSelected(true);
+        textviews[currentTabIndex].setTextColor(0xFF999999);
+        textviews[i].setTextColor(0xFF45C01A);
+        currentTabIndex = i;
+    }
     /**
      * 检测是否开启通知
      *

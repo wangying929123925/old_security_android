@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.ananops_android.R;
@@ -78,11 +79,27 @@ public class JWebSocketClientService extends Service {
     }
     public JWebSocketClientService() {
     }
+    //灰色保活手段
     public static class GrayInnerService extends Service {
 
         @Override
         public int onStartCommand(Intent intent, int flags, int startId) {
-            startForeground(GRAY_SERVICE_ID, new Notification());
+            //如果API在26以上即版本为O则调用startForefround()方法启动服务
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                //    startForegroundService()
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                if (manager != null) {
+                    //进行渠道设置
+                    //第三个参数值越小，该通知的重要性越低，因为我们只需要开启前台服务，不需要让用户知道
+                    NotificationChannel channel = new NotificationChannel("channel","keep",NotificationManager.IMPORTANCE_MIN);
+                    manager.createNotificationChannel(channel);
+                    Notification notification = new NotificationCompat.Builder(this,"channel").build();
+                    startForeground(GRAY_SERVICE_ID,notification);
+                }
+
+            } else {
+                startForeground(GRAY_SERVICE_ID, new Notification());
+            }
             stopForeground(true);
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
@@ -108,10 +125,7 @@ public class JWebSocketClientService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.e("JWebSocketClientService", "启动服务");
-        //如果API在26以上即版本为O则调用startForefround()方法启动服务
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-        //    startForegroundService()
-        }
+
     }
 
     @Override
@@ -122,17 +136,27 @@ public class JWebSocketClientService extends Service {
         //initSocketClient();
        // mHandler.postDelayed(heartBeatRunnable, HEART_BEAT_RATE);//开启心跳检测
         //设置service为前台服务，提高优先级
-        if (Build.VERSION.SDK_INT < 18) {
-            //Android4.3以下 ，隐藏Notification上的图标
+        if (Build.VERSION.SDK_INT <Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            //Android4.3以下 ，隐藏Notification上的图标,直接发送空消息
             startForeground(GRAY_SERVICE_ID, new Notification());
-        } else if(Build.VERSION.SDK_INT>18 && Build.VERSION.SDK_INT<25){
+        } else if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
             //Android4.3 - Android7.0，隐藏Notification上的图标
+            //先发送通知，然后再开启一个服务，在里面发送另一个id一样的通知，最后将第二个前台服务停止并销毁自己,第一次发送的通知被取消掉
             Intent innerIntent = new Intent(this, GrayInnerService.class);
             startService(innerIntent);
             startForeground(GRAY_SERVICE_ID, new Notification());
-        }else{
-            //Android7.0以上app启动后通知栏会出现一条"正在运行"的通知
-            startForeground(GRAY_SERVICE_ID, new Notification());
+        }else {
+            //Android8.0以上app启动后通知栏会出现一条"正在运行"的通知
+            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            if (manager != null) {
+                //进行渠道设置
+                //第三个参数值越小，该通知的重要性越低，因为我们只需要开启前台服务，不需要让用户知道
+                NotificationChannel channel = new NotificationChannel("channel","keep",NotificationManager.IMPORTANCE_MIN);
+                manager.createNotificationChannel(channel);
+                Notification notification = new NotificationCompat.Builder(this,"channel").build();
+                startForeground(GRAY_SERVICE_ID,notification);
+            }
+           // startForeground(GRAY_SERVICE_ID, new Notification());
         }
 
         acquireWakeLock();

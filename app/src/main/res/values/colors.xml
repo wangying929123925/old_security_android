@@ -10,9 +10,12 @@
         <color name="blue">#69ACF5</color>
         <color name="deep_blue">#4E76A8</color>
         <color name="gray">#ff999999</color>
+        <color name="date_picker_text_dark">#333333</color>
         <color name="deep_black">#ff000000</color>
         <color name="black">#ff000000</color>
+        <color name="date_picker_divider">#11112233</color>
         <color name="link">#1024ED</color>
         <color name="yellow">#fdd829</color>
+        <color name="green">#59B29C</color>
     </resources>
 

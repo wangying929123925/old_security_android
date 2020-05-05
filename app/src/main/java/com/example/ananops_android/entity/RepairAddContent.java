@@ -31,7 +31,10 @@ public class RepairAddContent {
      * totalCost : 0
      * userId : 0
      */
-
+    private String actualFinishTime;
+    private String actualStartTime;
+    private String delayReason;
+    private String troubleReason;
     private String addressName;
     private String appointTime;
     private String call;
@@ -48,7 +51,7 @@ public class RepairAddContent {
     private Long projectId;
     private Double requestLatitude;
     private Double requestLongitude;
-    private int result;
+    private String result;
     private String scheduledFinishTime;
     private String scheduledStartTime;
     private int status;
@@ -65,6 +68,38 @@ public class RepairAddContent {
 
     public void setAttachmentIdList(List<Long> attachmentIdList) {
         this.attachmentIdList = attachmentIdList;
+    }
+
+    public String getActualFinishTime() {
+        return actualFinishTime;
+    }
+
+    public void setActualFinishTime(String actualFinishTime) {
+        this.actualFinishTime = actualFinishTime;
+    }
+
+    public String getActualStartTime() {
+        return actualStartTime;
+    }
+
+    public void setActualStartTime(String actualStartTime) {
+        this.actualStartTime = actualStartTime;
+    }
+
+    public String getDelayReason() {
+        return delayReason;
+    }
+
+    public void setDelayReason(String delayReason) {
+        this.delayReason = delayReason;
+    }
+
+    public String getTroubleReason() {
+        return troubleReason;
+    }
+
+    public void setTroubleReason(String troubleReason) {
+        this.troubleReason = troubleReason;
     }
 
     public String getAddressName() {
@@ -195,11 +230,11 @@ public class RepairAddContent {
         this.requestLongitude = requestLongitude;
     }
 
-    public int getResult() {
+    public String getResult() {
         return result;
     }
 
-    public void setResult(int result) {
+    public void setResult(String result) {
         this.result = result;
     }
 
@@ -288,7 +323,7 @@ public class RepairAddContent {
         private String deviceName;
         private String deviceType;
         private Long id;
-        private String level;
+        private Integer level;
         private Long taskId;
         private int troubleType;
 
@@ -348,11 +383,11 @@ public class RepairAddContent {
             this.id = id;
         }
 
-        public String getLevel() {
+        public Integer getLevel() {
             return level;
         }
 
-        public void setLevel(String level) {
+        public void setLevel(Integer level) {
             this.level = level;
         }
 

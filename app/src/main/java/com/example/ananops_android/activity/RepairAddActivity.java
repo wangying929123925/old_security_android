@@ -23,20 +23,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.services.help.Tip;
-import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.GridAdapter;
+import com.example.ananops_android.datePicker.CustomDatePicker;
+import com.example.ananops_android.datePicker.DateFormatUtils;
 import com.example.ananops_android.db.ProjectListResponse;
 import com.example.ananops_android.db.TroubleTypeAndAddressListResponse;
 import com.example.ananops_android.db.UpLoadFilesResponse;
 import com.example.ananops_android.entity.ProjectInfo;
 import com.example.ananops_android.entity.RepairAddContent;
-import com.example.ananops_android.entity.TroubleAddress;
+import com.example.ananops_android.entity.TroubleAddEntity;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.photopicker.PhotoPickerActivity;
 import com.example.ananops_android.photopicker.PhotoPreviewActivity;
@@ -82,11 +82,10 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
     private TextView choose_service;//选择服务商
     private TextView repair_add_confirm;//提交
     private ImageView basicinfo_back;
-    private AlertDialog alertFaultAddr; //故障地点
-    private AlertDialog alertFaultType; //故障类型
-    private AlertDialog alertFaultName; //故障名称
+//    private AlertDialog alertFaultAddr; //故障地点
+//    private AlertDialog alertFaultType; //故障类型
+//    private AlertDialog alertFaultName; //故障名称
     private Button repair_submit_pics;//上传图片
-    private ProgressBar progressBar01;
     private ProgressDialog progressDialog;
     private GridView gridView;
     private GridAdapter gridAdapter;
@@ -99,11 +98,22 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
     private String[] result = new String[4];
     private List<ProjectInfo> projectInfos = new ArrayList<>();
     private String[] projectArray;
-    private String[] addressArray;
-    private List<TroubleAddress> troubleAddresses = new ArrayList<>();
-    private int addressTmp=0;
-    private String[] troubleTypeArray;
+    private List<TroubleAddEntity> troubleAddresses = new ArrayList<>();
+    private String[] addressArray;//故障地址
+    private int addressTmp = 0;
+    private List<TroubleAddEntity> emergencyLevels = new ArrayList<>();
+    private String[] emergencyLevelArray;//紧急程度
+    private int emergencyLevelTmp = 0;
+    private List<TroubleAddEntity> troubleLevels = new ArrayList<>();
+    private String[] troubleLevelArray;//故障等级
+    private int troubleLevelTmp = 0;
+    private List<TroubleAddEntity> troubleTypes = new ArrayList<>();
+    private String[] troubleTypeArray;//故障类型
     private int troubleTypeTmp=0;
+    private List<TroubleAddEntity> deviceTypes = new ArrayList<>();
+    private String[] deviceTypeArray;//设备类型
+    private int deviceTypeTmp=0;
+
     private Context mContext;
     private static String[] PERMISSION_STORAGE_PHOTO ={
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -112,22 +122,24 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
     };
     private static final int REQUEST_PLACE = 1;
     private int compressFlag = 0;
+    private CustomDatePicker mTimerPicker;//时间选择
     private List<Long> attachmentIdList = new ArrayList<>();
-    private Handler mHandler = new Handler(){
-        public void handleMessage(Message msg)
-        {
+    private final Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
             switch (msg.what)
             {
                 case 1:
-                   compressFlag=1;
+                    compressFlag=1;
                     break;
                 case 2:
                     break;
-                    default:
-                        break;
+                default:
+                    break;
             }
+            return false;
         }
-    };
+    });
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,6 +157,13 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
                 ActivityCompat.requestPermissions(this,PERMISSION_STORAGE_PHOTO,1);
             }
      //   }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTimerPicker.onDestroy();
+       // alertFaultAddr = null;
     }
 
     @Override
@@ -222,8 +241,8 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
         repair_add_confirm = findViewById(R.id.repair_add_confirm);
         basicinfo_back = findViewById(R.id.basicinfo_back);
         repair_submit_pics = findViewById(R.id.repair_submit_pics);
-        progressBar01 = findViewById((R.id.progressBar01));
-        progressBar01.setIndeterminate(false);//不确定模式
+   //     progressBar01 = findViewById((R.id.progressBar01));
+    //    progressBar01.setIndeterminate(false);//不确定模式
         repair_time.setText(BaseUtils.getInstence().getTime());
         gridView = (GridView) findViewById(R.id.gridView_photo);
         int cols = getResources().getDisplayMetrics().widthPixels / getResources().getDisplayMetrics().densityDpi;
@@ -274,7 +293,7 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
                     }
                 });
         //获取类型和位置列表
-        Net.instance.getTroubleTypeListAndAddressList(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id","111")),SPUtils.getInstance(mContext).getString("Token","111"))
+        Net.instance.getTroubleTypeListAndAddressList(SPUtils.getInstance(mContext).getString("Token","111"))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<TroubleTypeAndAddressListResponse>() {
@@ -292,12 +311,17 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
                     @Override
                     public void onNext(TroubleTypeAndAddressListResponse troubleTypeAndAddressListResponse) {
                         if (TextUtils.equals(troubleTypeAndAddressListResponse.getCode(), "200")) {
-                           //故障类型列表
+                            troubleTypes.clear();
                             troubleAddresses.clear();
+                            emergencyLevels.clear();
+                            troubleLevels.clear();
+                            deviceTypes.clear();
+                            //故障类型列表
                             if (troubleTypeAndAddressListResponse.getResult().getTroubleTypeList().size() > 0) {
                                 troubleTypeArray = new String[troubleTypeAndAddressListResponse.getResult().getTroubleTypeList().size()];
                                 for (int i = 0; i <troubleTypeAndAddressListResponse.getResult().getTroubleTypeList().size(); i++) {
-                                    troubleTypeArray[i] = troubleTypeAndAddressListResponse.getResult().getTroubleTypeList().get(i);
+                                    troubleTypes.add(troubleTypeAndAddressListResponse.getResult().getTroubleTypeList().get(i));
+                                    troubleTypeArray[i] = troubleTypeAndAddressListResponse.getResult().getTroubleTypeList().get(i).getName();
                                 }
                                 Log.v("故障列表1", troubleTypeAndAddressListResponse.getResult().getTroubleTypeList().get(0) + "");
                             } else {
@@ -308,9 +332,40 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
                                 addressArray = new String[troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().size()];
                                 for (int i = 0; i <troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().size(); i++) {
                                     troubleAddresses.add(troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().get(i));
-                                    addressArray[i] = troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().get(i).getTroubleAddress();
+                                    addressArray[i] = troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().get(i).getName();
                                 }
-                                Log.v("位置列表1", troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().get(0).getTroubleAddress() + "");
+                               // Log.v("位置列表1", troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().get(0).getTroubleAddress() + "");
+                            } else {
+                                Toast.makeText(mContext, "无位置列表！", Toast.LENGTH_LONG).show();
+                            }
+                            //故障等级列表
+                            if (troubleTypeAndAddressListResponse.getResult().getTroubleLevelList().size() > 0) {
+                                troubleLevelArray = new String[troubleTypeAndAddressListResponse.getResult().getTroubleLevelList().size()];
+                                for (int i = 0; i <troubleTypeAndAddressListResponse.getResult().getTroubleLevelList().size(); i++) {
+                                    troubleLevels.add(troubleTypeAndAddressListResponse.getResult().getTroubleLevelList().get(i));
+                                    troubleLevelArray[i] = troubleTypeAndAddressListResponse.getResult().getTroubleLevelList().get(i).getName();
+                                }
+                            //    Log.v("位置列表1", troubleTypeAndAddressListResponse.getResult().getTroubleAddressList().get(0).getTroubleAddress() + "");
+                            } else {
+                                Toast.makeText(mContext, "无位置列表！", Toast.LENGTH_LONG).show();
+                            }
+                            //紧急程度列表
+                            if (troubleTypeAndAddressListResponse.getResult().getEmergencyLevelList().size() > 0) {
+                                emergencyLevelArray = new String[troubleTypeAndAddressListResponse.getResult().getEmergencyLevelList().size()];
+                                for (int i = 0; i <troubleTypeAndAddressListResponse.getResult().getEmergencyLevelList().size(); i++) {
+                                    emergencyLevels.add(troubleTypeAndAddressListResponse.getResult().getEmergencyLevelList().get(i));
+                                    emergencyLevelArray[i] = troubleTypeAndAddressListResponse.getResult().getEmergencyLevelList().get(i).getName();
+                                }
+                            } else {
+                                Toast.makeText(mContext, "无位置列表！", Toast.LENGTH_LONG).show();
+                            }
+                            //设备类型列表
+                            if (troubleTypeAndAddressListResponse.getResult().getDeviceTypeList().size() > 0) {
+                                deviceTypeArray = new String[troubleTypeAndAddressListResponse.getResult().getDeviceTypeList().size()];
+                                for (int i = 0; i <troubleTypeAndAddressListResponse.getResult().getDeviceTypeList().size(); i++) {
+                                    deviceTypes.add(troubleTypeAndAddressListResponse.getResult().getDeviceTypeList().get(i));
+                                    deviceTypeArray[i] = troubleTypeAndAddressListResponse.getResult().getDeviceTypeList().get(i).getName();
+                                }
                             } else {
                                 Toast.makeText(mContext, "无位置列表！", Toast.LENGTH_LONG).show();
                             }
@@ -364,43 +419,51 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
                // String[] item_project={"1", "2", "3"};
                 showChooseDislog1(v,projectArray,et_project_name);
                 break;
-            case R.id.et_fault_type:
-                showFaultTypeAlertDialog(v) ;
+            case R.id.et_fault_type://故障类型
+                showFaultTypeAlertDialog(v,"请选择故障类型",troubleTypeArray,"troubleType",fault_type) ;
                 break;
-            case R.id.et_fault_addr:
-                showFaultAddrAlertDialog(v);
+            case R.id.et_fault_addr://故障地点
+                showFaultTypeAlertDialog(v,"请选择故障地点",addressArray,"troubleAddress",fault_addr) ;
                 break;
-            case R.id.et_fault_name:
-                showFaultNameAlertDialog(v);
+            case R.id.et_fault_name://设备名称
+                showFaultTypeAlertDialog(v,"请选择设备名称",deviceTypeArray,"deviceType",fault_name) ;
+               // showFaultNameAlertDialog(v);
                 break;
-            case R.id.et_fault_degree:
-                String[] item = {"p0", "p1", "其他"};
-                showChooseDislog(v,et_fault_degree,item);
+            case R.id.et_fault_degree://故障等级
+               // String[] item = {"p0", "p1", "其他"};
+               // showChooseDislog(v,et_fault_degree,item);
+                showFaultTypeAlertDialog(v,"请选择故障等级",troubleLevelArray,"troubleLevel",et_fault_degree) ;
                 break;
-            case R.id.et_emergency_degree:
-                String[] item1 = {"紧急", "中等", "一般"};
-                showChooseDislog(v,et_emergency_degree,item1);
+            case R.id.et_emergency_degree://紧急程度
+//                String[] item1 = {"紧急", "中等", "一般"};
+//                showChooseDislog(v,et_emergency_degree,item1);
+                showFaultTypeAlertDialog(v,"请选择紧急程度",emergencyLevelArray,"emergencyLevel",et_emergency_degree) ;
                 break;
             case R.id.choose_service:
-                String[] item2 = {"1", "2", "3"};
-                showChooseDislog(v,choose_service,item2);
+//                String[] item2 = {"1", "2", "3"};
+//                showChooseDislog(v,choose_service,item2);
                 break;
             case R.id.basicinfo_back:
                 showExitAlertDialog(v);
                 break;
             case R.id.et_appointment_time:
-                BaseUtils.showConfirmDialog(result,mContext,"请选择具体报修的时间", new ConfirmDialogInterface() {
+                String endTime = "2023-12-31 23:59:00";
+                String beginTime = BaseUtils.getInstence().getTime();
+                mTimerPicker = new CustomDatePicker(this, new CustomDatePicker.Callback() {
                     @Override
-                    public void onConfirmClickListener() {
-//                        Toast.makeText(RepairAddActivity.this, "queding", Toast.LENGTH_SHORT).show();
-                        et_appointment_time.setText(result[0] + "-" + result[1] + "-" + result[2] + " " + result[3]);
+                    public void onTimeSelected(long timestamp) {
+                        et_appointment_time.setText(DateFormatUtils.long2Str(timestamp, true));
                     }
-
-                    @Override
-                    public void onCancelClickListener() {
-//                        Toast.makeText(RepairAddActivity.this, "quxiao", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                }, beginTime, endTime);
+                // 允许点击屏幕或物理返回键关闭
+                mTimerPicker.setCancelable(true);
+                // 显示时和分
+                mTimerPicker.setCanShowPreciseTime(true);
+                // 允许循环滚动
+                mTimerPicker.setScrollLoop(true);
+                // 允许滚动动画
+                mTimerPicker.setCanShowAnim(true);
+                mTimerPicker.show(beginTime);
                 break;
             case R.id.et_repair_address:
                 Intent intent = new Intent(RepairAddActivity.this, AddressSearchActivity.class);
@@ -460,67 +523,34 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
             e.printStackTrace();
         }
     }
-    public void showFaultTypeAlertDialog(View view){
-       // final String[] items = {"视频系统", "报警系统", "门禁系统"};
+    public void showFaultTypeAlertDialog(View view,String title,String[] strings,String tmpCode,TextView textView){
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-        alertBuilder.setTitle("请选择故障类型");
-        alertBuilder.setSingleChoiceItems(troubleTypeArray, 0, new DialogInterface.OnClickListener() {
+        alertBuilder.setTitle(title)
+                .setSingleChoiceItems(strings, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-               Toast.makeText(RepairAddActivity.this,troubleTypeArray[i],Toast.LENGTH_SHORT).show();
+             //  Toast.makeText(RepairAddActivity.this,troubleTypeArray[i],Toast.LENGTH_SHORT).show();
              //  tmp=troubleTypeArray[i];
-               troubleTypeTmp=i;
-               fault_type.setText(troubleTypeArray[i]);
-                alertFaultType.dismiss();
+                if(tmpCode.equals("troubleAddress")){//故障位置
+                    addressTmp = i;
+                } else if (tmpCode.equals("emergencyLevel")){//紧急程度
+                    emergencyLevelTmp = i;
+                } else if (tmpCode.equals("troubleLevel")) {///故障等级
+                    troubleLevelTmp = i;
+                } else if (tmpCode.equals("troubleType")) {
+                    troubleTypeTmp = i;
+                } else if (tmpCode.equals("deviceType")) {
+                    deviceTypeTmp = i;
+                }
+                textView.setText(strings[i]);
+               // alertFaultType.dismiss();
+                dialogInterface.dismiss();
             }
-        });
-
-        alertFaultType = alertBuilder.create();
-        alertFaultType.show();
-    }
-    public void showFaultAddrAlertDialog(View view){
-        //final String[] items = {"大门","大厅","现金柜台","非现金柜台","自助银行","办公区","网络机房","监控机房","其他","自助银行","办公区","网络机房","监控机房","其他"};
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-        alertBuilder.setTitle("请选择故障位置");
-        alertBuilder.setSingleChoiceItems(addressArray, 0, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(RepairAddActivity.this,addressArray[i],Toast.LENGTH_SHORT).show();
-                addressTmp = i;
-                fault_addr.setText(addressArray[i]);
-                alertFaultAddr.dismiss();
-            }
-        });
-        alertFaultAddr = alertBuilder.create();
-        alertFaultAddr.show();
-    }
-    public void showFaultNameAlertDialog(View view){
-        final String[] items = {"摄像机故障","监视器故障","硬盘录像机故障","拾音器故障","报警系统故障","门禁系统故障"};
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-        alertBuilder.setTitle("请选择故障位置");
-        alertBuilder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(RepairAddActivity.this,items[i],Toast.LENGTH_SHORT).show();
-                fault_name.setText(items[i]);
-                alertFaultName.dismiss();
-            }
-        });
-        alertFaultName = alertBuilder.create();
-        alertFaultName.show();
-    }
-    public void showChooseDislog(View view, final TextView textView, final String[] item){
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        builder.setTitle("请选择")
-                .setSingleChoiceItems(item, 0, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        textView.setText(item[which]);
-                        dialog.dismiss();
-                    }
-                })
-                .create()
-                .show();
+        })
+        .create()
+        .show();
+//        alertFaultType = alertBuilder.create();
+//        alertFaultType.show();
     }
     public void showChooseDislog1(View view, final String[] item, final TextView textView) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -681,7 +711,7 @@ private void subPics(){
            repairAddContent.setCall(et_repair_tel.getText().toString().trim());
            repairAddContent.setObjectId(null);
            repairAddContent.setObjectType(1);
-           repairAddContent.setLevel(changeLevel(et_emergency_degree.getText().toString().trim()));//
+           repairAddContent.setLevel(emergencyLevels.get(emergencyLevelTmp).getCode());//
            repairAddContent.setPrincipalId(projectInfos.get(projectTmp).getAleaderId());//
            repairAddContent.setProjectId(projectInfos.get(projectTmp).getId());//
            repairAddContent.setStatus(0);//
@@ -690,14 +720,14 @@ private void subPics(){
            repairAddContent.setTotalCost(0);//
            repairAddContent.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "111")));//
            repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDescription(fault_description.getText().toString().trim());
-           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceId(0L);//
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceId(deviceTypes.get(deviceTypeTmp).getId());//
            repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceType(fault_type.getText().toString().trim());//设备类型
-           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLatitude(troubleAddresses.get(troubleTypeTmp).getTroubleLatitude());
-           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLongitude(troubleAddresses.get(troubleTypeTmp).getTroubleLongitude());
-           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setLevel(et_fault_degree.getText().toString().trim());
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLatitude(troubleAddresses.get(addressTmp).getLatitude());
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceLongitude(troubleAddresses.get(addressTmp).getLongitude());
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setLevel(troubleLevels.get(troubleLevelTmp).getCode());
            repairAddContent.getMdmcAddTaskItemDtoList().get(0).setId(null);
            repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTaskId(0L);
-           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTroubleType(troubleTypeTmp);//故障类型
+           repairAddContent.getMdmcAddTaskItemDtoList().get(0).setTroubleType(troubleTypes.get(troubleTypeTmp).getCode());//故障类型
            Log.v("repairAddContent", repairAddContent + "");
            BaseUtils.getInstence().repairAdd(repairAddContent, mContext);
 //           BaseUtils.getInstence().intent(mContext,UserMainActivity.class);

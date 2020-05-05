@@ -71,7 +71,7 @@ public class MessageEntity {
 
             private int status;
             private String statusMsg;
-            private Long taskId;
+            private String taskId;
             private Long userId;
 
             public int getStatus() {
@@ -90,11 +90,11 @@ public class MessageEntity {
                 this.statusMsg = statusMsg;
             }
 
-            public Long getTaskId() {
+            public String getTaskId() {
                 return taskId;
             }
 
-            public void setTaskId(Long taskId) {
+            public void setTaskId(String taskId) {
                 this.taskId = taskId;
             }
 

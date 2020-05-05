@@ -55,6 +55,7 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
             order_item_button1 = view.findViewById(R.id.order_item_button1);
             order_item_button2 = view.findViewById(R.id.order_item_button2);
             relative_button = view.findViewById(R.id.relative_button);
+            relative_button.setVisibility(View.GONE);
             order_item_view.setOnClickListener(RepairAdapter.this);
             order_item_details.setOnClickListener(RepairAdapter.this);
             order_item_button1.setOnClickListener(RepairAdapter.this);

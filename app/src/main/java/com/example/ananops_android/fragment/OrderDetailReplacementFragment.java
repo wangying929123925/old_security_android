@@ -26,11 +26,14 @@ import com.example.ananops_android.activity.ChooseReplacementActivity;
 import com.example.ananops_android.adapter.ListCommonAdapter;
 import com.example.ananops_android.adapter.ListViewHolder;
 import com.example.ananops_android.db.CodeMessageResponse;
+import com.example.ananops_android.db.DeviceOrderResult;
 import com.example.ananops_android.db.ReplacementOrderCreateRequest;
 import com.example.ananops_android.entity.Replacement;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,12 +101,13 @@ public class OrderDetailReplacementFragment extends Fragment {
             public void onReceive(Context context, Intent intent){
                // RepairContent repairContent=intent.getParcelableExtra("tip");
                // String msg = intent.getStringExtra("replacement");
-               List<Replacement> replacementListTest=new ArrayList<>();
+                List<Replacement> replacementListTest = new ArrayList<>();
                      replacementListTest= (List<Replacement>) intent.getSerializableExtra("dataList");
                      replacementList.clear();
                 for(Replacement replacement:replacementListTest){
                     replacementList.add(replacement);
                 }
+                tv_whether_replace.setText("是");
                 refresh();
             }
         };
@@ -111,54 +115,67 @@ public class OrderDetailReplacementFragment extends Fragment {
 
     }
     private void initView(){
+        setListAdapter();
     }
     private void initData() {
+       // setListAdapter();
         if (!(getArguments() == null)) {
             ORDER_ID = (String) getArguments().get("order_id");
             STATUS_FLAG = (String) getArguments().get("statusDo");
             datas = getArguments().getStringArrayList("data");
         }
         tv1.setText(datas.get(0));
-        tv2.setText(datas.get(1));
-        tv3.setText(datas.get(2));
-        tv4.setText(datas.get(3));
+        tv2.setText(datas.get(2));
+        tv3.setText(datas.get(3));
+        tv4.setText(datas.get(4));
         if (STATUS_FLAG == "3-2" || STATUS_FLAG.equals("3-2")) {
             initDiffDetail();
         } else {
-            //从后台拉取数据
-            tv_whether_replace.setText("是");
-            fragment_order_choose_replacement.setVisibility(View.INVISIBLE);
-            replacement_submit.setVisibility(View.GONE);
-            Replacement replacement = new Replacement();
-            replacement.setName("易美吉双头锯-继电器（30*5*1）");
-            replacement.setId("1324");
-            replacement.setType("30*50*1");
-            replacement.setPrice((float) 20.00);
-            replacement.setCount(1);
-            Replacement replacement1 = new Replacement();
-            replacement1.setName("易美吉双头锯-继电器（20*5*1）");
-            replacement1.setId("4321");
-            replacement1.setType("20*50*1");
-            replacement1.setPrice((float) 40.00);
-            replacement.setCount(1);
-            replacementList.add(replacement);
-            replacementList.add(replacement1);
+            //从后台拉取数据,获取备品备件
+           Net.instance.getDeviceOrderInfo(Long.valueOf(ORDER_ID),1,SPUtils.getInstance(mContext).getString("Token",""))
+                   .subscribeOn(Schedulers.newThread())
+                   .observeOn(AndroidSchedulers.mainThread())
+                   .subscribe(new Subscriber<DeviceOrderResult>() {
+                       @Override
+                       public void onCompleted() {
+
+                       }
+
+                       @Override
+                       public void onError(Throwable e) {
+
+                       }
+
+                       @Override
+                       public void onNext(DeviceOrderResult deviceOrderResult) {
+                           if (TextUtils.equals(deviceOrderResult.getCode(), "200")) {
+                               String devices=deviceOrderResult.getResult().getDeviceOrderList().get(0).getDeviceOrder().getItems();
+                               Gson gson = new Gson();
+                               replacementList=gson.fromJson(devices,new TypeToken<List<Replacement>>(){}.getType());
+                               refresh();
+                           }
+                       }
+                   });
         }
-        mAdapter=new ListCommonAdapter<Replacement>(getContext(),R.layout.item_replacement_table,replacementList) {
+
+    }
+
+    private void setListAdapter() {
+        mAdapter = new ListCommonAdapter<Replacement>(getContext(), R.layout.item_replacement_table, replacementList) {
             @Override
             protected void convert(final ListViewHolder viewHolder, final Replacement replacement, final int position) {
-                viewHolder.setText(R.id.replacement_table_name,replacement.getName());
-                viewHolder.setText(R.id.replacement_table_id,replacement.getId());
-                viewHolder.setText(R.id.replacement_table_num,String.valueOf(replacement.getCount()));
-                viewHolder.setText(R.id.replacement_table_price,String.valueOf(replacement.getPrice()));
-                replacementList.get(position).setReplacement_totalPricce(replacement.getCount()*replacement.getPrice());
-                viewHolder.setText(R.id.replacement_table_money,String.valueOf(replacement.getCount()*replacement.getPrice()));
-               // final int value1=viewHolder.getItemPosition();
+                viewHolder.setText(R.id.replacement_table_name, replacement.getName());
+                viewHolder.setText(R.id.replacement_table_id, replacement.getId());
+                viewHolder.setText(R.id.replacement_table_num, String.valueOf(replacement.getCount()));
+                viewHolder.setText(R.id.replacement_table_price, String.valueOf(replacement.getPrice()));
+                replacementList.get(position).setReplacement_totalPricce(replacement.getCount() * replacement.getPrice());
+                viewHolder.setText(R.id.replacement_table_money, String.valueOf(replacement.getCount() * replacement.getPrice()));
+                // final int value1=viewHolder.getItemPosition();
                 viewHolder.setOnClickListener(R.id.replacement_table_num, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final int value=viewHolder.getItemPosition();
-                        Toast.makeText(getContext(),"position"+value,Toast.LENGTH_SHORT).show();
+                        final int value = viewHolder.getItemPosition();
+                        Toast.makeText(getContext(), "position" + value, Toast.LENGTH_SHORT).show();
                         final EditText et = new EditText(getContext());
                         et.setKeyListener(DigitsKeyListener.getInstance("0123456789"));
                         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(v.getContext());
@@ -167,22 +184,23 @@ public class OrderDetailReplacementFragment extends Fragment {
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        int num=1;
-                                        try{
-                                         num=(Integer.parseInt(et.getText().toString()));}
-                                        catch (Exception e){e.printStackTrace();}
+                                        int num = 1;
+                                        try {
+                                            num = (Integer.parseInt(et.getText().toString()));
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                         replacementList.get(value).setCount(num);
-                                        replacementList.get(value).setReplacement_totalPricce(replacementList.get(value).getPrice()*num);
+                                        replacementList.get(value).setReplacement_totalPricce(replacementList.get(value).getPrice() * num);
                                         notifyDataSetChanged();
                                     }
                                 })
-                                .setNegativeButton("取消",null).show();
+                                .setNegativeButton("取消", null).show();
                     }
                 });
             }
         };
         lv_replacement.setAdapter(mAdapter);
-
     }
     //维修工待接单,填写方案，提交备件选择
     private void initDiffDetail(){
@@ -192,15 +210,16 @@ public class OrderDetailReplacementFragment extends Fragment {
         replacement_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //提交备品备件申请
                 Log.v("是否选择备品备件",s);
                 if (s.equals("是")) {
                     ReplacementOrderCreateRequest replacementOrderCreateRequest = new ReplacementOrderCreateRequest();
                     replacementOrderCreateRequest.setObjectId(Long.valueOf(ORDER_ID));
-                    replacementOrderCreateRequest.setCurrentApproverId(782517846944000001L);
-                    replacementOrderCreateRequest.setCurrentApprover("值机员");
-                    replacementOrderCreateRequest.setApplicantId(782525013398923265L);
-                    replacementOrderCreateRequest.setApplicant("服务商业务员");
+                    replacementOrderCreateRequest.setCurrentApproverId(Long.valueOf(datas.get(1)));
+                    replacementOrderCreateRequest.setCurrentApprover(datas.get(0));
+                    replacementOrderCreateRequest.setApplicantId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", " ")));
+                    replacementOrderCreateRequest.setApplicant(SPUtils.getInstance(mContext).getString("Token", " "));
                     replacementOrderCreateRequest.setItems(replacementList);
                     Net.instance.ReplacementOrderCreate(replacementOrderCreateRequest, SPUtils.getInstance(mContext).getString("Token", " "))
                             .subscribeOn(Schedulers.newThread())
@@ -246,7 +265,7 @@ public class OrderDetailReplacementFragment extends Fragment {
                mAdapter.notifyDataSetChanged();
             }
 
-  public void showDialog(View view)
+  private void showDialog(View view)
   {
       final String[] items = {"是","否"};
       AlertDialog.Builder alertBuilder = new AlertDialog.Builder(view.getContext());

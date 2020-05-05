@@ -5,7 +5,6 @@ import com.example.ananops_android.entity.MessageEntity;
 public class MessageBodyGson {
     private Long userId;
     private MessageEntity.ContentBean.MsgBodyDtoBean msgBodyDto;
-
     public Long getUserId() {
         return userId;
     }

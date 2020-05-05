@@ -28,6 +28,7 @@ import com.example.ananops_android.fragment.TimeLineFragment;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
+import com.example.ananops_android.view.RepairFinishWindow;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     private Button order_detail_button1;
     private Button order_detail_button2;
     private LinearLayout fragment_order_commit;
+    private RepairFinishWindow repairFinishWindow;
     private Context mContext;
       @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -226,9 +228,8 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onClick(View v) {
                         //维修提交
-                        Toast.makeText(mContext, "确认提交", Toast.LENGTH_SHORT).show();
-                        BaseUtils.getInstence().changeStatus(10, ORDER_ID, "提交方案", mContext);
-                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                        repairFinishWindow = new RepairFinishWindow(ORDER_ID, mContext);
+                        repairFinishWindow.show();
                     }
                 });
                 break;
@@ -244,7 +245,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                     public void onClick(View v) {
                         Toast.makeText(mContext, "确认提交", Toast.LENGTH_SHORT).show();
                         BaseUtils.getInstence().changeStatus(15, ORDER_ID, "提交方案", mContext);
-                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                       // BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                     }
                 });
                 order_detail_button2.setOnClickListener(new View.OnClickListener() {
@@ -253,7 +254,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                         //审核计划
                         Toast.makeText(mContext, "确认提交", Toast.LENGTH_SHORT).show();
                         BaseUtils.getInstence().changeStatus(3, ORDER_ID, "提交方案", mContext);
-                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                    //    BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                     }
                 });
                 break;
@@ -313,7 +314,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                         } else {
                             //ToastUtil.showLongToast("请求失败");
                         }
-                        Toast.makeText(mContext, "网络异常，请检查网络状态orderDetail", Toast.LENGTH_SHORT).show();
+                     //   Toast.makeText(mContext, "网络异常，请检查网络状态orderDetail", Toast.LENGTH_SHORT).show();
                     }
                     @Override
                     public void onNext(OrderDetailResponse orderDetailResponse) {
@@ -329,17 +330,19 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                                 value1.add(orderDetailResponse.getResult().getMdmcTask().getSuggestion());
                                 value2.clear();
                                 if(orderDetailResponse.getResult().getPrincipalInfoDto()!=null){
-                                    value2.add(orderDetailResponse.getResult().getPrincipalInfoDto().getUserName());
+                                    value2.add(orderDetailResponse.getResult().getPrincipalInfoDto().getUserName());//服务商
+                                    value2.add(orderDetailResponse.getResult().getPrincipalInfoDto().getId());//服务商
                                 }else {
+                                    value2.add("");
                                     value2.add("");
                                 }
                                if (orderDetailResponse.getResult().getEngineerDto() != null) {
-                                value2.add(orderDetailResponse.getResult().getEngineerDto().getUserName());
+                                value2.add(orderDetailResponse.getResult().getEngineerDto().getUserName());//工程师
                                }else {
                                    value2.add("");
                                }
-                               value2.add(orderDetailResponse.getResult().getMdmcTask().getSuggestion());
-                               value2.add(String.valueOf(orderDetailResponse.getResult().getMdmcTask().getResult()));
+                               value2.add(orderDetailResponse.getResult().getMdmcTask().getSuggestion());//维修建议
+                               value2.add(String.valueOf(orderDetailResponse.getResult().getMdmcTask().getResult()));//维修结果
                                getFileUrl();
                         } else {
                             getFileUrl();
@@ -424,7 +427,9 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                                   if (urlSize > 0) {
                                       value3.clear();
                                       for (int i = 0; i < urlSize; i++) {
-                                          value3.add(repairFileUrlResponse.getResult().get(0).getElementImgUrlDtoList().get(i).getAttachmentId());
+                                          String url = repairFileUrlResponse.getResult().get(0).getElementImgUrlDtoList().get(i).getAttachmentId().replace("\\","");
+                                          value3.add(url);
+                                          Log.i("取到的URL为：",url);
                                       }
                                   }
                               }
@@ -464,7 +469,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                       finish();
                   } else {
                       AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                      builder.setMessage("退出后信息将不保存，确认退出吗？");
+                      builder.setMessage("确认返回吗？");
                       builder.setTitle("提示");
                       builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                           @Override
@@ -489,5 +494,11 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                       break;
           }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        repairFinishWindow.onDestroy();
     }
 }

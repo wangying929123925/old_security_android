@@ -1,21 +1,14 @@
 package com.example.ananops_android.util;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ananops_android.BuildConfig;
-import com.example.ananops_android.Interface.ConfirmDialogInterface;
-import com.example.ananops_android.R;
 import com.example.ananops_android.activity.InspectionSearchListActivity;
 import com.example.ananops_android.activity.UserMainActivity;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersResponse;
@@ -30,17 +23,12 @@ import com.example.ananops_android.entity.RepairContent;
 import com.example.ananops_android.net.Net;
 import com.ihsanbal.logging.Level;
 import com.ihsanbal.logging.LoggingInterceptor;
-import com.zyyoona7.picker.DatePickerView;
-import com.zyyoona7.picker.base.BaseDatePickerView;
-import com.zyyoona7.picker.listener.OnDateSelectedListener;
-import com.zyyoona7.wheel.WheelView;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -290,7 +278,7 @@ public class BaseUtils {
         changeStatusDto.setStatus(status);
         changeStatusDto.setStatusMsg(statusMsg);
         changeStatusDto.setTaskId(orderId);
-      Net.instance.changeStatus(changeStatusDto,SPUtils.getInstance(mContext).getString("Token"," "))
+      Net.instance.changeStatus(changeStatusDto,orderId,SPUtils.getInstance(mContext).getString("Token"," "))
               .subscribeOn(Schedulers.newThread())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(new Subscriber<CodeMessageResponse>() {
@@ -501,139 +489,6 @@ public class BaseUtils {
         String time = sdf.format(curDate);
         return time;
     }
-    /**
-     * 选择预约时间的dialog
-     * @param title
-     * @param confirmDialogInterface
-     */
-    public static void showConfirmDialog(final String[] result,final Context mContext, @Nullable String title, @NonNull final ConfirmDialogInterface confirmDialogInterface) {
-        Calendar calendar = Calendar.getInstance();
-        //获取系统的日期
-        //年
-        int year = calendar.get(Calendar.YEAR);
-        //月
-        int month = calendar.get(Calendar.MONTH)+1;
-        //日
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        result[0] = year + "";
-        result[1] = month + "";
-        result[2] = day + "";
-        result[3] = "01:00:00";
-        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        //加载布局
-        View view = View.inflate(mContext, R.layout.dialog_confirm, null);
-        //获取组件实例
-        TextView textTitle = view.findViewById(R.id.textTitle);
-//        TextView textContent=view.findViewById(R.id.textContent);
-        TextView textConfirm = view.findViewById(R.id.textConfirm);
-        textConfirm.setText("确定");
-        TextView textCancel = view.findViewById(R.id.textCancel);
-        textCancel.setText("取消");
 
-        DatePickerView defaultDpv = view.findViewById(R.id.dpv_default);
-        defaultDpv.setTextSize(24, true);
-        defaultDpv.setLabelTextSize(20);
-        defaultDpv.setMinDate(calendar);
-        Calendar maxCalendar = Calendar.getInstance();
-        maxCalendar.add(Calendar.MONTH, 3);
-        defaultDpv.setMaxDate(maxCalendar);
-
-//        //隐藏年月日
-//        defaultDpv.setShowLabel(false);
-//
-//        //获取年月日 WheelView
-//        YearWheelView yearWv3 = defaultDpv.getYearWv();
-//        MonthWheelView monthWv3 = defaultDpv.getMonthWv();
-//        DayWheelView dayWv3 = defaultDpv.getDayWv();
-//        //注意：setIntegerNeedFormat(String integerFormat)方法 integerFormat 中必须包含并且只能包含一个格式说明符（format specifier）
-//        //更多请查看该方法参数说明
-//        yearWv3.setIntegerNeedFormat("%d年");
-//        monthWv3.setIntegerNeedFormat("%d月");
-//        dayWv3.setIntegerNeedFormat("%02d日");
-
-        //选中回调
-        defaultDpv.setOnDateSelectedListener(new OnDateSelectedListener() {
-            @Override
-            public void onDateSelected(BaseDatePickerView datePickerView, int year, int month, int day, @Nullable Date date) {
-                Toast.makeText(mContext, "选中的日期：" + year + "-" + month + "-" + day, Toast.LENGTH_SHORT).show();
-                result[0] = year + "";
-                result[1] = month + "";
-                result[2] = day + "";
-
-            }
-        });
-
-        //初始化数据
-        List<String> list = new ArrayList();
-        list.add("01:00:00");
-        list.add("02:00:00");
-        list.add("03:00:00");
-        list.add("04:00:00");
-        list.add("05:00:00");
-        list.add("06:00:00");
-        list.add("07:00:00");
-        list.add("08:00:00");
-        list.add("09:00:00");
-        list.add("10:00:00");
-        list.add("11:00:00");
-        list.add("12:00:00");
-        list.add("13:00:00");
-        list.add("14:00:00");
-        list.add("15:00:00");
-        list.add("16:00:00");
-        list.add("17:00:00");
-        list.add("18:00:00");
-        list.add("19:00:00");
-        list.add("20:00:00");
-        list.add("21:00:00");
-        list.add("22:00:00");
-        list.add("23:00:00");
-        list.add("24:00:00");
-        //泛型为数据类型
-        final WheelView<String> newWheelView = view.findViewById(R.id.newwheelview);
-
-        //设置数据
-        newWheelView.setData(list);
-        newWheelView.setOnItemSelectedListener(new WheelView.OnItemSelectedListener<String>() {
-            @Override
-            public void onItemSelected(WheelView<String> wheelView, String data, int position) {
-//                Toast.makeText(mContext, "选择了" + data, Toast.LENGTH_SHORT).show();
-                result[3] = data;
-            }
-        });
-        //尽请使用各种方法
-        newWheelView.setTextSize(24f, true);
-        //设置标题
-        textTitle.setText(title);
-        //设置消息内容
-//        textContent.setText(msg);
-        //设置需要显示的view
-        builder.setView(view);
-        //赋值给其父类以获取dismiss方法
-        final AlertDialog alertDialog = builder.create();
-        //显示dialog
-        alertDialog.show();
-        //设置确定按钮内容
-        textConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //确认键业务逻辑处理接口
-                confirmDialogInterface.onConfirmClickListener();
-                //业务逻辑处理完毕使dialog消失
-                alertDialog.dismiss();
-            }
-        });
-        //设置取消按钮内容
-        textCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //取消键业务逻辑处理接口
-                confirmDialogInterface.onCancelClickListener();
-                //业务逻辑处理完毕使dialog消失
-                alertDialog.dismiss();
-            }
-        });
-
-    }
 }
 

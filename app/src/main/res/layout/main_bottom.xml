@@ -94,14 +94,15 @@
                 android:layout_centerHorizontal="true"
                 android:layout_height="match_parent"
                 android:onClick="onTabClicked">
+
                 <ImageView
                     android:id="@+id/tab_main_img3"
                     android:layout_width="wrap_content"
                     android:layout_height="28dp"
                     android:layout_centerHorizontal="true"
                     android:background="#ffffff"
-                    android:src="@drawable/tab_mine"
-                    android:clickable="false"/>
+                    android:clickable="false"
+                    android:src="@drawable/tab_mine" />
 
                 <TextView
                     android:id="@+id/tab_main_text3"
@@ -110,7 +111,7 @@
                     android:layout_below="@id/tab_main_img3"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="3dp"
-                    android:text="设备"
+                    android:text="我的"
                     android:textColor="#9A9A9A"
                     android:textSize="12sp"
                     android:clickable="false"/>

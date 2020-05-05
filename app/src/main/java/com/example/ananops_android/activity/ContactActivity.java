@@ -16,9 +16,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ananops_android.Interface.ConfirmDialogInterface;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.ContactAdapter;
+import com.example.ananops_android.datePicker.CustomDatePicker;
+import com.example.ananops_android.datePicker.DateFormatUtils;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.InspectionEngineerDistributeRequest;
 import com.example.ananops_android.db.RepairerListResponse;
@@ -56,6 +57,7 @@ public class ContactActivity extends BaseActivity implements View.OnClickListene
     private String type;
     private String projectId;
     private Contacts contacts;
+    private CustomDatePicker mTimerPicker;//时间选择
     private String[] result = new String[4];//日期
     final private RepairAddContent repairAddContent = new RepairAddContent();//save
     @Override
@@ -66,6 +68,13 @@ public class ContactActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_contacts_main);
         initViews();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTimerPicker.onDestroy();
+    }
+
     private void initDatas() {
         title.setText("工作人员");
         imageBack.setOnClickListener(this);
@@ -172,17 +181,34 @@ public class ContactActivity extends BaseActivity implements View.OnClickListene
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BaseUtils.showConfirmDialog(result, mContext, "请选择具体deadline的时间", new ConfirmDialogInterface() {
+                String endTime = "2023-12-31 23:59:00";
+                String beginTime = BaseUtils.getInstence().getTime();
+                mTimerPicker = new CustomDatePicker(mContext, new CustomDatePicker.Callback() {
                     @Override
-                    public void onConfirmClickListener() {
-                        editText.setText(result[0] + "-" + result[1] + "-" + result[2] + " " + result[3]);
+                    public void onTimeSelected(long timestamp) {
+                        editText.setText(DateFormatUtils.long2Str(timestamp, true));
                     }
-
-                    @Override
-                    public void onCancelClickListener() {
-
-                    }
-                });
+                }, beginTime, endTime);
+                // 允许点击屏幕或物理返回键关闭
+                mTimerPicker.setCancelable(true);
+                // 显示时和分
+                mTimerPicker.setCanShowPreciseTime(true);
+                // 允许循环滚动
+                mTimerPicker.setScrollLoop(true);
+                // 允许滚动动画
+                mTimerPicker.setCanShowAnim(true);
+                mTimerPicker.show(beginTime);
+//                BaseUtils.showConfirmDialog(result, mContext, "请选择具体deadline的时间", new ConfirmDialogInterface() {
+//                    @Override
+//                    public void onConfirmClickListener() {
+//                        editText.setText(result[0] + "-" + result[1] + "-" + result[2] + " " + result[3]);
+//                    }
+//
+//                    @Override
+//                    public void onCancelClickListener() {
+//
+//                    }
+//                });
             }
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -222,7 +248,7 @@ public class ContactActivity extends BaseActivity implements View.OnClickListene
                                     Toast.makeText(mContext,"提交成功！",Toast.LENGTH_SHORT).show();
                                     Log.v("ContactAddTime200:", System.currentTimeMillis() + "");
                                     BaseUtils.getInstence().changeStatus(5,typeId,"服务商接单派工",mContext);
-                                    BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
+                                   // BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
                                 }
                                 else{
                                     Toast.makeText(mContext,"服务器故障！",Toast.LENGTH_SHORT).show();

@@ -1,16 +1,18 @@
 package com.example.ananops_android.db;
 
-import com.example.ananops_android.entity.TroubleAddress;
+import com.example.ananops_android.entity.TroubleAddEntity;
 
 import java.util.List;
 
 public class TroubleTypeAndAddressListResponse {
 
+
     /**
-     * code : 200
-     * message : 操作成功
-     * result : {"userId":"782517846944000001","troubleTypeList":["投影仪","摄像机","发电机","收款机","报警器","stjg"],"troubleAddressList":[{"troubleAddress":"主楼三楼楼梯口","troubleLongitude":null,"troubleLatitude":null},{"troubleAddress":"银行北门","troubleLongitude":null,"troubleLatitude":null},{"troubleAddress":"银行东门","troubleLongitude":null,"troubleLatitude":null},{"troubleAddress":"主楼二楼门口","troubleLongitude":null,"troubleLatitude":null},{"troubleAddress":"大门口","troubleLongitude":null,"troubleLatitude":null},{"troubleAddress":"string","troubleLongitude":null,"troubleLatitude":null}]}
+     * code : 0
+     * message : string
+     * result : {"deviceTypeList":[{"code":"string","dictId":0,"groupId":0,"id":0,"latitude":0,"longitude":0,"mark":"string","name":"string","sort":0}],"emergencyLevelList":[{"code":"string","dictId":0,"groupId":0,"id":0,"latitude":0,"longitude":0,"mark":"string","name":"string","sort":0}],"troubleAddressList":[{"code":"string","dictId":0,"groupId":0,"id":0,"latitude":0,"longitude":0,"mark":"string","name":"string","sort":0}],"troubleLevelList":[{"code":"string","dictId":0,"groupId":0,"id":0,"latitude":0,"longitude":0,"mark":"string","name":"string","sort":0}],"troubleTypeList":[{"code":"string","dictId":0,"groupId":0,"id":0,"latitude":0,"longitude":0,"mark":"string","name":"string","sort":0}]}
      */
+
     private String code;
     private String message;
     private ResultBean result;
@@ -40,39 +42,50 @@ public class TroubleTypeAndAddressListResponse {
     }
 
     public static class ResultBean {
-        /**
-         * userId : 782517846944000001
-         * troubleTypeList : ["投影仪","摄像机","发电机","收款机","报警器","stjg"]
-         * troubleAddressList : [{"troubleAddress":"主楼三楼楼梯口","troubleLongitude":null,"troubleLatitude":null},{"troubleAddress":"银行北门","troubleLongitude":null,"troubleLatitude":null},{"troubleAddress":"银行东门","troubleLongitude":null,"troubleLatitude":null},{"troubleAddress":"主楼二楼门口","troubleLongitude":null,"troubleLatitude":null},{"troubleAddress":"大门口","troubleLongitude":null,"troubleLatitude":null},{"troubleAddress":"string","troubleLongitude":null,"troubleLatitude":null}]
-         */
+        private List<TroubleAddEntity> deviceTypeList;
+        private List<TroubleAddEntity> emergencyLevelList;
+        private List<TroubleAddEntity> troubleAddressList;
+        private List<TroubleAddEntity> troubleLevelList;
+        private List<TroubleAddEntity> troubleTypeList;
 
-        private Long userId;
-        private List<String> troubleTypeList;
-        private List<TroubleAddress> troubleAddressList;
-
-        public Long getUserId() {
-            return userId;
+        public List<TroubleAddEntity> getDeviceTypeList() {
+            return deviceTypeList;
         }
 
-        public void setUserId(Long userId) {
-            this.userId = userId;
+        public void setDeviceTypeList(List<TroubleAddEntity> deviceTypeList) {
+            this.deviceTypeList = deviceTypeList;
         }
 
-        public List<String> getTroubleTypeList() {
-            return troubleTypeList;
+        public List<TroubleAddEntity> getEmergencyLevelList() {
+            return emergencyLevelList;
         }
 
-        public void setTroubleTypeList(List<String> troubleTypeList) {
-            this.troubleTypeList = troubleTypeList;
+        public void setEmergencyLevelList(List<TroubleAddEntity> emergencyLevelList) {
+            this.emergencyLevelList = emergencyLevelList;
         }
 
-        public List<TroubleAddress> getTroubleAddressList() {
+        public List<TroubleAddEntity> getTroubleAddressList() {
             return troubleAddressList;
         }
 
-        public void setTroubleAddressList(List<TroubleAddress> troubleAddressList) {
+        public void setTroubleAddressList(List<TroubleAddEntity> troubleAddressList) {
             this.troubleAddressList = troubleAddressList;
         }
 
+        public List<TroubleAddEntity> getTroubleLevelList() {
+            return troubleLevelList;
+        }
+
+        public void setTroubleLevelList(List<TroubleAddEntity> troubleLevelList) {
+            this.troubleLevelList = troubleLevelList;
+        }
+
+        public List<TroubleAddEntity> getTroubleTypeList() {
+            return troubleTypeList;
+        }
+
+        public void setTroubleTypeList(List<TroubleAddEntity> troubleTypeList) {
+            this.troubleTypeList = troubleTypeList;
+        }
     }
 }
