@@ -86,6 +86,8 @@ public class InspectionInfo implements Parcelable {
     private int inspectionType;
     private String remark;
     private int frequency;
+    private int pointSum;
+    private int alreadyPoint;
 
 
     public String getCreatedTime() {
@@ -344,6 +346,22 @@ public class InspectionInfo implements Parcelable {
         this.frequency = frequency;
     }
 
+    public int getPointSum() {
+        return pointSum;
+    }
+
+    public void setPointSum(int pointSum) {
+        this.pointSum = pointSum;
+    }
+
+    public int getAlreadyPoint() {
+        return alreadyPoint;
+    }
+
+    public void setAlreadyPoint(int alreadyPoint) {
+        this.alreadyPoint = alreadyPoint;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -351,77 +369,86 @@ public class InspectionInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(createdTime);
-        dest.writeString(creator);
-        dest.writeLong(creatorId);
-        dest.writeInt(cycleTime);
-        dest.writeString(deadlineTime);
-        dest.writeString(dealResult);
-        dest.writeString(description);
-        dest.writeLong(id);
-        dest.writeString(inspectionCondition);
-        dest.writeString(inspectionContent);
-        dest.writeInt(isNow);
-        dest.writeString(lastOperator);
-        dest.writeLong(lastOperatorId);
-        dest.writeString(orderBy);
-        dest.writeLong(projectId);
-        dest.writeString(projectName) ;
-        dest.writeString(scheduledFinishTime);
-        dest.writeString(scheduledStartTime);
-        dest.writeString(taskName);
-        dest.writeString(taskType);
-        dest.writeString(updateTime);
-        dest.writeLong(principalId);
-        dest.writeLong(facilitatorId);
-        dest.writeString(location);
-        dest.writeInt( status);
-        dest.writeFloat(totalCost);
-        dest.writeFloat(maintenanceCost);
-        dest.writeString(actualFinishTime);
-        dest.writeInt(days);
-        dest.writeInt(inspectionType);
-        dest.writeString(remark);
-        dest.writeInt(frequency);
+        dest.writeString(this.createdTime);
+        dest.writeString(this.creator);
+        dest.writeLong(this.creatorId);
+        dest.writeInt(this.cycleTime);
+        dest.writeString(this.deadlineTime);
+        dest.writeString(this.dealResult);
+        dest.writeString(this.description);
+        dest.writeValue(this.id);
+        dest.writeString(this.inspectionCondition);
+        dest.writeString(this.inspectionContent);
+        dest.writeInt(this.isNow);
+        dest.writeString(this.lastOperator);
+        dest.writeLong(this.lastOperatorId);
+        dest.writeString(this.orderBy);
+        dest.writeLong(this.projectId);
+        dest.writeString(this.projectName);
+        dest.writeString(this.scheduledFinishTime);
+        dest.writeString(this.scheduledStartTime);
+        dest.writeString(this.taskName);
+        dest.writeString(this.taskType);
+        dest.writeString(this.updateTime);
+        dest.writeLong(this.principalId);
+        dest.writeLong(this.facilitatorId);
+        dest.writeString(this.location);
+        dest.writeInt(this.status);
+        dest.writeFloat(this.totalCost);
+        dest.writeFloat(this.maintenanceCost);
+        dest.writeString(this.actualFinishTime);
+        dest.writeInt(this.days);
+        dest.writeInt(this.inspectionType);
+        dest.writeString(this.remark);
+        dest.writeInt(this.frequency);
+        dest.writeInt(this.pointSum);
+        dest.writeInt(this.alreadyPoint);
     }
 
-    public static final Parcelable.Creator<InspectionInfo> CREATOR = new Creator<InspectionInfo>() {
+    public InspectionInfo() {
+    }
+
+    protected InspectionInfo(Parcel in) {
+        this.createdTime = in.readString();
+        this.creator = in.readString();
+        this.creatorId = in.readLong();
+        this.cycleTime = in.readInt();
+        this.deadlineTime = in.readString();
+        this.dealResult = in.readString();
+        this.description = in.readString();
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.inspectionCondition = in.readString();
+        this.inspectionContent = in.readString();
+        this.isNow = in.readInt();
+        this.lastOperator = in.readString();
+        this.lastOperatorId = in.readLong();
+        this.orderBy = in.readString();
+        this.projectId = in.readLong();
+        this.projectName = in.readString();
+        this.scheduledFinishTime = in.readString();
+        this.scheduledStartTime = in.readString();
+        this.taskName = in.readString();
+        this.taskType = in.readString();
+        this.updateTime = in.readString();
+        this.principalId = in.readLong();
+        this.facilitatorId = in.readLong();
+        this.location = in.readString();
+        this.status = in.readInt();
+        this.totalCost = in.readFloat();
+        this.maintenanceCost = in.readFloat();
+        this.actualFinishTime = in.readString();
+        this.days = in.readInt();
+        this.inspectionType = in.readInt();
+        this.remark = in.readString();
+        this.frequency = in.readInt();
+        this.pointSum = in.readInt();
+        this.alreadyPoint = in.readInt();
+    }
+
+    public static final Creator<InspectionInfo> CREATOR = new Creator<InspectionInfo>() {
         @Override
         public InspectionInfo createFromParcel(Parcel source) {
-            InspectionInfo inspectionInfo = new InspectionInfo();
-            inspectionInfo.setCreatedTime(source.readString());
-            inspectionInfo.setCreator(source.readString());
-            inspectionInfo.setCreatorId(source.readLong());
-            inspectionInfo.setCycleTime(source.readInt());
-            inspectionInfo.setDeadlineTime(source.readString());
-            inspectionInfo.setDealResult(source.readString());
-            inspectionInfo.setDescription(source.readString());
-            inspectionInfo.setId(source.readLong());
-            inspectionInfo.setInspectionCondition(source.readString());
-            inspectionInfo.setInspectionContent(source.readString());
-            inspectionInfo.setIsNow(source.readInt());
-            inspectionInfo.setLastOperator(source.readString());
-            inspectionInfo.setLastOperatorId(source.readLong());
-            inspectionInfo.setOrderBy(source.readString());
-            inspectionInfo.setProjectId(source.readLong());
-            inspectionInfo.setProjectName(source.readString()) ;
-            inspectionInfo.setScheduledFinishTime(source.readString());
-            inspectionInfo.setScheduledStartTime(source.readString());
-            inspectionInfo.setTaskName(source.readString());
-            inspectionInfo.setTaskType(source.readString());
-            inspectionInfo.setUpdateTime(source.readString());
-            inspectionInfo.setPrincipalId(source.readLong());
-            inspectionInfo.setFacilitatorId(source.readLong());
-            inspectionInfo.setLocation(source.readString());
-            inspectionInfo.setStatus(source.readInt());
-            inspectionInfo.setTotalCost(source.readFloat());
-            inspectionInfo.setMaintenanceCost(source.readFloat());
-            inspectionInfo.setActualFinishTime(source.readString());
-            inspectionInfo.setDays(source.readInt());
-            inspectionInfo.setInspectionType(source.readInt());
-            inspectionInfo.setRemark(source.readString());
-            inspectionInfo.setFrequency(source.readInt());
-            return inspectionInfo;
+            return new InspectionInfo(source);
         }
 
         @Override

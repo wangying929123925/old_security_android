@@ -147,7 +147,10 @@ public class RepairFinishWindow implements View.OnClickListener {
             mPickerDialog.dismiss();
             mPickerDialog = null;
         }
-       mTimerPicker.onDestroy();
+        if(mTimerPicker!=null){
+            mTimerPicker.onDestroy();
+        }
+
     }
 
 

@@ -36,7 +36,7 @@ public class RepairCommentActivity extends BaseActivity implements View.OnClickL
     private RatingBar quality_comment_rat;
     private EditText et_comment;
     private String comment_content;
-    private float general_comment_mum;
+    private int general_comment_mum;
     private float attitude_comment_mum;
     private float quality_comment_mum;
     private static String ORDER_ID;
@@ -57,11 +57,6 @@ public class RepairCommentActivity extends BaseActivity implements View.OnClickL
         title.setText("评价");
         back_img = findViewById(R.id.img_back);
         repair_commit_button = findViewById(R.id.comment_submit_button);
-        comment_repair_name = findViewById(R.id.comment_repair_name);
-        general_comment_rat = findViewById(R.id.general_comment_rat);
-        attitude_comment_rat = findViewById(R.id.attitude_comment_rat);
-        quality_comment_rat = findViewById(R.id.quality_comment_rat);
-        et_comment = findViewById(R.id.et_comment);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
       //  Log.v("", "initView: ");
@@ -83,7 +78,7 @@ public class RepairCommentActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 Toast.makeText(RepairCommentActivity.this,"总体评分="+rating,Toast.LENGTH_LONG).show();
-                general_comment_mum = rating;
+                general_comment_mum = (int)rating;
             }
         });
         attitude_comment_rat.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {

@@ -34,7 +34,9 @@
             style="@style/RadioButtonBottomTab"
             android:text="支付消息" />
     </RadioGroup>
+
     <ListView
+        android:background="@color/state_pressed"
         android:id="@+id/message_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

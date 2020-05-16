@@ -7,19 +7,28 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ananops_android.R;
+import com.example.ananops_android.db.InspectionLogResponse;
+import com.example.ananops_android.db.InspectionLogsRequest;
 import com.example.ananops_android.entity.InspectionTaskLog;
-import com.example.ananops_android.util.InspectionUtils;
+import com.example.ananops_android.net.Net;
+import com.example.ananops_android.util.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class InspectionTimeLineFragment extends Fragment {
     private RecyclerView myRV;
@@ -52,14 +61,47 @@ public class InspectionTimeLineFragment extends Fragment {
         Log.v("inspectionTimeLine",inspectionId);
         // taskItems= InspectionUtils.getInstence().getInspectionTaskItems(taskItems,Long.valueOf(inspectionId),mComtext);
         myRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        taskLogs=InspectionUtils.getInstence().getInspectionLogs(taskLogs,Long.valueOf(inspectionId),mContext);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        myRV.setAdapter(new MyRecyclerViewAdapter(taskLogs, getContext()));
+      //  taskLogs = InspectionUtils.getInstence().getInspectionLogs(taskLogs, Long.valueOf(inspectionId), mContext);
+       getTaskLogs();
 
+    }
+
+    private void getTaskLogs() {
+        if (inspectionId != null) {
+            InspectionLogsRequest inspectionLogsRequest=new InspectionLogsRequest();
+            inspectionLogsRequest.setTaskId(Long.valueOf(inspectionId));
+            inspectionLogsRequest.setOrderBy("string");
+            Net.instance.getInspectionLog(inspectionLogsRequest, SPUtils.getInstance(mContext).getString("Token", " "))
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<InspectionLogResponse>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.v("ErrorGetInspectionLog", System.currentTimeMillis() + "");
+                            e.printStackTrace();
+                        }
+                        @Override
+                        public void onNext(InspectionLogResponse inspectionLogResponse) {
+                            if (TextUtils.equals(inspectionLogResponse.getCode(), "200")) {
+
+                               taskLogs.clear();
+                                if (inspectionLogResponse.getResult().size() > 0) {
+                                    taskLogs.addAll(inspectionLogResponse.getResult());
+                                    Log.v("巡检日志列表1", inspectionLogResponse.getResult().get(0).getId() + "");
+                                }
+                                myRV.setAdapter(new MyRecyclerViewAdapter(taskLogs, getContext()));
+                            } else {
+                                Toast.makeText(mContext, inspectionLogResponse.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+        } else {
+            Toast.makeText(mContext, "没有巡检单号！", Toast.LENGTH_LONG).show();
+        }
     }
     private class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.InnerHolder> {
 

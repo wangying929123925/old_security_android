@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/deep_blue">
+        android:background="@color/blue">
         <TextView
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
@@ -23,24 +23,26 @@
             android:textSize="20dp"/>
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/icon_mine"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/ic_person"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_mine_top"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"/>
         <TextView
             android:id="@+id/mine_text"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="60dp"
             android:layout_toRightOf="@+id/icon_mine"
-            android:paddingLeft="20dp"
+            android:paddingLeft="30dp"
             android:layout_alignTop="@+id/icon_mine"
+            android:gravity="center_vertical"
             android:text="您好，你的名字"
             android:textColor="@color/state_selected"
             android:textSize="20sp"/>
     </RelativeLayout>
 </LinearLayout>
 <LinearLayout
+    android:background="@color/state_pressed"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -66,8 +68,8 @@
         android:background="@drawable/setting_item_selector"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/fragment_mine_height"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="我的隐私"
         android:textColor="@color/black"
         android:drawableRight="@drawable/ic_right" />
@@ -88,8 +90,8 @@
             android:background="@drawable/setting_item_selector"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/fragment_mine_height"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="通用"
             android:textColor="@color/black"
             android:drawableRight="@drawable/ic_right" />
@@ -110,8 +112,8 @@
             android:background="@drawable/setting_item_selector"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/fragment_mine_height"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="问题反馈"
             android:textColor="@color/black"
             android:drawableRight="@drawable/ic_right" />
@@ -132,8 +134,8 @@
             android:background="@drawable/setting_item_selector"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/fragment_mine_height"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="关于安安运维"
             android:textColor="@color/black"
             android:drawableRight="@drawable/ic_right" />
@@ -154,8 +156,8 @@
             android:background="@drawable/setting_item_selector"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/fragment_mine_height"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="退出"
             android:textColor="@color/black"
             android:drawableRight="@drawable/ic_right" />

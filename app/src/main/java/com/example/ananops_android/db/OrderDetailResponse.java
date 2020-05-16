@@ -581,7 +581,7 @@ public class OrderDetailResponse {
             private String projectId;
             private Double requestLatitude;
             private Double requestLongitude;
-            private int result;
+            private String result;
             private String scheduledFinishTime;
             private String scheduledStartTime;
             private int status;
@@ -686,6 +686,10 @@ public class OrderDetailResponse {
 
             public void setFacilitatorId(String facilitatorId) {
                 this.facilitatorId = facilitatorId;
+            }
+
+            public String getResult() {
+                return result;
             }
 
             public String getId() {
@@ -808,11 +812,7 @@ public class OrderDetailResponse {
                 this.requestLongitude = requestLongitude;
             }
 
-            public int getResult() {
-                return result;
-            }
-
-            public void setResult(int result) {
+            public void setResult(String result) {
                 this.result = result;
             }
 

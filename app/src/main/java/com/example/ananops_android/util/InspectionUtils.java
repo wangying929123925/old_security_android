@@ -10,7 +10,6 @@ import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.InspectionItemListImcRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
-import com.example.ananops_android.db.InspectionItemLogsRequest;
 import com.example.ananops_android.db.InspectionListResponse;
 import com.example.ananops_android.db.InspectionLogResponse;
 import com.example.ananops_android.db.InspectionLogsRequest;
@@ -270,24 +269,13 @@ public List<InspectionTaskItem> getInspectionTaskItemsImc(final List<InspectionT
                         Log.v("ErrorModifyItemStatus", System.currentTimeMillis() + "");
                         // e.printStackTrace();
                         Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
-                        if (e instanceof HttpException) {
-                            HttpException httpException = (HttpException) e;
-                            try{
-                                String error = httpException.response().errorBody().string();
-                                Log.v("changeItemStatusError", error);
-                            }catch(IOException e1) {
-                                e1.printStackTrace();
-                            }
-                        }else {
-                            //ToastUtil.showLongToast("请求失败");
-                        }
-                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                     //   BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                     }
 
                     @Override
                     public void onNext(CodeMessageResponse codeMessageResponse) {
                         if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
-                            Toast.makeText(mContext, "修改状态成功！", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "操作成功！", Toast.LENGTH_LONG).show();
                             BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                         } else {
                             Toast.makeText(mContext, codeMessageResponse.getMessage(), Toast.LENGTH_LONG).show();

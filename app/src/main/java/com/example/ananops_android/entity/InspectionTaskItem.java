@@ -49,6 +49,7 @@ public class InspectionTaskItem {
     private String updateTime;
     private int version;
     private Long userId;
+
     /**
      * id : 799909602912112640
      * version : null
@@ -77,7 +78,8 @@ public class InspectionTaskItem {
     private Integer frequency;
     private Double itemLatitude;
     private Double itemLongitude;
-    private Float count;
+    private Integer count;
+    private String location;
     private List<String> attachmentIds;
 
     public List<String> getAttachmentIds() {
@@ -320,11 +322,19 @@ public class InspectionTaskItem {
         this.itemLongitude = itemLongitude;
     }
 
-    public Float getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public void setCount(Float count) {
+    public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

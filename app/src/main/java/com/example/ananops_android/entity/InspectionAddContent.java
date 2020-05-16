@@ -1,10 +1,8 @@
 package com.example.ananops_android.entity;
 
-import java.util.List;
-
 public class InspectionAddContent {
 
-    private List<InspectionTaskItem> imcAddInspectionItemDtoList;
+    //private List<InspectionTaskItem> imcAddInspectionItemDtoList;
     /**
      * actualFinishTime : 2019-8-24 11:11:11
      * days : 0
@@ -46,13 +44,15 @@ public class InspectionAddContent {
     private String taskName;
     private Float totalCost;
     private Long userId;
-    public List<InspectionTaskItem> getImcAddInspectionItemDtoList() {
-        return imcAddInspectionItemDtoList;
-    }
-
-    public void setImcAddInspectionItemDtoList(List<InspectionTaskItem> imcAddInspectionItemDtoList) {
-        this.imcAddInspectionItemDtoList = imcAddInspectionItemDtoList;
-    }
+    private int pointSum;
+    private int alreadyPoint;
+//    public List<InspectionTaskItem> getImcAddInspectionItemDtoList() {
+//        return imcAddInspectionItemDtoList;
+//    }
+//
+//    public void setImcAddInspectionItemDtoList(List<InspectionTaskItem> imcAddInspectionItemDtoList) {
+//        this.imcAddInspectionItemDtoList = imcAddInspectionItemDtoList;
+//    }
 
     public String getActualFinishTime() {
         return actualFinishTime;
@@ -198,6 +198,22 @@ public class InspectionAddContent {
         this.userId = userId;
     }
 
+    public int getPointSum() {
+        return pointSum;
+    }
+
+    public void setPointSum(int pointSum) {
+        this.pointSum = pointSum;
+    }
+
+    public int getAlreadyPoint() {
+        return alreadyPoint;
+    }
+
+    public void setAlreadyPoint(int alreadyPoint) {
+        this.alreadyPoint = alreadyPoint;
+    }
+
     public static class LoginAuthDtoBean {
         /**
          * groupId : 0
@@ -252,6 +268,7 @@ public class InspectionAddContent {
         public void setUserName(String userName) {
             this.userName = userName;
         }
+
     }
 
     public static class ImcAddInspectionItemDtoListBean {

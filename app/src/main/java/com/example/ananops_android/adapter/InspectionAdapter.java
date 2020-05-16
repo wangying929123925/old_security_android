@@ -8,9 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ananops_android.R;
-import com.example.ananops_android.entity.InspectionContent;
 import com.example.ananops_android.entity.InspectionInfo;
-import com.example.ananops_android.entity.UserLogin;
 
 import java.util.List;
 
@@ -30,7 +28,7 @@ public class InspectionAdapter extends BaseRecyclerAdapter {
         return inspectionContents.size();
     }
     public class ViewHolder extends BaseViewHolder {
-        private TextView inspection_name, inspection_id, inspection_time, inspection_status, inspection_more;
+        private TextView inspection_name, inspection_id, inspection_time, inspection_status, inspection_more,inspection_project;
         private RelativeLayout relativeButton;
         private Button button1;
         private Button button2;
@@ -44,6 +42,7 @@ public class InspectionAdapter extends BaseRecyclerAdapter {
             relativeButton=itemView.findViewById(R.id.relative_button);
             inspection_name = itemView.findViewById(R.id.inspection_item_title);
             inspection_id = itemView.findViewById(R.id.inspection_item_id);
+            inspection_project = itemView.findViewById(R.id.inspection_item_name);
             inspection_time = itemView.findViewById(R.id.inspection_item_time);
             inspection_status = itemView.findViewById(R.id.inspection_item_status);
             inspection_more = itemView.findViewById(R.id.inspection_item_details);
@@ -55,9 +54,10 @@ public class InspectionAdapter extends BaseRecyclerAdapter {
         protected void onBind(int position) {
             InspectionInfo inspectionContent = inspectionContents.get(position);
             inspection_name.setText(inspectionContent.getTaskName());
+            inspection_project.setText(inspectionContent.getProjectName());
             inspection_id.setText(String.valueOf(inspectionContent.getId()));
             inspection_time.setText(inspectionContent.getCycleTime()+"天");
-            inspection_status.setText(String.valueOf(inspectionContent.getStatus()));
+            inspection_status.setText(String.valueOf(inspectionContent.getPointSum()));
             relativeButton.setVisibility(View.GONE);
         }
 

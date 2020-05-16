@@ -1,6 +1,5 @@
 package com.example.ananops_android.db;
 
-import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.entity.InspectionInfoResponse;
 
 public class InspectionDetailResponse {

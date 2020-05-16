@@ -27,7 +27,6 @@ import com.example.ananops_android.fragment.InspectionItemTimeLineFragment;
 import com.example.ananops_android.fragment.OrderDetailAppendix;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
-import com.example.ananops_android.util.InspectionUtils;
 import com.example.ananops_android.util.SPUtils;
 
 import java.util.ArrayList;
@@ -188,8 +187,8 @@ public class InspectionItemDetailActivity extends BaseActivity {
                                 public void onNext(CodeMessageResponse codeMessageResponse) {
                                     if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
                                         Toast.makeText(mContext, "工程师接单成功！", Toast.LENGTH_LONG).show();
-                                        InspectionUtils.getInstence().changeInspectionItemStatus(3,inspectionItemId,mContext);
-                                        //BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                                      //  InspectionUtils.getInstence().changeInspectionItemStatus(3,inspectionItemId,mContext);
+                                        BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     } else {
                                         Toast.makeText(mContext, codeMessageResponse.getMessage(), Toast.LENGTH_LONG).show();
                                     }
@@ -202,14 +201,12 @@ public class InspectionItemDetailActivity extends BaseActivity {
                 fragment_inspection_commit.setVisibility(View.VISIBLE);
                 inspection_detail_button1.setVisibility(View.GONE);
                 inspection_detail_button2.setVisibility(View.VISIBLE);
-                inspection_detail_button2.setText("完成");
-                inspection_detail_button2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //改变状态
-                        InspectionUtils.getInstence().changeInspectionItemStatus(4,inspectionItemId,mContext);
-                     //   InspectionUtils.getInstence().changeInspectionItemStatus(4,inspectionItemId,mContext);
-                    }
+                inspection_detail_button2.setText("子项单据");
+                inspection_detail_button2.setOnClickListener(v -> {
+
+                    BaseUtils.getInstence().intent(mContext,InspectionInvoiceListActivity.class,"inspectionItemId",inspectionItemId);
+                    //改变状态
+                    // InspectionUtils.getInstence().changeInspectionItemStatus(4,inspectionItemId,mContext);
                 });
                 break;
                 default:

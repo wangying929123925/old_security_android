@@ -6,10 +6,10 @@
 <include layout="@layout/layout_title"/>
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="250dp"
         android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:text="@string/question_submit_text1"/>
     <TextView
         android:layout_width="match_parent"
@@ -22,6 +22,6 @@
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:text="@string/question_submit_text3"/>
 </LinearLayout>

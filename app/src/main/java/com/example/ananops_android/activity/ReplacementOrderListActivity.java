@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +35,7 @@ public class ReplacementOrderListActivity extends BaseActivity {
     private ImageView imageBack;
     private List<ReplacementOrder> replacementOrders = new ArrayList<>();
     private ListCommonAdapter mAdapter;
-    private TextView noResult;
+    private LinearLayout noResult;
     private EditTextWithDel mEtSearchName;
     private Context mComtext;
     @Override

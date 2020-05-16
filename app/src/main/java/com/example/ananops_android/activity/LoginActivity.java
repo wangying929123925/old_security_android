@@ -9,11 +9,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,6 +28,7 @@ import com.example.ananops_android.db.PostResponse;
 import com.example.ananops_android.db.UserInformation;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
+import com.example.ananops_android.util.CommUtil;
 import com.example.ananops_android.util.SPUtils;
 
 import java.io.IOException;
@@ -35,14 +39,15 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     private EditText mAccount;                        //用户名编辑
     private EditText mPwd;                            //密码编辑
     private Button mLoginButton;                      //登录按钮
     private CheckBox mRememberCheck;
+    private CheckBox check_password_cb;
     private EditText validate_input;
     private ImageView validate_img;
-    private Button refresh_button;
+    private ImageView refresh_button;
     private Long deviceId;
     private Context mContext;
     Bitmap bitmap;
@@ -52,20 +57,17 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
      //   ActivityManager.getInstance().addActivity(this);
         mContext = this;
-        setContentView(R.layout.activity_login1);
+        setContentView(R.layout.activity_login);
         mAccount = (EditText) findViewById(R.id.login_edit_account);
         mPwd = (EditText) findViewById(R.id.login_edit_pwd);
         mLoginButton = (Button) findViewById(R.id.login_btn_login);
         mRememberCheck = (CheckBox) findViewById(R.id.Login_Remember);
-        validate_input=findViewById(R.id.validate_input);
-        validate_img=findViewById(R.id.validate_img);
-        refresh_button=findViewById(R.id.refresh_button);
-      //  login_sp = getSharedPrefereces("userInfo", 0);
-      //  String name=login_sp.getString("USER_NAME", "");
+        validate_input = findViewById(R.id.validate_input);
+        validate_img = findViewById(R.id.validate_img);
+        refresh_button = findViewById(R.id.refresh_button);
+        check_password_cb = findViewById(R.id.check_password_cb);
         String name = SPUtils.getInstance(mContext).getString("USER_NAME", "");
         String pwd = SPUtils.getInstance(mContext).getString("PASSWORD", "");
-
-       // String pwd =login_sp.getString("PASSWORD", "");
         boolean choseRemember = SPUtils.getInstance(mContext).getBoolean("mRememberCheck", false);
       //  boolean choseRemember =login_sp.getBoolean("mRememberCheck", false);
         if(choseRemember){
@@ -76,6 +78,7 @@ public class LoginActivity extends BaseActivity {
         }
         mLoginButton.setOnClickListener(mListener);
         refresh_button.setOnClickListener(mListener);
+        check_password_cb.setOnCheckedChangeListener(this);
     }
 
 
@@ -151,6 +154,21 @@ public class LoginActivity extends BaseActivity {
                     });
         }
     }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+       // 显示和隐藏密码
+        if (isChecked) {
+            // 显示密码
+            mPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        } else {
+            // 隐藏密码
+            mPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
+        // 光标移动到最后面
+        CommUtil.cursorToEnd(mPwd);
+    }
+
     class NetworkChangeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

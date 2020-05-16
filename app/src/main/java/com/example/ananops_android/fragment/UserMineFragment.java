@@ -48,7 +48,7 @@ public class UserMineFragment extends Fragment implements View.OnClickListener {
     }
 
     private void inirDatas() {
-        mine_text.setText("您好"+ SPUtils.getInstance(getActivity()).getString("role_name","111"));
+        mine_text.setText("您好,"+ SPUtils.getInstance(getActivity()).getString("role_name","111"));
     }
 
     private void setOnListener() {

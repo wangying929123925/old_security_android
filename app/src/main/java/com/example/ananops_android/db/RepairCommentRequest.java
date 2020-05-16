@@ -12,9 +12,10 @@ public class RepairCommentRequest {
 
     private String contents;
     private Long principalId;
-    private Float score;
+    private int score;
     private Long taskId;
     private Long userId;
+    private String checkContens;
 
     public String getContents() {
         return contents;
@@ -32,11 +33,11 @@ public class RepairCommentRequest {
         this.principalId = principalId;
     }
 
-    public Float getScore() {
+    public int getScore() {
         return score;
     }
 
-    public void setScore(Float score) {
+    public void setScore(int score) {
         this.score = score;
     }
 
@@ -54,5 +55,13 @@ public class RepairCommentRequest {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getCheckContens() {
+        return checkContens;
+    }
+
+    public void setCheckContens(String checkContens) {
+        this.checkContens = checkContens;
     }
 }

@@ -35,7 +35,10 @@
             android:layout_alignParentBottom="true"
             android:background="#dbdbdb" />
     </RelativeLayout>
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -57,7 +60,7 @@
                     android:layout_marginLeft="10dp"
                     android:text="选择项目"
                     android:textColor="#353535"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
                 <TextView
                     android:id="@+id/et_project_name"
                     android:layout_width="match_parent"
@@ -67,7 +70,7 @@
                     android:paddingLeft="90dp"
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:background="@null"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -98,7 +101,7 @@
                     android:layout_marginLeft="10dp"
                     android:text="巡检名称"
                     android:textColor="#353535"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
                 <TextView
                     android:id="@+id/et_inspection_name"
                     android:layout_width="match_parent"
@@ -108,7 +111,7 @@
                     android:paddingLeft="90dp"
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:background="@null"/>
                 <TextView
                     android:id="@+id/choose_fault_type"
@@ -138,9 +141,38 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
+                    android:text="服务商"
+                    android:textColor="#353535"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/choose_service"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="90dp"
+                    android:singleLine="true"
+                    android:textColorHint="#DDDDDD"
+                    android:textSize="14sp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#dbdbdb" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/setting_item_selector"
+                android:layout_gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
                     android:text="巡检周期"
                     android:textColor="#353535"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
                 <TextView
                     android:id="@+id/et_inspection_time"
                     android:layout_width="match_parent"
@@ -149,7 +181,92 @@
                     android:paddingLeft="90dp"
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textSize="14sp"
+                    android:layout_alignParentRight="true"
+                    android:text="（天）"
+                    android:textColor="@color/black"
+                    />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#dbdbdb" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/setting_item_selector"
+                android:layout_gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="持续时间"
+                    android:textColor="#353535"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/et_inspection_days"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="90dp"
+                    android:singleLine="true"
+                    android:textColorHint="#DDDDDD"
+                    android:textSize="14sp" />
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textSize="14sp"
+                    android:layout_alignParentRight="true"
+                    android:text="（天）"
+                    android:textColor="@color/black"
+                    />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#dbdbdb" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/setting_item_selector"
+                android:layout_gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="点位数目"
+                    android:textColor="#353535"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/et_inspection_points"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="90dp"
+                    android:singleLine="true"
+                    android:textColorHint="#DDDDDD"
+                    android:textSize="14sp" />
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textSize="14sp"
+                    android:layout_alignParentRight="true"
+                    android:text="（个）"
+                    android:textColor="@color/black"
+                    />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
@@ -169,18 +286,17 @@
                     android:layout_marginLeft="10dp"
                     android:text="开始时间"
                     android:textColor="#353535"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/et_start_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:maxLength="11"
                     android:paddingLeft="90dp"
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:background="@null"
                     android:inputType="none"/>
                 <View
@@ -200,9 +316,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:text="计划时间"
+                    android:text="完成时间"
                     android:textColor="#353535"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/et_plan_time"
@@ -214,7 +330,7 @@
                     android:paddingLeft="90dp"
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
@@ -224,7 +340,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
+                android:layout_height="90dp"
                 android:background="@drawable/setting_item_selector"
                 android:layout_gravity="center_vertical"
                 >
@@ -232,12 +348,12 @@
                 <TextView
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="11dp"
                     android:text="巡检内容"
                     android:textColor="#353535"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/et_inspection_content"
@@ -247,7 +363,7 @@
                     android:paddingLeft="90dp"
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
@@ -256,7 +372,7 @@
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
+                android:layout_height="90dp"
                 android:background="@drawable/setting_item_selector"
                 android:layout_gravity="center_vertical"
                 >
@@ -267,7 +383,7 @@
                     android:layout_marginLeft="10dp"
                     android:text="巡检备注"
                     android:textColor="#353535"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/et_inspection_tip"
@@ -278,108 +394,16 @@
                     android:paddingLeft="90dp"
                     android:singleLine="true"
                     android:textColorHint="#DDDDDD"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.1dp"
                     android:layout_alignParentBottom="true"
                     android:background="#dbdbdb" />
             </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@drawable/setting_item_selector"
-                android:layout_gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="立即执行"
-                    android:textColor="#353535"
-                    android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/et_inspection_do_result"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:maxLength="11"
-                    android:paddingLeft="90dp"
-                    android:singleLine="true"
-                    android:textColorHint="#DDDDDD"
-                    android:textSize="16sp" />
-                <CheckBox
-                    android:layout_width="40dp"
-                    android:layout_height="20dp"
-                    android:text=""
-                    android:id="@+id/do_result"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:checked="false"
-                    android:textSize="15dp" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#dbdbdb" />
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@drawable/setting_item_selector"
-
-                android:layout_gravity="center_vertical"
-                >
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:text="添加网点"
-                    android:textColor="#353535"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/add_dot"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:maxLength="11"
-                    android:paddingLeft="90dp"
-                    android:singleLine="true"
-                    android:textColorHint="#DDDDDD"
-                    android:textSize="16sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="请选择 >"
-                    android:textColor="#1A73C0"
-                    android:textSize="14sp"
-                    />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="#dbdbdb" />
-            </RelativeLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/state_pressed"/>
-
-            <ListView
-                android:id="@+id/dot_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                />
         </LinearLayout>
-
+</ScrollView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -388,16 +412,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="服务商"
             android:gravity="center"
             android:textColor="@color/black"
            />
         <TextView
-            android:id="@+id/choose_service"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:text="请选择服务商"
             android:gravity="center"
             android:textColor="@color/black"
             />

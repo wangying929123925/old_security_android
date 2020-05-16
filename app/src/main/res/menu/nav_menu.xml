@@ -3,32 +3,32 @@
 <group android:checkableBehavior="single">
     <item
     android:id="@+id/main_page"
-    android:icon="@drawable/ic_mainpage"
+    android:icon="@drawable/ic_workorder"
     android:title="Main_page"
     />
     <item
         android:id="@+id/type_manage"
-        android:icon="@drawable/ic_type_manage"
+        android:icon="@drawable/ic_workorder"
         android:title="Type_manage"
         />
     <item
         android:id="@+id/service_manage"
-        android:icon="@drawable/ic_service"
+        android:icon="@drawable/ic_workorder"
         android:title="Service_manage"
         />
     <item
         android:id="@+id/plugin_manage"
-        android:icon="@drawable/ic_plugin"
+        android:icon="@drawable/ic_workorder"
         android:title="Plugin_manage"
         />
     <item
         android:id="@+id/tenants_manage"
-        android:icon="@drawable/ic_tenants"
+        android:icon="@drawable/ic_workorder"
         android:title="Tenants_manage"
         />
     <item
         android:id="@+id/logout"
-        android:icon="@drawable/ic_document"
+        android:icon="@drawable/ic_workorder"
         android:title="logout"
         android:checkable="true"
         />

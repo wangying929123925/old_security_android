@@ -9,16 +9,20 @@ import com.example.ananops_android.db.AllUnDistributedWorkOrdersResponse;
 import com.example.ananops_android.db.AllUnauthorizedTaskRequest;
 import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
 import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
+import com.example.ananops_android.db.ChangeInspectionStatusRequest;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.ConfirmWorkOrderRequest;
 import com.example.ananops_android.db.DeviceOrderResult;
+import com.example.ananops_android.db.EngineerListByGroupIdRequest;
+import com.example.ananops_android.db.EngineerListByGroupIdResponse;
 import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersRequset;
 import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersResponse;
 import com.example.ananops_android.db.GroupIdResponse;
 import com.example.ananops_android.db.InspectionCommentRequest;
 import com.example.ananops_android.db.InspectionDetailResponse;
 import com.example.ananops_android.db.InspectionEngineerDistributeRequest;
+import com.example.ananops_android.db.InspectionItemAddRequest;
 import com.example.ananops_android.db.InspectionItemDetailResponse;
 import com.example.ananops_android.db.InspectionItemListImcRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
@@ -31,6 +35,9 @@ import com.example.ananops_android.db.InspectionLogsRequest;
 import com.example.ananops_android.db.InspectionPicRequest;
 import com.example.ananops_android.db.InspectionPicResponse;
 import com.example.ananops_android.db.InspectionQueryByStatusAndIdRequest;
+import com.example.ananops_android.db.InvoiceDetailResponse;
+import com.example.ananops_android.db.InvoiceListRequest;
+import com.example.ananops_android.db.InvoiceListResponse;
 import com.example.ananops_android.db.LoginResponse;
 import com.example.ananops_android.db.MessageListRequest;
 import com.example.ananops_android.db.MessageListResponse;
@@ -56,6 +63,7 @@ import com.example.ananops_android.db.UnDistrbutedInspectionDetailResponse;
 import com.example.ananops_android.db.UpLoadFilesResponse;
 import com.example.ananops_android.db.UserInformation;
 import com.example.ananops_android.entity.InspectionAddContent;
+import com.example.ananops_android.entity.InvoiceDetail;
 import com.example.ananops_android.entity.RepairAddContent;
 import com.example.ananops_android.util.BaseUtils;
 
@@ -167,9 +175,13 @@ public interface Net {
     @Headers("Content-Type:application/json")
     Observable<CodeMessageResponse> postRepairDetail(@Body RepairChangeDetail modifyTask, @Header("Authorization") String postToken);
 
-    //获取维修工程师名单
+    //根据项目获取维修工程师名单
     @POST("spc/engineer/getEngineerIdListByProjectId/{projectId}")
     Observable<RepairerListResponse> getRepairerList(@Path("projectId") Long projectId, @Header("Authorization") String postToken);
+
+    //groupId获取维修工名单
+    @POST("spc/engineer/queryListByGroupId")
+    Observable<EngineerListByGroupIdResponse>getRepairListByGroupId(@Body EngineerListByGroupIdRequest engineerQueryDto,@Header("Authorization") String postToken);
 
     //获取备件信息列表
     @GET("rdc/deviceOrder/devices")
@@ -243,13 +255,18 @@ public interface Net {
     //根据用户ID查询巡检列表
     @POST("imc/inspectionTask/getTaskByUserId")
     Observable<AllUnauthorizedTaskResponse>getInspectionTaskByUserId(@Body InspectionListByUserIdAndStatusRequest getTaskByUserId, @Header("Authorization") String postToken);
-    //根据状态和用户ID查询巡检列表
+
+    //根据服务商ID查询列表
+    @POST("imc/inspectionTask/getAllTaskByFacilitatorId")
+    Observable<AllUnDistributedWorkOrdersResponse>getInspectionTaskByFacilitatorId(@Body AllUnDistributedWorkOrdersRequest getTaskByUserId, @Header("Authorization") String postToken);
+
+ //根据状态和用户ID查询巡检列表
     @POST("imc/inspectionTask/getTaskListByUserIdAndStatus")
     Observable<AllUnDistributedWorkOrdersResponse> getInspectionTaskByUserIdAndStatus(@Body InspectionListByUserIdAndStatusRequest getTaskByUserIdAndStatus, @Header("Authorization") String postToken);
 
     //服务商查询未分配工程师的巡检单
-    @POST("spc/workorder/getAllUnDistributedWorkOrders")
-    Observable<AllUnDistributedWorkOrdersResponse> getAllUnDistributedWorkOrder(@Body AllUnDistributedWorkOrdersRequest WorkOrderStatusQueryDto, @Header("Authorization") String postToken);
+    @POST("imc/inspectionTask/getAllUnDistributedTask")
+    Observable<AllUnDistributedWorkOrdersResponse> getAllUnDistributedWorkOrder(@Body AllUnDistributedWorkOrdersRequest taskQueryDto, @Header("Authorization") String postToken);
 
     //甲方负责人查看未审核任务
     @POST("imc/inspectionTask/getAllUnauthorizedTask")
@@ -264,22 +281,30 @@ public interface Net {
     Observable<CodeMessageResponse> denyImcTaskByPrincipal(@Body AcceptImcTaskByPrincipalRequest acceptImcTaskByPrincipalRequest, @Header("Authorization") String postToken);
 
     //服务商查看未审批工单
-    @POST("spc/workorder/getAllUnConfirmedWorkOrders")
-    Observable<GetAllUnConfirmedWorkOrdersResponse> getAllUnConfirmedWorkOrders(@Body GetAllUnConfirmedWorkOrdersRequset getAllUnConfirmedWorkOrdersRequest, @Header("Authorization") String postToken);
+    @POST("imc/inspectionTask/getAllUnConfirmedTask")
+    Observable<GetAllUnConfirmedWorkOrdersResponse> getAllUnConfirmedWorkOrders(@Body GetAllUnConfirmedWorkOrdersRequset taskQueryDto, @Header("Authorization") String postToken);
+
+    //服务商查看已完成工单
+    @POST("imc/inspectionTask/getAllFinishedTaskByFacilitatorId")
+    Observable<GetAllUnConfirmedWorkOrdersResponse> getAllFinishedWorkOrders(@Body GetAllUnConfirmedWorkOrdersRequset taskQueryDto, @Header("Authorization") String postToken);
 
     //服务商通过审核
     @POST("spc/workorder/confirmWorkOrder")
     Observable<CodeMessageResponse> confirmWorkOrder(@Body ConfirmWorkOrderRequest WorkOrderConfirmDto, @Header("Authorization") String postToken);
 
-    ////服务商查询未分配工程师巡检单的详细信息
+   //添加巡检子项项目
+   @POST("imc/inspectionItem/save")
+   Observable<CodeMessageResponse> inspectionItemAdd(@Body InspectionItemAddRequest saveInspectionItem, @Header("Authorization") String postToken);
+
+   //服务商查询未分配工程师巡检单的详细信息
     @POST("spc/workorder/getSpcWorkOrderById")
     Observable<UnDistrbutedInspectionDetailResponse> getSpcWorkOrderById(@Body UnDistrbutedInspectionDetailRequest WorkOrderStatusQueryDto, @Header("Authorization") String postToken);
 
     //服务商为巡检子项分配工程师
-    @POST("spc/workorder/distributeEngineerWithMdmcOrder")
+    @POST("spc/workorder/distributeEngineerWithImcOrder")
     Observable<CodeMessageResponse> inspectionDistributeEngineer(@Body InspectionEngineerDistributeRequest engineerDistributeDto, @Header("Authorization") String postToken);
 
-    //维修工程师查询未接单子项,状态2//g根据状态和ID查询单据
+    //维修工程师查询未接单子项,状态2//g根据状态和ID查询单据巡检子项
     @POST("imc/inspectionItem/getItemByMaintainerIdAndStatus")
     Observable<InspectionItemListResponse> getInspectionItemByMaintainerIdAndStatus(@Body InspectionQueryByStatusAndIdRequest getItemByMaintainerIdAndStatus, @Header("Authorization") String postToken);
 
@@ -287,7 +312,15 @@ public interface Net {
     @POST("imc/inspectionItem/getAllAcceptedItemByMaintainer")
     Observable<InspectionItemListResponse> getAllAcceptedItemByMaintainer(@Body AllAcceptedItemByMaintainerRequest itemQueryDto, @Header("Authorization") String postToken);
 
-    //根据巡检ID和状态查询子项列表
+    //维修工程师查看已完成巡检子项列表
+    @POST("imc/inspectionItem/getAllFinishedImcItemByMaintainerId")
+    Observable<InspectionItemListResponse> getAllFinishedItemByMaintainer(@Body InspectionQueryByStatusAndIdRequest itemQueryDto, @Header("Authorization") String postToken);
+
+    //维修工程师获取全部巡检子项列表
+    @POST("imc/inspectionItem/getItemByMaintainerId")
+    Observable<InspectionItemListResponse> getAllItemByMaintainer(@Body AllAcceptedItemByMaintainerRequest itemQueryDto, @Header("Authorization") String postToken);
+
+   //根据巡检ID和状态查询子项列表
     @POST("imc/inspectionItem/getAllItemByTaskIdAndStatus")
     Observable<InspectionItemListResponse> getAllItemByTaskIdAndStatus(@Body AllItemByTaskIdAndStatuRequest getAllItemByTaskIdAndStatus, @Header("Authorization") String postToken);
 
@@ -308,15 +341,32 @@ public interface Net {
     Observable<CodeMessageResponse> acceptItemByMaintainer(@Body AcceptInspectionItemRequest confirmImcItemDto, @Header("Authorization") String postToken);
 
     //巡检评价
-    @POST("imc/inspectionReview/save")
-    Observable<CodeMessageResponse> InspectionCommentAdd(@Body InspectionCommentRequest saveInspectionReview, @Header("Authorization") String postToken);
+    @POST("imc/inspectionReview/confirmRating")
+    Observable<CodeMessageResponse> InspectionCommentAdd(@Body InspectionCommentRequest imcAddInspectionReviewDto, @Header("Authorization") String postToken);
 
     //修改巡检子项状态
     @POST("imc/inspectionItem/modifyItemStatusByItemId")
     Observable<CodeMessageResponse> modifyItemStatusByItemId(@Body ChangeInspectionItemStatusRequest modifyItemStatus, @Header("Authorization") String postToken);
+
+    @POST("imc/inspectionTask/modifyTaskStatusByTaskId")
+    Observable<CodeMessageResponse>modifyIspectionStatusByItemId(@Body ChangeInspectionStatusRequest modifyTaskStatus,@Header("Authorization") String postToken);
+
+    //获取子项单据列表
+    @POST("imc/itemInvoice/queryInvoiceList")
+     Observable<InvoiceListResponse>getInvoiceList(@Body InvoiceListRequest imcInvoiceQueryDto, @Header("Authorization") String postToken);
+
+   //获取子项单据详情
+   @POST("imc/itemInvoice/queryDetailsById/{invoiceId}")
+   Observable<InvoiceDetailResponse> getInvoiceDetail(@Path("invoiceId") Long invoiceId, @Header("Authorization") String postToken);
+
+   //子项单据提交
+   @POST("imc/itemInvoice/save")
+   Observable<CodeMessageResponse>invoiceDetailSave(@Body InvoiceDetail formDataDto, @Header("Authorization") String postToken);
+
    //获取消息列表
     @POST("websocket/websocket/queryWebsocketMsgInfo")
     Observable<MessageListResponse> getMessageList(@Body MessageListRequest queryWebsocketMsgInfo,@Header("Authorization") String postToken);
+
     //修改消息状态
     @POST("websocket/websocket/changeWebsocketMsgStatus")
     Observable<CodeMessageResponse>changeMessageStatus(@Body MessageStatusChangeRequest changeWebsocketMsgStatus,@Header("Authorization") String postToken);

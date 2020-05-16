@@ -45,4 +45,5 @@ public class AllAcceptedItemByMaintainerRequest {
     public void setMaintainerId(Long maintainerId) {
         this.maintainerId = maintainerId;
     }
+
 }

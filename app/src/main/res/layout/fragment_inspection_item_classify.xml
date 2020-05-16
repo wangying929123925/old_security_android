@@ -14,20 +14,19 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:padding="10dp"
-            android:background="@drawable/shape_corner_bluewidge_19"
             android:layout_gravity="center_vertical"
             >
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="待分配工程师"
-                android:id="@+id/btn_un_distributed"
-                android:background="@color/deep_blue"
-                android:textSize="20sp"
-                android:textColor="#ffffff"
-                android:gravity="center"
-                android:layout_centerVertical="true"
-                />
+
+        <Button
+            android:id="@+id/btn_un_distributed"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/shape_corner_gray_shallow"
+            android:gravity="center"
+            android:text="待分配工程师"
+            android:textColor="@color/blue"
+            android:textSize="16sp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.1dp"
@@ -40,7 +39,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="10dp"
-        android:background="@drawable/shape_corner_bluewidge_19"
         android:layout_gravity="center_vertical"
         >
         <Button
@@ -48,9 +46,9 @@
             android:layout_height="50dp"
             android:text="工程师待接单"
             android:id="@+id/btn_un_accept"
-            android:background="@color/deep_blue"
-            android:textSize="20sp"
-            android:textColor="#ffffff"
+            android:background="@drawable/shape_corner_gray_shallow"
+            android:textSize="16sp"
+            android:textColor="@color/blue"
             android:gravity="center"
             android:layout_centerVertical="true"
             />
@@ -66,7 +64,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="10dp"
-        android:background="@drawable/shape_corner_bluewidge_19"
         android:layout_gravity="center_vertical"
         >
         <Button
@@ -74,9 +71,9 @@
             android:layout_height="50dp"
             android:text="子项正在进行"
             android:id="@+id/btn_item_doing"
-            android:background="@color/deep_blue"
-            android:textSize="20sp"
-            android:textColor="#ffffff"
+            android:background="@drawable/shape_corner_gray_shallow"
+            android:textSize="16sp"
+            android:textColor="@color/blue"
             android:gravity="center"
             android:layout_centerVertical="true"
             />
@@ -92,20 +89,19 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="10dp"
-        android:background="@drawable/shape_corner_bluewidge_19"
         android:layout_gravity="center_vertical"
         >
+
         <Button
+            android:id="@+id/btn_item_done"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="子项执行结束"
-            android:id="@+id/btn_item_done"
-            android:background="@color/deep_blue"
-            android:textSize="20sp"
-            android:textColor="#ffffff"
+           android:layout_centerVertical="true"
+            android:background="@drawable/shape_corner_gray_shallow"
             android:gravity="center"
-            android:layout_centerVertical="true"
-            />
+            android:text="子项执行结束"
+            android:textColor="@color/blue"
+            android:textSize="16sp" />
         <View
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
@@ -118,7 +114,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="10dp"
-        android:background="@drawable/shape_corner_bluewidge_19"
         android:layout_gravity="center_vertical"
         >
         <Button
@@ -126,9 +121,9 @@
             android:layout_height="50dp"
             android:text="子项确认完毕"
             android:id="@+id/btn_un_confirmed"
-            android:background="@color/deep_blue"
-            android:textSize="20sp"
-            android:textColor="#ffffff"
+            android:background="@drawable/shape_corner_gray_shallow"
+            android:textSize="16sp"
+            android:textColor="@color/blue"
             android:gravity="center"
             android:layout_centerVertical="true"
             />

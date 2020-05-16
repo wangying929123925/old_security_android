@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +32,7 @@ import rx.schedulers.Schedulers;
 public class ProjectListActivity extends BaseActivity {
     private ListView sortListView;
     private TextView title;
-    private TextView noResult;
+    private LinearLayout noResult;
     private EditTextWithDel mEtSearchName;
     private ImageView imageBack;
     private List<ProjectInfo> projectInfos=new ArrayList<>();
@@ -46,6 +47,11 @@ public class ProjectListActivity extends BaseActivity {
         mContext =this;
       //  ActivityManager.getInstance().addActivity(this);
         //获取项目信息
+        initViews();
+        getProjects();
+    }
+
+    private void getProjects() {
         Net.instance.getProjectList(Long.valueOf(SPUtils.getInstance(mContext).getString("groupId", "1")), SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -57,6 +63,7 @@ public class ProjectListActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        initDatas();
                         Log.v("ErrorGetProjectList", System.currentTimeMillis() + "");
                         e.printStackTrace();
                         Toast.makeText(mContext, "网络异常，请检查网络状态changeStatus", Toast.LENGTH_SHORT).show();
@@ -69,41 +76,46 @@ public class ProjectListActivity extends BaseActivity {
                             if (projectListResponse.getResult().size() > 0) {
                                 projectInfos.addAll(projectListResponse.getResult());
                                 initDatas();
-                                initViews();
+                               // initViews();
                                 Log.v("项目列表1", projectListResponse.getResult().get(0).getId() + "");
-                            } else {
-                                Toast.makeText(mContext, "无项目列表！", Toast.LENGTH_LONG).show();
-                                Log.v("项目列表0", projectListResponse.getResult().size() + "");
                             }
                         } else {
                             Toast.makeText(mContext, projectListResponse.getMessage(), Toast.LENGTH_LONG).show();
                         }
+                        initDatas();
                     }
                 });
-
-
-
-
     }
     private void initViews() {
-
-    }
-    private void initDatas() {
         sortListView=findViewById(R.id.lv_contact);
         mEtSearchName = (EditTextWithDel) findViewById(R.id.et_search_contact);
         title=findViewById(R.id.txt_title);
-        noResult=findViewById(R.id.no_result_text);
+        noResult = findViewById(R.id.no_result_text);
         imageBack=findViewById(R.id.img_back);
         title.setText("项目列表");
-        mAdapter = new ListCommonAdapter<ProjectInfo>(getApplicationContext(), R.layout.item_project_list, projectInfos) {
+        imageBack.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected void convert(ListViewHolder viewHolder,ProjectInfo projectInfo, int position) {
-                viewHolder.setText(R.id.Plist_name, projectInfo.getProjectName());//名称
-                viewHolder.setText(R.id.Plist_id, String.valueOf(projectInfo.getId()));//id
-                viewHolder.setText(R.id.Plist_type, projectInfo.getCreator());//类型
-                viewHolder.setText(R.id.Plist_price, projectInfo.getCreatedTime());//价格
+            public void onClick(View v) {
+                finish();
             }
-        };
+        });
+    }
+    private void initDatas() {
+        if (projectInfos.size() == 0) {
+            noResult.setVisibility(View.VISIBLE);
+        }else {
+            noResult.setVisibility(View.GONE);
+        }
+            mAdapter = new ListCommonAdapter<ProjectInfo>(getApplicationContext(), R.layout.item_project_list, projectInfos) {
+                @Override
+                protected void convert(ListViewHolder viewHolder, ProjectInfo projectInfo, int position) {
+                    viewHolder.setText(R.id.Plist_name, projectInfo.getProjectName());//名称
+                    viewHolder.setText(R.id.Plist_id, projectInfo.getCreator());//id
+                    viewHolder.setText(R.id.Plist_type, "开始时间："+projectInfo.getStartTime());//类型
+                    viewHolder.setText(R.id.Plist_price, "结束时间："+projectInfo.getEndTime());//价格
+                    viewHolder.setImageDrawable(R.id.inspection_sub, getResources().getDrawable(R.drawable.ic_project));
+                }
+            };
         sortListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -115,12 +127,6 @@ public class ProjectListActivity extends BaseActivity {
         });
         mAdapter.notifyDataSetInvalidated();
         sortListView.setAdapter(mAdapter);
-        imageBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
     }
 }

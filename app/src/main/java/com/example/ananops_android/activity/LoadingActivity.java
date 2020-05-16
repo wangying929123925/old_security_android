@@ -19,7 +19,7 @@ import java.util.TimerTask;
 
 public class LoadingActivity extends BaseActivity {
     private ImageView welcomeImg = null;
-    private static final long DELAY = 3000;
+    private static final long DELAY = 500;
     private TimerTask task;
     private RelativeLayout introduction_title;
     @Override
@@ -49,7 +49,7 @@ public class LoadingActivity extends BaseActivity {
     private class AnimationImpl implements Animation.AnimationListener {
         @Override
         public void onAnimationStart(Animation animation) {
-            welcomeImg.setBackgroundResource(R.drawable.load_pic);
+        //    welcomeImg.setBackgroundResource(R.drawable.load_pic);
         }
 
         @Override

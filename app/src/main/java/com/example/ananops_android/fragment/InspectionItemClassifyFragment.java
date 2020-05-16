@@ -102,13 +102,13 @@ public class InspectionItemClassifyFragment extends Fragment implements View.OnC
             case R.id.btn_un_distributed:
                 if (statusDo.equals("2-2")) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("inspectionItemId", inspectionId);
+                    bundle.putString("inspectionId", inspectionId);
                     bundle.putString("statusDo", "2-2");
                     bundle.putString("status","1");
                     BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class, bundle);
                 } else {
                     Bundle bundle = new Bundle();
-                    bundle.putString("inspectionItemId", inspectionId);
+                    bundle.putString("inspectionId", inspectionId);
                     bundle.putString("statusDo", "no");
                     bundle.putString("status","1");
                     BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class, bundle);
@@ -116,28 +116,28 @@ public class InspectionItemClassifyFragment extends Fragment implements View.OnC
                 break;
             case R.id.btn_un_accept:
                 Bundle bundle0 = new Bundle();
-                bundle0.putString("inspectionItemId", inspectionId);
+                bundle0.putString("inspectionId", inspectionId);
                 bundle0.putString("statusDo", "no");
                 bundle0.putString("status","2");
                 BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class, bundle0);
                 break;
             case R.id.btn_item_doing:
                 Bundle bundle1 = new Bundle();
-                bundle1.putString("inspectionItemId", inspectionId);
+                bundle1.putString("inspectionId", inspectionId);
                 bundle1.putString("statusDo", "no");
                 bundle1.putString("status","3");
                 BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class, bundle1);
                 break;
             case R.id.btn_item_done:
                 Bundle bundle2 = new Bundle();
-                bundle2.putString("inspectionItemId", inspectionId);
+                bundle2.putString("inspectionId", inspectionId);
                 bundle2.putString("statusDo", "no");
                 bundle2.putString("status","4");
                 BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class, bundle2);
                 break;
             case R.id.btn_un_confirmed:
                 Bundle bundle3 = new Bundle();
-                bundle3.putString("inspectionItemId", inspectionId);
+                bundle3.putString("inspectionId", inspectionId);
                 bundle3.putString("statusDo", "no");
                 bundle3.putString("status","5");
                 BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class, bundle3);

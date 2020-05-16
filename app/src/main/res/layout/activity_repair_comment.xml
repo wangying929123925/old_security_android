@@ -3,37 +3,149 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-  <include layout="@layout/layout_title"/>
-    <TextView
-        android:id="@+id/comment_repair_name"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:text="您的评价回鼓励我们做的更好~"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        />
+    android:layout_height="match_parent"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:orientation="horizontal">
+        android:background="@color/state_selected"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:text="验收评价"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            />
 
         <TextView
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:text="整体评价"
-            android:textColor="@color/black"
-            android:textStyle="bold"
+            android:id="@+id/tv_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="取消"
+            android:textColor="@color/shallow_blue"
             android:textSize="16sp"
-            android:gravity="center"/>
+            android:textStyle="bold" />
 
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_alignParentBottom="true"
+        android:background="#dbdbdb" />
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/form_item_height">
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/red"
+            android:text="@string/necessary_add"/>
+        <TextView
+            android:layout_width="@dimen/comment_add_text_width"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="单据唯一编号"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            />
+        <TextView
+            android:id="@+id/comment_tv1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_corner_gray"
+            android:paddingLeft="5dp"
+            android:gravity="center_vertical"
+            android:text="852357504124847104"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/form_item_height">
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/red"
+            android:text="@string/necessary_add"/>
+        <TextView
+            android:layout_width="@dimen/comment_add_text_width"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="评价用户编号"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            />
+        <TextView
+            android:id="@+id/comment_tv2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_corner_gray"
+            android:paddingLeft="5dp"
+            android:gravity="center_vertical"
+            android:text="852357504124847104"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="96dp">
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/red"
+            android:text="@string/necessary_add"/>
+        <TextView
+            android:layout_width="@dimen/comment_add_text_width"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="验收服务内容"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            />
+        <EditText
+            android:id="@+id/comment_tv3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:hint="请填写服务内容"
+            android:paddingLeft="5dp"
+            android:background="@drawable/shape_corner_gray_shallow"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/form_item_height">
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/red"
+            android:text="@string/necessary_add"/>
+        <TextView
+            android:layout_width="@dimen/comment_add_text_width"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="此次服务打星"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            />
         <RatingBar
             android:id="@+id/general_comment_rat"
             style="?android:attr/ratingBarStyleIndicator"
@@ -46,109 +158,35 @@
             android:progressTint="@color/yellow"
             android:rating="5"
             android:stepSize="0.1" />
-        <TextView
-            android:id="@+id/general_comment_text"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textColor="@color/gray"
-            tools:text="非常好"/>
     </LinearLayout>
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="15dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:orientation="horizontal">
-
-    <TextView
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center_vertical"
-        android:text="服务态度"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:gravity="center"/>
-
-    <RatingBar
-        android:id="@+id/attitude_comment_rat"
-        style="?android:attr/ratingBarStyleIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:isIndicator="false"
-        android:numStars="5"
-        android:progressTint="@color/yellow"
-        android:rating="5"
-        android:stepSize="0.1" />
-    <TextView
-        android:id="@+id/attitude_comment_text"
-        android:layout_width="60dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:textColor="@color/gray"
-        tools:text="非常好"/>
-</LinearLayout>
-    <LinearLayout
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:orientation="horizontal">
-
+        android:layout_height="96dp">
         <TextView
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:text="服务质量"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:gravity="center"/>
-
-        <RatingBar
-            android:id="@+id/quality_comment_rat"
-            style="?android:attr/ratingBarStyleIndicator"
-            android:layout_width="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/red"
+            android:text="@string/necessary_add"/>
+        <TextView
+            android:layout_width="@dimen/comment_add_text_width"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:isIndicator="false"
-            android:numStars="5"
-            android:progressTint="@color/yellow"
-            android:rating="5"
-            android:stepSize="0.1" />
-        <TextView
-            android:id="@+id/quality_comment_text"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:text="此次服务评价"
+            android:textColor="@color/black"
             android:textSize="16sp"
-            android:textColor="@color/gray"
-            tools:text="非常好"/>
+            />
+        <EditText
+            android:id="@+id/comment_tv4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:hint="请填写服务评价"
+            android:paddingLeft="5dp"
+            android:background="@drawable/shape_corner_gray_shallow"/>
     </LinearLayout>
-    <EditText
-        android:id="@+id/et_comment"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@null"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:hint="请填写您的评价"
-        android:gravity="top"
-        android:textSize="14dp"
-        android:textCursorDrawable="@null"
-        android:textColorHint="#999999"
-        android:minLines="10"/>
     <Button
         android:id="@+id/comment_submit_button"
         android:layout_width="80dp"
@@ -157,7 +195,6 @@
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
         android:text="发布"
-        android:textStyle="bold"
         android:textColor="@color/state_selected"
         android:textSize="16sp"
         />

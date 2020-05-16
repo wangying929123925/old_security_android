@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.MyFragmentPagerAdapter;
 import com.example.ananops_android.db.AcceptImcTaskByPrincipalRequest;
+import com.example.ananops_android.db.ChangeInspectionStatusRequest;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.ConfirmWorkOrderRequest;
 import com.example.ananops_android.db.InspectionDetailResponse;
@@ -26,6 +27,7 @@ import com.example.ananops_android.fragment.InspectionTimeLineFragment;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
 import com.example.ananops_android.util.SPUtils;
+import com.example.ananops_android.view.CommentWindow;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,7 +56,7 @@ public class InspectionDetailActivity extends BaseActivity {
     private ArrayList<String> list_value1= new ArrayList<>();
     private ArrayList<String> list_value4= new ArrayList<>();
     private static String statusDo; //StatusDo
-
+    private CommentWindow commentWindow;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +81,8 @@ public class InspectionDetailActivity extends BaseActivity {
             list_title = new ArrayList<>();
             list_title.add("巡检信息");
             list_title.add("进度条");
-            list_title.add("网点");
-            list_title.add("备品备件");
+            list_title.add("子项类别");
+            list_title.add("其他信息");
         }
         if (list_fragment == null) {
             list_fragment = new ArrayList<>();
@@ -143,147 +145,178 @@ public class InspectionDetailActivity extends BaseActivity {
        // statusDo = getIntent().getStringExtra("statusDo");
         if (!statusDo.equals("")) {
             switch (statusDo) {
-                case "4-2"://甲方负责人审核通过or不通过:
-                    b1.setText("通过");
-                    b1.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            AcceptImcTaskByPrincipalRequest acc = new AcceptImcTaskByPrincipalRequest();
-                            acc.setTaskId(Long.parseLong(inspectionId));
-                            Net.instance.acceptImcTaskByPrincipal(acc, SPUtils.getInstance(mContext).getString("Token", " "))
-                                    .subscribeOn(Schedulers.newThread())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(new Subscriber<CodeMessageResponse>() {
-                                        @Override
-                                        public void onCompleted() {
-
-                                        }
-
-                                        @Override
-                                        public void onError(Throwable e) {
-                                            Log.v("ErrorAcceptImcTaskBy", System.currentTimeMillis() + "");
-                                            Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
-                                            e.printStackTrace();
-                                        }
-
-                                        @Override
-                                        public void onNext(CodeMessageResponse codeMessageResponse) {
-                                            if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
-                                                Toast.makeText(mContext, "甲方负责人审核通过", Toast.LENGTH_SHORT).show();
-                                                try {
-                                                    Thread.sleep(500);
-                                                } catch (InterruptedException e) {
-                                                    e.printStackTrace();
-                                                }
-                                                BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
-                                            }
-                                        }
-                                    });
-                        }
-                    });
-                    b2.setText("不通过");
-                    b2.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            AcceptImcTaskByPrincipalRequest acc = new AcceptImcTaskByPrincipalRequest();
-                            acc.setTaskId(Long.parseLong(inspectionId));
-                            Net.instance.denyImcTaskByPrincipal(acc, SPUtils.getInstance(mContext).getString("Token", " "))
-                                    .subscribeOn(Schedulers.newThread())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(new Subscriber<CodeMessageResponse>() {
-                                        @Override
-                                        public void onCompleted() {
-
-                                        }
-
-                                        @Override
-                                        public void onError(Throwable e) {
-                                            Log.v("ErrorDenyImcTaskBy", System.currentTimeMillis() + "");
-                                            Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
-                                            e.printStackTrace();
-                                        }
-
-                                        @Override
-                                        public void onNext(CodeMessageResponse codeMessageResponse) {
-                                            if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
-                                                Toast.makeText(mContext, "甲方负责人审核拒绝", Toast.LENGTH_SHORT).show();
-                                                try {
-                                                    Thread.sleep(500);
-                                                } catch (InterruptedException e) {
-                                                    e.printStackTrace();
-                                                }
-                                                BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
-                                            }
-                                        }
-                                    });
-                        }
-                    });
-                    break;
                 case "2-1"://服务商审核通过or不通过:
+                    b1.setVisibility(View.VISIBLE);
+                    b2.setVisibility(View.VISIBLE);
                     b1.setText("通过");
-                    b1.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ConfirmWorkOrderRequest request = new ConfirmWorkOrderRequest();
-                            request.setDecision(1);
-                            ConfirmWorkOrderRequest.WorkOrderQueryDtoBean inner = new ConfirmWorkOrderRequest.WorkOrderQueryDtoBean();
-                            inner.setId(Long.valueOf(inspectionId));
-                            inner.setPageNum(0);
-                            inner.setPageSize(0);
-                            inner.setType("inspection");
-                            request.setWorkOrderQueryDto(inner);
-                            Net.instance.confirmWorkOrder(request, SPUtils.getInstance(mContext).getString("Token", " "))
-                                    .subscribeOn(Schedulers.newThread())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(new Subscriber<CodeMessageResponse>() {
-                                        @Override
-                                        public void onCompleted() {
+                    b1.setOnClickListener(v -> {
+                        ConfirmWorkOrderRequest request = new ConfirmWorkOrderRequest();
+                        request.setDecision(1);
+                        ConfirmWorkOrderRequest.WorkOrderQueryDtoBean inner = new ConfirmWorkOrderRequest.WorkOrderQueryDtoBean();
+                        inner.setId(Long.valueOf(inspectionId));
+                        inner.setPageNum(0);
+                        inner.setPageSize(0);
+                        inner.setType("inspection");
+                        request.setWorkOrderQueryDto(inner);
+                        Net.instance.confirmWorkOrder(request, SPUtils.getInstance(mContext).getString("Token", " "))
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<CodeMessageResponse>() {
+                                    @Override
+                                    public void onCompleted() {
 
-                                        }
+                                    }
 
-                                        @Override
-                                        public void onError(Throwable e) {
-                                            Log.v("ErrorAcceptImcTaskBy", System.currentTimeMillis() + "");
-                                            Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
-                                            if (e instanceof HttpException) {
-                                                HttpException httpException = (HttpException) e;
-                                                try{
-                                                    String error = httpException.response().errorBody().string();
-                                                    Log.v("RepairAddError", error);
-                                                }catch(IOException e1) {
-                                                    e1.printStackTrace();
-                                                }
-                                            }else {
-                                                //ToastUtil.showLongToast("请求失败");
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.v("ErrorAcceptImcTaskBy", System.currentTimeMillis() + "");
+                                        Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
+                                        if (e instanceof HttpException) {
+                                            HttpException httpException = (HttpException) e;
+                                            try{
+                                                String error = httpException.response().errorBody().string();
+                                                Log.v("RepairAddError", error);
+                                            }catch(IOException e1) {
+                                                e1.printStackTrace();
                                             }
+                                        }else {
+                                            //ToastUtil.showLongToast("请求失败");
                                         }
+                                    }
 
-                                        @Override
-                                        public void onNext(CodeMessageResponse codeMessageResponse) {
-                                            if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
-                                                Toast.makeText(mContext, "甲方负责人审核通过", Toast.LENGTH_SHORT).show();
-                                                try {
-                                                    Thread.sleep(500);
-                                                } catch (InterruptedException e) {
-                                                    e.printStackTrace();
-                                                }
-                                                BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
-                                            }
+                                    @Override
+                                    public void onNext(CodeMessageResponse codeMessageResponse) {
+                                        if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
+                                            Toast.makeText(mContext, "甲方负责人审核通过", Toast.LENGTH_SHORT).show();
+                                            BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                         }
-                                    });
-                        }
+                                    }
+                                });
                     });
                     b2.setText("不通过");
-                    b2.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(mContext, "不通过", Toast.LENGTH_SHORT).show();
-                        }
+                    b2.setOnClickListener(v -> Toast.makeText(mContext, "不通过", Toast.LENGTH_SHORT).show());
+                    break;
+                case "2-2":
+                    b1.setVisibility(View.VISIBLE);
+                    b2.setVisibility(View.GONE);
+                    b1.setText("新建子项任务");
+                    b1.setOnClickListener(v -> {
+                        BaseUtils.getInstence().intent(mContext,InspectionItemAddActivity.class,"inspectionId",inspectionId);
                     });
                     break;
-                case "4-3":
+                case "2-4"://确认完成
+                    b1.setVisibility(View.VISIBLE);
+                    b2.setVisibility(View.GONE);
+                    b1.setText("确认评价");
+                    b1.setOnClickListener(v -> {
+                        String userId = SPUtils.getInstance(mContext).getString("user_id", "1");
+                        commentWindow = new CommentWindow(inspectionId,userId,2,mContext);
+                        commentWindow.show();
+                    });
+
+                case "4-2"://甲方负责人审核通过or不通过:
+                    b1.setVisibility(View.VISIBLE);
+                    b2.setVisibility(View.VISIBLE);
+                    b1.setText("通过");
+                    b1.setOnClickListener(v -> {
+                        AcceptImcTaskByPrincipalRequest acc = new AcceptImcTaskByPrincipalRequest();
+                        acc.setTaskId(Long.parseLong(inspectionId));
+                        Net.instance.acceptImcTaskByPrincipal(acc, SPUtils.getInstance(mContext).getString("Token", " "))
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<CodeMessageResponse>() {
+                                    @Override
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.v("ErrorAcceptImcTaskBy", System.currentTimeMillis() + "");
+                                        Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
+                                        e.printStackTrace();
+                                    }
+
+                                    @Override
+                                    public void onNext(CodeMessageResponse codeMessageResponse) {
+                                        if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
+                                        //    Toast.makeText(mContext, "甲方负责人审核通过", Toast.LENGTH_SHORT).show();
+                                            BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                                        }
+                                    }
+                                });
+                    });
+                    b2.setText("不通过");
+                    b2.setOnClickListener(v -> {
+                        AcceptImcTaskByPrincipalRequest acc = new AcceptImcTaskByPrincipalRequest();
+                        acc.setTaskId(Long.parseLong(inspectionId));
+                        Net.instance.denyImcTaskByPrincipal(acc, SPUtils.getInstance(mContext).getString("Token", " "))
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<CodeMessageResponse>() {
+                                    @Override
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.v("ErrorDenyImcTaskBy", System.currentTimeMillis() + "");
+                                        Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
+                                        e.printStackTrace();
+                                    }
+
+                                    @Override
+                                    public void onNext(CodeMessageResponse codeMessageResponse) {
+                                        if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
+                                            Toast.makeText(mContext, "甲方负责人审核拒绝", Toast.LENGTH_SHORT).show();
+                                            try {
+                                                Thread.sleep(500);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                        //    BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                                        }
+                                    }
+                                });
+                    });
+                    break;
+                case "4-4":
+                    b1.setVisibility(View.VISIBLE);
+                    b2.setVisibility(View.GONE);
                     b1.setText("确认完成");
-                    b1.setVisibility(View.GONE);
+                    b1.setOnClickListener(v -> {
+                        ChangeInspectionStatusRequest changeInspectionStatusRequest = new ChangeInspectionStatusRequest();
+                        changeInspectionStatusRequest.setTaskId(Long.valueOf(inspectionId));
+                        changeInspectionStatusRequest.setStatus(7);
+                        changeInspectionStatusRequest.setStatusMsg("巡检完成");
+                        Net.instance.modifyIspectionStatusByItemId(changeInspectionStatusRequest, SPUtils.getInstance(mContext).getString("Token", " "))
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<CodeMessageResponse>() {
+                                    @Override
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.v("ErrorModifyItemStatus", System.currentTimeMillis() + "");
+                                        Toast.makeText(mContext, "操作失败", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onNext(CodeMessageResponse codeMessageResponse) {
+                                        if (TextUtils.equals(codeMessageResponse.getCode(), "200")) {
+                                            Toast.makeText(mContext, "操作成功！", Toast.LENGTH_LONG).show();
+                                            BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                                        } else {
+                                            Toast.makeText(mContext, "操作失败！", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                    });
+
                     break;
                 default:
                     fragment_inspection_commit.setVisibility(View.GONE);
@@ -340,6 +373,11 @@ public class InspectionDetailActivity extends BaseActivity {
                             list_value4.add(" ");
                             list_value4.add(" ");
                             list_value4.add(" ");
+                            int result = inspectionDetailResponse.getResult().getPointSum() - inspectionDetailResponse.getResult().getAlreadyPoint();
+                            if (result > 0) {
+                                String text="新建子项"+"("+result+")";
+                                b1.setText(text);
+                            }
                             initFragment();
                         } else {
                             Toast.makeText(mContext, inspectionDetailResponse.getMessage(), Toast.LENGTH_LONG).show();

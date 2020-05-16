@@ -68,9 +68,40 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
+                android:text="维修名称"
+                android:textColor="#353535"
+                android:textSize="14sp" />
+            <EditText
+                android:id="@+id/et_repair_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:hint="请填写项目名称"
+                android:paddingLeft="90dp"
+                android:singleLine="true"
+                android:background="@null"
+                android:textColorHint="#DDDDDD"
+                android:textSize="14sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_alignParentBottom="true"
+                android:background="#dbdbdb" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/setting_item_selector"
+            android:layout_gravity="center_vertical" >
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
                 android:text="项目名称"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/et_project_name"
                 android:layout_width="match_parent"
@@ -80,7 +111,7 @@
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/choose_project_name"
                 android:layout_width="wrap_content"
@@ -114,7 +145,7 @@
                 android:layout_marginBottom="67dp"
                 android:text="服务商"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/et_repair_facname"
@@ -125,7 +156,7 @@
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:background="@null"
                 android:inputType="none"/>
             <View
@@ -147,7 +178,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="审核人"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/et_repair_person"
@@ -159,7 +190,7 @@
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.1dp"
@@ -179,7 +210,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="联系方式"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/et_repair_tel"
@@ -187,11 +218,12 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:hint="报修人电话"
+                android:inputType="number"
                 android:maxLength="11"
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:background="@null"/>
             <View
                 android:layout_width="match_parent"
@@ -212,7 +244,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="报修时间"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/et_repair_time"
@@ -223,7 +255,7 @@
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:editable="false"
                 android:background="@null"/>
             <View
@@ -245,7 +277,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="预约时间"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/et_appointment_time"
@@ -256,7 +288,7 @@
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/choose_appointment_time"
                 android:layout_width="wrap_content"
@@ -286,9 +318,52 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
+                android:text="最晚时间"
+                android:textColor="#353535"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/et_deadline_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:hint="请选择最晚维修时间"
+                android:paddingLeft="90dp"
+                android:singleLine="true"
+                android:textColorHint="#DDDDDD"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/choose_appointment_time1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="请选择 >"
+                android:textColor="#1A73C0"
+                android:textSize="14sp"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_alignParentBottom="true"
+                android:background="#dbdbdb" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/setting_item_selector"
+            android:layout_gravity="center_vertical"
+            >
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
                 android:text="维修定位"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/et_repair_address"
@@ -296,11 +371,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:hint="请选择维修位置"
-                android:maxLength="11"
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/choose_repair_address"
                 android:layout_width="wrap_content"
@@ -312,6 +386,40 @@
                 android:textColor="#1A73C0"
                 android:textSize="14sp"
                 />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_alignParentBottom="true"
+                android:background="#dbdbdb" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/setting_item_selector"
+            android:layout_gravity="center_vertical"
+            >
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="预算费用"
+                android:textColor="#353535"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/et_repair_cost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:hint="请填写预计花费"
+                android:background="@null"
+                android:inputType="number"
+                android:maxLength="6"
+                android:paddingLeft="90dp"
+                android:singleLine="true"
+                android:textColorHint="#DDDDDD"
+                android:textSize="14sp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.1dp"
@@ -340,7 +448,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="故障类型"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/et_fault_type"
                 android:layout_width="match_parent"
@@ -350,7 +458,7 @@
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/choose_fault_type"
                 android:layout_width="wrap_content"
@@ -384,7 +492,7 @@
             android:layout_marginLeft="10dp"
             android:text="故障位置"
             android:textColor="#353535"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/et_fault_addr"
@@ -395,7 +503,7 @@
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/choose_fault_addr"
                 android:layout_width="wrap_content"
@@ -427,7 +535,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="故障名称"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/et_fault_name"
@@ -439,7 +547,7 @@
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/choose_fault_name"
                 android:layout_width="wrap_content"
@@ -471,7 +579,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="故障等级"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/et_fault_degree"
@@ -483,7 +591,7 @@
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/choose_fault_degree"
                 android:layout_width="wrap_content"
@@ -515,7 +623,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="紧急程度"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/et_emergency_degree"
@@ -527,7 +635,7 @@
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/choose_emergency_degree"
                 android:layout_width="wrap_content"
@@ -559,7 +667,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="故障描述"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <EditText
                 android:id="@+id/et_fault_description"
                 android:layout_width="match_parent"
@@ -569,7 +677,7 @@
                 android:paddingLeft="90dp"
                 android:singleLine="true"
                 android:textColorHint="#DDDDDD"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:background="@null"/>
             <View
                 android:layout_width="match_parent"
@@ -591,7 +699,7 @@
                 android:layout_marginTop="10dp"
                 android:text="请上传图片信息"
                 android:textColor="#353535"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <GridView
                 android:id="@+id/gridView_photo"
                 android:layout_margin="10dp"

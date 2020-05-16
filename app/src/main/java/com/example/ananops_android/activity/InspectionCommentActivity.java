@@ -34,7 +34,7 @@ public class InspectionCommentActivity extends BaseActivity implements View.OnCl
     private RatingBar attitude_comment_rat;
     private RatingBar quality_comment_rat;
     private EditText et_comment;
-    private float general_comment_mum;
+    private int general_comment_mum;
     private static String ORDER_ID;
     private Context mContext;
     @Override
@@ -52,7 +52,6 @@ public class InspectionCommentActivity extends BaseActivity implements View.OnCl
         back_img = findViewById(R.id.img_back);
         repair_commit_button = findViewById(R.id.comment_submit_button);
         general_comment_rat = findViewById(R.id.general_comment_rat);
-        et_comment = findViewById(R.id.et_comment);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         //  Log.v("", "initView: ");
@@ -74,7 +73,7 @@ public class InspectionCommentActivity extends BaseActivity implements View.OnCl
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 Toast.makeText(mContext,"总体评分="+rating,Toast.LENGTH_LONG).show();
-                general_comment_mum = rating;
+                general_comment_mum = (int)rating;
             }
         });
 
@@ -90,6 +89,7 @@ public class InspectionCommentActivity extends BaseActivity implements View.OnCl
             InspectionCommentRequest inspectionCommentRequest = new InspectionCommentRequest();
             inspectionCommentRequest.setContents(et_comment.getText().toString().trim());
             inspectionCommentRequest.setScore(general_comment_mum);
+            inspectionCommentRequest.setStatus(5);
             inspectionCommentRequest.setPrincipalId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id"," ")));
             inspectionCommentRequest.setInspectionTaskId(Long.valueOf(ORDER_ID));
             Net.instance.InspectionCommentAdd(inspectionCommentRequest, SPUtils.getInstance(mContext).getString("Token", " "))

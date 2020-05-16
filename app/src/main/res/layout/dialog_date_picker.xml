@@ -19,8 +19,8 @@
             android:padding="10dp"
             android:text="@string/cancel"
             android:textColor="@color/blue"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="14sp"
+             />
 
         <TextView
             android:id="@+id/tv_title"
@@ -30,8 +30,8 @@
             android:gravity="center"
             android:text="请选择时间"
             android:textColor="@color/blue"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+             />
 
         <TextView
             android:id="@+id/tv_confirm"
@@ -41,8 +41,8 @@
             android:padding="10dp"
             android:text="确认"
             android:textColor="@color/blue"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="14sp"
+             />
 
     </LinearLayout>
 

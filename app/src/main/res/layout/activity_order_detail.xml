@@ -49,8 +49,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="接单"
-                android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:gravity="center"
                 android:background="@color/deep_blue"
                 android:textColor="@color/state_selected"/>
@@ -64,8 +63,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="不接单"
-                android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:gravity="center"
                 android:background="@color/deep_blue"
                 android:textColor="@color/state_selected"/>

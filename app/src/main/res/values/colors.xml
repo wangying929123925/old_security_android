@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
     <resources>
+    <color name="root_bg_color">#efeded</color>
         <color name="colorPrimary">#008577</color>
         <color name="colorPrimaryDark">#00574B</color>
         <color name="colorAccent">#D81B60</color>
+        <color name="red">#EC0B2C</color>
+         <color name="white">#ffffff</color>
         <color name="navpage">#FFE1E8EB</color>
         <color name="state_pressed">#ffeeeeee</color>
         <color name="state_selected">#ffffff</color>
         <color name="blue">#69ACF5</color>
+        <color name="shallow_blue">#93BEEC</color>
         <color name="deep_blue">#4E76A8</color>
         <color name="gray">#ff999999</color>
         <color name="date_picker_text_dark">#333333</color>
@@ -16,6 +20,7 @@
         <color name="date_picker_divider">#11112233</color>
         <color name="link">#1024ED</color>
         <color name="yellow">#fdd829</color>
+        <color name="bright_yellow">#FF9800</color>
         <color name="green">#59B29C</color>
     </resources>
 

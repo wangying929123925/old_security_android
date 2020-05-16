@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,8 @@ import com.example.ananops_android.adapter.ContactAdapter;
 import com.example.ananops_android.datePicker.CustomDatePicker;
 import com.example.ananops_android.datePicker.DateFormatUtils;
 import com.example.ananops_android.db.CodeMessageResponse;
+import com.example.ananops_android.db.EngineerListByGroupIdRequest;
+import com.example.ananops_android.db.EngineerListByGroupIdResponse;
 import com.example.ananops_android.db.InspectionEngineerDistributeRequest;
 import com.example.ananops_android.db.RepairerListResponse;
 import com.example.ananops_android.entity.Contacts;
@@ -48,7 +51,7 @@ public class ContactActivity extends BaseActivity implements View.OnClickListene
     private ContactAdapter adapter;
     private EditTextWithDel mEtSearchName;
     private TextView title;
-    private TextView noResult;
+    private LinearLayout noResult;
     private TextView departNum;
     private TextView contactNum;
     private ImageView imageBack;
@@ -66,13 +69,17 @@ public class ContactActivity extends BaseActivity implements View.OnClickListene
         mContext=this;
       //  ActivityManager.getInstance().addActivity(this);
         setContentView(R.layout.activity_contacts_main);
+     //   initDatas();
         initViews();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mTimerPicker.onDestroy();
+        if(mTimerPicker!=null){
+            mTimerPicker.onDestroy();
+        }
+
     }
 
     private void initDatas() {
@@ -95,10 +102,49 @@ public class ContactActivity extends BaseActivity implements View.OnClickListene
         contactNum = findViewById(R.id.department_men_num);
         imageBack = findViewById(R.id.img_back);
         initDatas();
-        initEvents();
-      //  setListAdapter();
-        getResource();
+     //   initEvents();
+      //  getResource();
+       getResourceByGroupId();
+    }
 
+    private void getResourceByGroupId() {
+        EngineerListByGroupIdRequest engineerListByGroupIdRequest = new EngineerListByGroupIdRequest();
+        engineerListByGroupIdRequest.setOrderBy("string");
+        engineerListByGroupIdRequest.setPosition("engineer");
+      //  engineerListByGroupIdRequest.setGroupId(Long.valueOf(SPUtils.getInstance(mContext).getString("groupId", "1")));
+        Net.instance.getRepairListByGroupId(engineerListByGroupIdRequest,SPUtils.getInstance(mContext).getString("Token", " "))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<EngineerListByGroupIdResponse>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("getEngineerList","time");
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(EngineerListByGroupIdResponse engineerListByGroupIdResponse) {
+                        if (TextUtils.equals(engineerListByGroupIdResponse.getCode(), "200")) {
+                            SourceDateList.clear();
+                            int num = engineerListByGroupIdResponse.getResult().getList().size();
+                            if (num > 0) {
+                                for (int i = 0; i < num; i++) {
+                                    Contacts contacts = new Contacts();
+                                    contacts.setId(engineerListByGroupIdResponse.getResult().getList().get(i).getUserId());
+                                    contacts.setName(engineerListByGroupIdResponse.getResult().getList().get(i).getUserName());
+                                    SourceDateList.add(contacts);
+                                }
+                                setListAdapter();
+                            } else {
+                                Toast.makeText(mContext, "无维修工列表！", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                });
     }
     private void getResource(){
         Net.instance.getRepairerList(Long.valueOf(projectId), SPUtils.getInstance(mContext).getString("Token", " "))
@@ -134,6 +180,7 @@ public class ContactActivity extends BaseActivity implements View.OnClickListene
      //   SourceDateList = filledData(getResources().getStringArray(R.array.contacts));
         adapter=new ContactAdapter(this,SourceDateList);
         sortListView.setAdapter(adapter);
+        initEvents();
     }
     private void initEvents() {
         //注册监听事件

@@ -23,16 +23,20 @@ import com.example.ananops_android.activity.InspectionSearchListActivity;
 import com.example.ananops_android.activity.OrderSearchListActivity;
 import com.example.ananops_android.activity.ProjectListActivity;
 import com.example.ananops_android.activity.RepairAddActivity;
-import com.example.ananops_android.activity.ReplacementOrderListActivity;
 import com.example.ananops_android.activity.UserOrderSearchActivitySpinner;
 import com.example.ananops_android.adapter.RepairAdapter;
+import com.example.ananops_android.db.AllAcceptedItemByMaintainerRequest;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersRequest;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersResponse;
 import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
+import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersRequset;
+import com.example.ananops_android.db.GetAllUnConfirmedWorkOrdersResponse;
+import com.example.ananops_android.db.InspectionItemListResponse;
 import com.example.ananops_android.db.InspectionListByUserIdAndStatusRequest;
 import com.example.ananops_android.db.OrderRequest;
 import com.example.ananops_android.db.OrderResponse;
 import com.example.ananops_android.entity.InspectionInfo;
+import com.example.ananops_android.entity.InspectionTaskItem;
 import com.example.ananops_android.entity.RepairContent;
 import com.example.ananops_android.entity.UnReadNum;
 import com.example.ananops_android.net.Net;
@@ -44,6 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -94,6 +99,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
     private TextView main_inspection_num3;
     private TextView main_inspection_num4;
     private TextView main_inspection_num5;
+    private CircleImageView icon_mine;
     private RepairAdapter adapter;//适配器
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -101,6 +107,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
     private int[] inspectionStatus=new int[5];
     private List<RepairContent> repairContents = new ArrayList<>();
     private List<InspectionInfo> inspectionInfos = new ArrayList<>();
+    private List<InspectionTaskItem> inspectionTaskItems = new ArrayList<>();
    private Context mContext;
   private static String token;
   private static int role_num;
@@ -115,11 +122,16 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         mContext = getContext();
         role_num = SPUtils.getInstance(mContext).getInt("role_num", 0);
         token = SPUtils.getInstance(mContext).getString("Token", " ");
-        if (!(role_num == 1)) {
-            getInspctionList();
+        if (role_num == 2 ) {
+            getInspectionListByFac();
+        } else if ( role_num == 4) {
+            getInspectionList();
+        } else if (role_num == 3) {
+            getInspectionItemList();
         }
         getRepairList();
        // token = SPUtils.getInstance(mContext).getString("Token", "");
+        icon_mine = view.findViewById(R.id.icon_mine);
         user_Type = view.findViewById(R.id.user_type);
         main_repair = view.findViewById(R.id.main_repair);
         main_inspection = view.findViewById(R.id.main_inspection);
@@ -186,6 +198,13 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         initData();
         setOnListener();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refresh();
+    }
+
     private void initData() {
 //        UserLogin userLogin=new UserLogin();
 //        userLogin.setUseCode(2);
@@ -210,23 +229,24 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
     }
 
     private void initWorkData() {
+        icon_mine.setImageResource(R.drawable.ic_engineer_top);
         user_Type.setText(getResources().getString(R.string.REPAIR_MAN));//维修工
         main_repair_4.setVisibility(View.GONE);//1.3不可见
         main_repair_5.setVisibility(View.GONE);//1.3不可见
         main_inspection_4.setVisibility(View.GONE);//2.3不可见
         main_inspection_5.setVisibility(View.GONE);//2.3不可见
         main_repair_img1.setImageResource(R.drawable.ic_workorder);
-        main_repair_img2.setImageResource(R.drawable.ic_workorder);
-        main_repair_img3.setImageResource(R.drawable.ic_workorder);
+        main_repair_img2.setImageResource(R.drawable.ic_workorder_1);
+        main_repair_img3.setImageResource(R.drawable.ic_workorder_2);
 //        main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
 //        main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
 //        main_repair_num3.setText(String.valueOf(UnReadNum.main_repair_num3));
         main_repair_text1.setText(getResources().getString(R.string.worker_main_repair1));//待确认
         main_repair_text2.setText(getResources().getString(R.string.worker_main_repair2));//维修中
         main_repair_text3.setText(getResources().getString(R.string.worker_main_repair3));//维修中
-        main_inspection_img1.setImageResource(R.drawable.ic_workorder);
-        main_inspection_img2.setImageResource(R.drawable.ic_workorder);
-        main_inspection_img3.setImageResource(R.drawable.ic_workorder);
+        main_inspection_img1.setImageResource(R.drawable.ic_inspection_order);
+        main_inspection_img2.setImageResource(R.drawable.ic_inspection_order_1);
+        main_inspection_img3.setImageResource(R.drawable.ic_inspection_order_2);
         main_inspection_num1.setText(String.valueOf(UnReadNum.main_inspection_num1));
         main_inspection_num2.setText(String.valueOf(UnReadNum.main_inspection_num2));
         main_inspection_num3.setText(String.valueOf(UnReadNum.main_inspection_num3));
@@ -237,6 +257,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
     }
 
     private void initServiceData() {
+        icon_mine.setImageResource(R.drawable.ic_faci_top);
         user_Type.setText(getResources().getString(R.string.SERVICE_MAN));//服务商
        // main_repair_3.setVisibility(View.GONE);//1.3为空
         main_repair_4.setVisibility(View.GONE);//1.3为空
@@ -244,14 +265,14 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         main_inspection_4.setVisibility(View.GONE);//2.3为空
         main_inspection_5.setVisibility(View.GONE);//2.3为空
         main_repair_img1.setImageResource(R.drawable.ic_workorder);
-        main_repair_img2.setImageResource(R.drawable.ic_workorder);
-        main_repair_img3.setImageResource(R.drawable.ic_workorder);
+        main_repair_img2.setImageResource(R.drawable.ic_workorder_3);
+        main_repair_img3.setImageResource(R.drawable.ic_workorder_2);
         main_repair_text1.setText(getResources().getString(R.string.service_main_repair1));//待接单
         main_repair_text2.setText(getResources().getString(R.string.service_main_repair2));//审核备件
         main_repair_text3.setText(getResources().getString(R.string.service_main_repair3));//审核备件
-        main_inspection_img1.setImageResource(R.drawable.ic_workorder);
-        main_inspection_img2.setImageResource(R.drawable.ic_workorder);
-        main_inspection_img3.setImageResource(R.drawable.ic_workorder);
+        main_inspection_img1.setImageResource(R.drawable.ic_inspection_order);
+        main_inspection_img2.setImageResource(R.drawable.ic_inspection_order_2);
+        main_inspection_img3.setImageResource(R.drawable.ic_inspection_order_1);
         main_inspection_text1.setText(getResources().getString(R.string.service_main_inspection1));//新建巡检
         main_inspection_text2.setText(getResources().getString(R.string.service_main_inspection2));//验收
         main_inspection_text3.setText(getResources().getString(R.string.service_main_inspection3));//验收
@@ -262,13 +283,14 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
     }
 
     private void initUserData() {
+        icon_mine.setImageResource(R.drawable.ic_user_top);
         user_Type.setText(getResources().getString(R.string.USER));//用户
         main_inspection.setVisibility(View.GONE);
         main_repair_5.setVisibility(View.GONE);//1.3为空
-        main_repair_img1.setImageResource(R.drawable.ic_workorder);
+        main_repair_img1.setImageResource(R.drawable.ic_workorder_3);
         main_repair_img2.setImageResource(R.drawable.ic_workorder);
-        main_repair_img3.setImageResource(R.drawable.ic_workorder);
-        main_repair_img4.setImageResource(R.drawable.ic_workorder);
+        main_repair_img3.setImageResource(R.drawable.ic_workorder_2);
+        main_repair_img4.setImageResource(R.drawable.ic_workorder_1);
         main_repair_text1.setText(getResources().getString(R.string.user_main_repair1));//添加
         main_repair_text2.setText(getResources().getString(R.string.user_main_repair2));//验收
         main_repair_text3.setText(getResources().getString(R.string.user_main_repair3));//评价
@@ -276,24 +298,27 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
 
     }
     private void initUserManagerData(){
+    icon_mine.setImageResource(R.drawable.ic_manager_top);
     user_Type.setText(getResources().getString(R.string.USER_MANAGER));//用户管理员
    // main_repair_3.setVisibility(View.GONE);//1.3为空
-    main_repair_4.setVisibility(View.GONE);//1.3为空
+    //main_repair_4.setVisibility(View.GONE);//1.3为空
     main_repair_5.setVisibility(View.GONE);//1.3为空
     main_repair_img1.setImageResource(R.drawable.ic_workorder);
-    main_repair_img2.setImageResource(R.drawable.ic_workorder);
-    main_repair_img3.setImageResource(R.drawable.ic_workorder);
+    main_repair_img2.setImageResource(R.drawable.ic_workorder_1);
+    main_repair_img3.setImageResource(R.drawable.ic_workorder_3);
+    main_repair_img4.setImageResource(R.drawable.ic_workorder_2);
     main_repair_text1.setText(getResources().getString(R.string.userManager_main_repair1));//添加
     main_repair_text2.setText(getResources().getString(R.string.userManager_main_repair2));//验收
     main_repair_text3.setText(getResources().getString(R.string.userManager_main_repair3));//验收
+    main_repair_text4.setText(getResources().getString(R.string.userManager_main_repair4));//验收
 //    main_repair_num1.setText(String.valueOf(UnReadNum.main_repair_num1));
 //    main_repair_num2.setText(String.valueOf(UnReadNum.main_repair_num2));
 //    main_repair_num3.setText(String.valueOf(UnReadNum.main_repair_num3));
-    main_inspection_img1.setImageResource(R.drawable.ic_workorder);
-    main_inspection_img2.setImageResource(R.drawable.ic_workorder);
-    main_inspection_img3.setImageResource(R.drawable.ic_workorder);
-    main_inspection_img4.setImageResource(R.drawable.ic_workorder);
-    main_inspection_img5.setImageResource(R.drawable.ic_workorder);
+    main_inspection_img1.setImageResource(R.drawable.ic_inspection_order_4);
+    main_inspection_img2.setImageResource(R.drawable.ic_inspection_order);
+    main_inspection_img3.setImageResource(R.drawable.ic_inspection_order_2);
+    main_inspection_img4.setImageResource(R.drawable.ic_inspection_order_3);
+    main_inspection_img5.setImageResource(R.drawable.ic_inspection_order_1);
     main_inspection_text1.setText(getResources().getString(R.string.userManager_main_inspection1));//查看巡检结果
     main_inspection_text2.setText(getResources().getString(R.string.userManager_main_inspection2));//查看巡检结果
     main_inspection_text3.setText(getResources().getString(R.string.userManager_main_inspection3));//查看巡检结果
@@ -318,7 +343,14 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
     }
 
     public void refresh() {
-
+        if (role_num == 2 ) {
+            getInspectionListByFac();
+        } else if ( role_num == 4) {
+            getInspectionList();
+        } else if (role_num == 3) {
+            getInspectionItemList();
+        }
+        getRepairList();
     }
 
     @Override
@@ -345,7 +377,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
             case R.id.main_repair_2:
                 switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
                     case 1://维修中
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","9");
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","2");
                         break;
                     case 2://服务商待分配工程师
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","4");
@@ -367,11 +399,11 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                     case 1://用户确认完成
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","10");
                         break;
-                    case 2://服务商处理备件
-                        BaseUtils.getInstence().intent(getContext(), ReplacementOrderListActivity.class);
+                    case 2://服务商处理备件//未完
+                        BaseUtils.getInstence().intent(getContext(), OrderSearchListActivity.class,"title","7");
                         break;
-                    case 3://维修工维修中,确认完成
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","9");
+                    case 3://维修工维修中,确认完成//待定
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","13");
                         break;
                     case 4://甲方确认支付
                         BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","11");
@@ -382,13 +414,15 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.main_repair_4:
                 switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
-                    case 1://待评价
-                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","12");
+                    case 1://已完成
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","13");
                        // BaseUtils.getInstence().intent(getContext(),ContactActivity.class);
                         break;
-                    case 4://
-                       // BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","待验收");
-                       // BaseUtils.getInstence().intent(getContext(),ContactActivity.class);
+                    case 2:
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","13");
+                        break;
+                    case 4://已完成
+                        BaseUtils.getInstence().intent(getContext(),OrderSearchListActivity.class,"title","13");
                         break;
                 }
                 break;
@@ -401,42 +435,42 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                        // Toast.makeText(getContext(),"Ops,巡检全部查看正在开发中",Toast.LENGTH_LONG).show();
                         break;
                     case 2://服务商待接单//fuwushangchakan
-//                        GetAllUnConfirmedWorkOrdersRequset requset = new GetAllUnConfirmedWorkOrdersRequset();
-//                        requset.setPageNum(100);
-//                        requset.setPageSize(0);
-//                        Net.instance.getAllUnConfirmedWorkOrders(requset, SPUtils.getInstance(mContext).getString("Token", " "))
-//                                .subscribeOn(Schedulers.newThread())
-//                                .observeOn(AndroidSchedulers.mainThread())
-//                                .subscribe(new Observer<GetAllUnConfirmedWorkOrdersResponse>() {
-//                                    @Override
-//                                    public void onCompleted() {
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onError(Throwable e) {
-//
-//                                        Log.v("ErrorGetUnauthorWork", System.currentTimeMillis() + "");
-//                                        e.printStackTrace();
-//                                        Toast.makeText(mContext, "网络异常，请检查网络状态", Toast.LENGTH_SHORT).show();
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onNext(GetAllUnConfirmedWorkOrdersResponse response) {
-//                                        if (TextUtils.equals(response.getCode(), "200")) {
-//                                            ArrayList<InspectionInfo> result = (ArrayList<InspectionInfo>) response.getResult().getList();
-//                                            if (result != null) {
-//                                                Bundle bundle = new Bundle();
-//                                                bundle.putParcelableArrayList("result", result);
-//                                                bundle.putString("statusDo","2-1");
-//                                                BaseUtils.getInstence().intent(getContext(), InspectionSearchListActivity.class, bundle);
-//                                            }
-//                                        }
-//                                    }
-//                                });
-                     //   BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待确认");
-                        BaseUtils.getInstence().getAndPassInspectionList(2,"2-1",getContext());
+                        GetAllUnConfirmedWorkOrdersRequset requset = new GetAllUnConfirmedWorkOrdersRequset();
+                        requset.setPageNum(100);
+                        requset.setPageSize(0);
+                        requset.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "")));
+                        Net.instance.getAllUnConfirmedWorkOrders(requset, SPUtils.getInstance(mContext).getString("Token", " "))
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<GetAllUnConfirmedWorkOrdersResponse>() {
+                                    @Override
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.v("ErrorGetUnauthorWork", System.currentTimeMillis() + "");
+                                        e.printStackTrace();
+                                        Toast.makeText(mContext, "获取项目信息失败！", Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                    @Override
+                                    public void onNext(GetAllUnConfirmedWorkOrdersResponse response) {
+                                        if (TextUtils.equals(response.getCode(), "200")) {
+                                            ArrayList<InspectionInfo> result = (ArrayList<InspectionInfo>) response.getResult().getList();
+                                            if (result != null) {
+                                                Bundle bundle = new Bundle();
+                                                bundle.putParcelableArrayList("result", result);
+                                                bundle.putString("statusDo","2-1");
+                                                BaseUtils.getInstence().intent(getContext(), InspectionSearchListActivity.class, bundle);
+                                            }
+                                        }
+                                    }
+                                });
+                       // BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待确认");
+                       // BaseUtils.getInstence().getAndPassInspectionList(2,"2-1",getContext());
                         break;
                     case 3://维修工待接单
                         Bundle bundle = new Bundle();
@@ -458,6 +492,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                     case 2://服务商待分配工程师
                       //  Toast.makeText(getContext(), "待分配", Toast.LENGTH_SHORT).show();
                          AllUnDistributedWorkOrdersRequest allUnDistributedWorkOrdersRequest = new AllUnDistributedWorkOrdersRequest();
+                         allUnDistributedWorkOrdersRequest.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "")));
                         Net.instance.getAllUnDistributedWorkOrder(allUnDistributedWorkOrdersRequest, SPUtils.getInstance(mContext).getString("Token", " "))
                                 .subscribeOn(Schedulers.newThread())
                                 .observeOn(AndroidSchedulers.mainThread())
@@ -511,11 +546,48 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.main_inspection_3:
                 switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
-                    case 2://服务商待审查
-                       // BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待审查");
+                    case 2://服务商已完成
+                        GetAllUnConfirmedWorkOrdersRequset requset = new GetAllUnConfirmedWorkOrdersRequset();
+                        requset.setPageNum(100);
+                        requset.setPageSize(0);
+                        requset.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "")));
+                        Net.instance.getAllFinishedWorkOrders(requset, SPUtils.getInstance(mContext).getString("Token", " "))
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<GetAllUnConfirmedWorkOrdersResponse>() {
+                                    @Override
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Log.v("ErrorGetUnauthorWork", System.currentTimeMillis() + "");
+                                        e.printStackTrace();
+                                        Toast.makeText(mContext, "获取项目信息失败！", Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                    @Override
+                                    public void onNext(GetAllUnConfirmedWorkOrdersResponse response) {
+                                        if (TextUtils.equals(response.getCode(), "200")) {
+                                            ArrayList<InspectionInfo> result = (ArrayList<InspectionInfo>) response.getResult().getList();
+                                            if (result != null) {
+                                                Bundle bundle = new Bundle();
+                                                bundle.putParcelableArrayList("result", result);
+                                                bundle.putString("statusDo","2-3");
+                                                BaseUtils.getInstence().intent(getContext(), InspectionSearchListActivity.class, bundle);
+                                            }
+                                        }
+                                    }
+                                });
+
                         break;
-                    case 3://维修工待通过
-                       // BaseUtils.getInstence().intent(getContext(),InspectionSearchListActivity.class,"title","待通过");
+                    case 3://维修工已完成
+                        Bundle bundle = new Bundle();
+                        bundle.putString("inspectionItemId","0");
+                        bundle.putString("statusDo","3-3");
+                        BaseUtils.getInstence().intent(getContext(), InspectionItemListActivity.class,bundle);
                         break;
                     case 4://甲方巡检中确认任务完成
 //                        final AllUnauthorizedTaskRequest allUnauthorizedTaskRequest = new AllUnauthorizedTaskRequest();
@@ -550,7 +622,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
 //                                        }
 //                                    }
 //                                });
-                        BaseUtils.getInstence().getAndPassInspectionList(4,"4-3",getContext());
+                        BaseUtils.getInstence().getAndPassInspectionList(3,"4-3",getContext());
                         break;
                 }
                 break;
@@ -558,9 +630,9 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                 switch (SPUtils.getInstance(mContext).getInt("role_num",1)){
                     case 3://
                         break;
-                    case 4://甲方待付款
+                    case 4://甲方待确认
                       //  Toast.makeText(getContext(),"Ops,数据展示正在开发中",Toast.LENGTH_LONG).show();
-                        BaseUtils.getInstence().getAndPassInspectionList(5,"4-4",getContext());
+                        BaseUtils.getInstence().getAndPassInspectionList(4,"4-4",getContext());
                         break;
                 }
                 break;
@@ -569,7 +641,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                     case 3://无
                         break;
                     case 4://甲方待评价
-                        BaseUtils.getInstence().getAndPassInspectionList(6,"4-5",getContext());
+                        BaseUtils.getInstence().getAndPassInspectionList(5,"4-5",getContext());
                         break;
                 }
                 break;
@@ -581,10 +653,10 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    private void getInspctionList() {
+    private void getInspectionList() {
         InspectionListByUserIdAndStatusRequest inspectionListByUserIdAndStatusRequest = new InspectionListByUserIdAndStatusRequest();
         inspectionListByUserIdAndStatusRequest.setRole(1);
-        inspectionListByUserIdAndStatusRequest.setUserId(Long.valueOf(getContext().getSharedPreferences("GeneralStore",Context.MODE_PRIVATE).getString("user_id", "")));
+        inspectionListByUserIdAndStatusRequest.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "")));
         //getContext().getSharedPreferences("GeneralStore",Context.MODE_PRIVATE).getString("Token", " ")
         Net.instance.getInspectionTaskByUserId(inspectionListByUserIdAndStatusRequest, token)
                 .subscribeOn(Schedulers.newThread())
@@ -604,10 +676,14 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
 
                     @Override
                     public void onNext(AllUnauthorizedTaskResponse allUnauthorizedTaskResponse) {
-                        if (TextUtils.equals(allUnauthorizedTaskResponse.getCode(),"200")) {
+                        if (TextUtils.equals(allUnauthorizedTaskResponse.getCode(), "200")) {
                             if (allUnauthorizedTaskResponse.getResult() != null) {
-                               inspectionInfos=allUnauthorizedTaskResponse.getResult();
+                                inspectionInfos = allUnauthorizedTaskResponse.getResult();
                             }
+                        } else {
+                            Log.i("insepctionListCode",allUnauthorizedTaskResponse.getCode());
+                            Log.i("insepctionListMessage",allUnauthorizedTaskResponse.getMessage());
+
                         }
                        setMainPageInspectionNum();
                      //  initData();
@@ -615,6 +691,74 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                 });
     }
 
+    private void getInspectionListByFac() {
+        AllUnDistributedWorkOrdersRequest inspectionListByUserIdAndStatusRequest = new AllUnDistributedWorkOrdersRequest();
+        //  inspectionListByUserIdAndStatusRequest.setRole(1);
+        inspectionListByUserIdAndStatusRequest.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "")));
+        //getContext().getSharedPreferences("GeneralStore",Context.MODE_PRIVATE).getString("Token", " ")
+        Net.instance.getInspectionTaskByFacilitatorId(inspectionListByUserIdAndStatusRequest, token)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<AllUnDistributedWorkOrdersResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("ErrorGetInsTaskById", System.currentTimeMillis() + "");
+                        e.printStackTrace();
+                        Toast.makeText(mContext, "获取巡检列表失败", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNext(AllUnDistributedWorkOrdersResponse allUnauthorizedTaskResponse) {
+                        if (TextUtils.equals(allUnauthorizedTaskResponse.getCode(),"200")) {
+                            if (allUnauthorizedTaskResponse.getResult() != null) {
+                                inspectionInfos=allUnauthorizedTaskResponse.getResult().getList();
+                            }
+                        }
+                        setMainPageInspectionNum();
+                        //  initData();
+                    }
+                });
+    }
+    private void getInspectionItemList() {
+        AllAcceptedItemByMaintainerRequest allItemByTaskIdAndStatuRequest = new AllAcceptedItemByMaintainerRequest();
+        allItemByTaskIdAndStatuRequest.setMaintainerId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "")));
+        Net.instance.getAllItemByMaintainer(allItemByTaskIdAndStatuRequest,SPUtils.getInstance(mContext).getString("Token", " "))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<InspectionItemListResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                      //  Log.v("ErrorInspectionListTime", System.currentTimeMillis() + "");
+                        e.printStackTrace();
+                      //  initViews();
+                    }
+
+                    @Override
+                    public void onNext(InspectionItemListResponse inspectionItemListResponse) {
+                        if (TextUtils.equals(inspectionItemListResponse.getCode(), "200")) {
+                            inspectionTaskItems.clear();
+                            if (inspectionItemListResponse.getResult().size() > 0) {
+                                inspectionTaskItems.addAll(inspectionItemListResponse.getResult());
+                             //   Log.v("巡检子项列表1", inspectionItemListResponse.getResult().get(0).getId() + "");
+                               // initViews();//
+                                setMainPageInspectionNum();
+                            }
+                        } else {
+                            Toast.makeText(mContext, inspectionItemListResponse.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
     private void getRepairList() {
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setId(SPUtils.getInstance(mContext).getString("user_id",""));
@@ -658,6 +802,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                 });
 
     }
+
     private void setMainPageRepairNum() {
         //数组初始化
         for (int i = 0; i < repairStatus.length; i++) {
@@ -669,10 +814,13 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                 switch (role_num) {
                     case 1:
                         switch (status) {
+                            case 2:
+                                repairStatus[1]++;
+                                break;
                             case 10://待确认
                                 repairStatus[2]++;
                                 break;
-                            case 13://待评价
+                            case 13://已完成
                                 repairStatus[3]++;
                                 break;
                                 default:
@@ -689,6 +837,10 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                                 break;
                             case 7://待审核备件
                                 repairStatus[2]++;
+                                break;
+                            case 13:
+                                repairStatus[3]++;
+                                break;
                             default:
                                 break;
                         }
@@ -701,7 +853,7 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                             case 6://待填方案
                                 repairStatus[1]++;
                                 break;
-                            case 9://确认完成
+                            case 13://确认完成
                                 repairStatus[2]++;
                             default:
                                 break;
@@ -712,12 +864,12 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                             case 2://审核
                                 repairStatus[0]++;
                                 break;
-                            case 8://待审核备件
+                            case 8://待确认备件
                                 repairStatus[1]++;
                                 break;
-                            case 11://确认完成
+                            case 11://支付
                                 repairStatus[2]++;
-                            case 12://支付
+                            case 13://支付
                                 repairStatus[3]++;
                             default:
                                 break;
@@ -803,44 +955,67 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         for (int i = 0; i < inspectionStatus.length; i++) {
             inspectionStatus[i] = 0;
         }
-        if (inspectionInfos.size() > 0) {
-            for (InspectionInfo inspectionInfo : inspectionInfos) {
-                int status = inspectionInfo.getStatus();
-                switch (role_num) {
-                    case 2:
-                        switch (status) {
-                            case 2://待接单
-                                inspectionStatus[0]++;
-                                break;
-                            case 3://待派工
-                                inspectionStatus[1]++;
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    case 4:
-                        switch (status) {
-                            case 0://审核
-                                inspectionStatus[1]++;
-                                break;
-                            case 4://待确认
-                                inspectionStatus[2]++;
-                                break;
-                            case 5://付款
-                                inspectionStatus[3]++;
-                            case 6://评论
-                                inspectionStatus[4]++;
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
+        if (role_num == 2 || role_num == 4) {
+            if (inspectionInfos.size() > 0) {
+                for (InspectionInfo inspectionInfo : inspectionInfos) {
+                    int status = inspectionInfo.getStatus();
+                    switch (role_num) {
+                        case 2:
+                            switch (status) {
+                                case 2://待接单
+                                    inspectionStatus[0]++;
+                                    break;
+                                case 3://维修中
+                                    inspectionStatus[1]++;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case 4:
+                            switch (status) {
+                                case 0://审核
+                                    inspectionStatus[1]++;
+                                    break;
+                                case 3://维修中
+                                    inspectionStatus[2]++;
+                                    break;
+                                case 4://待确认
+                                    inspectionStatus[3]++;
+                                    break;
+                                case 5://付款
+                                    inspectionStatus[4]++;
+                                default:
+                                    break;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        } else if (role_num == 3) {
+            if (inspectionTaskItems.size() > 0) {
+                for (InspectionTaskItem inspectionTaskItem : inspectionTaskItems) {
+                    int status = inspectionTaskItem.getStatus();
+                    switch (status) {
+                        case 2://待接单
+                            inspectionStatus[0]++;
+                            break;
+                        case 3://巡检中
+                            inspectionStatus[1]++;
+                            break;
+                        case 4://已完成
+                            inspectionStatus[2]++;
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
-        showMainPageInspectionNum();
+        Log.v("inspectionStatus", "一"+inspectionStatus[0]+"二"+inspectionStatus[1]+"三"+inspectionStatus[2]);
+            showMainPageInspectionNum();
     }
 
     private void showMainPageInspectionNum() {
@@ -863,7 +1038,18 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
                 }
                 break;
             case 3:
-
+                if (inspectionStatus[0] > 0) {
+                    main_inspection_num1.setVisibility(View.VISIBLE);
+                    main_inspection_num1.setText(String.valueOf(inspectionStatus[0]));
+                }
+                if (inspectionStatus[1] > 0) {
+                    main_inspection_num2.setVisibility(View.VISIBLE);
+                    main_inspection_num2.setText(String.valueOf(inspectionStatus[1]));
+                }
+                if (inspectionStatus[2] > 0) {
+                    main_inspection_num3.setVisibility(View.VISIBLE);
+                    main_inspection_num3.setText(String.valueOf(inspectionStatus[2]));
+                }
                 break;
             case 4:
                 if (inspectionStatus[0] > 0) {

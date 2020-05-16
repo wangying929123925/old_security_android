@@ -17,7 +17,7 @@ public class AllItemByTaskIdAndStatuRequest {
     private int pageNum;
     private int pageSize;
     private String status;
-    private String taskId;
+    private Long taskId;
 
     public String getOrderBy() {
         return orderBy;
@@ -51,11 +51,11 @@ public class AllItemByTaskIdAndStatuRequest {
         this.status = status;
     }
 
-    public String getTaskId() {
+    public Long getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(String taskId) {
+    public void setTaskId(Long taskId) {
         this.taskId = taskId;
     }
 }

@@ -37,7 +37,7 @@ public class ActivityManager {
     /**
      * 结束当前Activity（堆栈中最后一个压入的）
      */
-    public void finishActivity() {
+    public void finishCurrentActivity() {
         Activity activity = activityStack.lastElement();
         finishActivity(activity);
     }

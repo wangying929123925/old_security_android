@@ -73,7 +73,7 @@ public class BaseUtils {
                 statusString = "维修工待接单";
                 break;
             case 6:
-                statusString = "维修工已结单";
+                statusString = "执行中";
                 break;
             case 7:
                 statusString = "服务商待审核备件";
@@ -88,7 +88,7 @@ public class BaseUtils {
                 statusString = "用户待验收";
                 break;
             case 11:
-                statusString = "管理员待确认账单";
+                statusString = "管理员待支付";
                 break;
             case 12:
                 statusString = "待评价";
@@ -261,7 +261,8 @@ public class BaseUtils {
                     public void onNext(CodeMessageResponse codeMessageResponse) {
                         if(TextUtils.equals(codeMessageResponse.getCode(),"200")){
                             Toast.makeText(mContext,"提交成功！",Toast.LENGTH_SHORT).show();
-                            BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
+                           BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
+
                         }
                         else{
                             Toast.makeText(mContext,"服务器故障！",Toast.LENGTH_SHORT).show();
@@ -291,8 +292,7 @@ public class BaseUtils {
                   public void onError(Throwable e) {
                       Log.v("LoginTime", System.currentTimeMillis() + "");
                       e.printStackTrace();
-
-                      Toast.makeText(mContext, "网络异常，请检查网络状态changeStatus", Toast.LENGTH_SHORT).show();
+                      Toast.makeText(mContext, "操作失败！", Toast.LENGTH_SHORT).show();
                      // BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                   }
 

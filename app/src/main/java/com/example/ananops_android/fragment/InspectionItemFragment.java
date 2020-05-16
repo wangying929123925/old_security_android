@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,7 +62,7 @@ public class InspectionItemFragment extends Fragment {
 
         public class InnerHolder extends RecyclerView.ViewHolder {
             private RelativeLayout mRl;
-            private EditText mContent;
+            private TextView mContent;
             private TextView mTitle;
             private Button mButton;
 
@@ -92,12 +91,7 @@ public class InspectionItemFragment extends Fragment {
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_sublist, null);
             final InnerHolder innerHolder = new InnerHolder(view);
 
-            innerHolder.mButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mContext, "click the"+ innerHolder.mTitle.getText(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            innerHolder.mButton.setOnClickListener(v -> Toast.makeText(mContext, "click the" + innerHolder.mTitle.getText(), Toast.LENGTH_SHORT).show());
             return innerHolder;
         }
 
@@ -105,12 +99,12 @@ public class InspectionItemFragment extends Fragment {
         public void onBindViewHolder(@NonNull InnerHolder innerHolder, final int i) {
             innerHolder.mTitle.setText(mData.get(i));
             innerHolder.mContent.setText(mValues.get(i));
-            innerHolder.mRl.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mContext, "点击了条目" + i, Toast.LENGTH_SHORT).show();
-                }
-            });
+//            innerHolder.mRl.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(mContext, "点击了条目" + i, Toast.LENGTH_SHORT).show();
+//                }
+//            });
             //电话可修改
             if (mData.get(i).contains("电话")||mData.get(i).contains("等级")) {
                 innerHolder.mContent.setFocusableInTouchMode(true);

@@ -10,6 +10,7 @@ public class AllUnDistributedWorkOrdersRequest {
     private String orderBy;
     private int pageNum;
     private int pageSize;
+    private Long userId;
 
     public String getOrderBy() {
         return orderBy;
@@ -35,4 +36,11 @@ public class AllUnDistributedWorkOrdersRequest {
         this.pageSize = 100;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }

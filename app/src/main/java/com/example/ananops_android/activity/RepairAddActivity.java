@@ -66,6 +66,9 @@ import rx.schedulers.Schedulers;
 
 public class RepairAddActivity extends BaseActivity implements View.OnClickListener {
     final private RepairAddContent repairAddContent=new RepairAddContent();
+    private EditText et_repair_name;
+    private TextView deadline_time;
+    private EditText total_cost;
     private TextView et_project_name;//项目名
     private TextView et_repair_person;//报修人
     private TextView repair_listid;//编号
@@ -162,7 +165,9 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mTimerPicker.onDestroy();
+        if(mTimerPicker!=null) {
+            mTimerPicker.onDestroy();
+        }
        // alertFaultAddr = null;
     }
 
@@ -197,6 +202,7 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
         et_fault_degree.setOnClickListener(this);
          choose_service.setOnClickListener(this);
         repair_submit_pics.setOnClickListener(this);
+        deadline_time.setOnClickListener(this);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -224,6 +230,9 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initViews() {
+        total_cost=findViewById(R.id.et_repair_cost);
+        et_repair_name = findViewById(R.id.et_repair_name);
+        deadline_time = findViewById(R.id.et_deadline_time);
         et_project_name = findViewById(R.id.et_project_name);//项目名
         et_repair_person = findViewById(R.id.et_repair_person);//报修人
         repair_listid = findViewById(R.id.et_repair_facname);
@@ -447,7 +456,7 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
                 showExitAlertDialog(v);
                 break;
             case R.id.et_appointment_time:
-                String endTime = "2023-12-31 23:59:00";
+                String endTime = "2025-12-31 23:59:00";
                 String beginTime = BaseUtils.getInstence().getTime();
                 mTimerPicker = new CustomDatePicker(this, new CustomDatePicker.Callback() {
                     @Override
@@ -464,6 +473,25 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
                 // 允许滚动动画
                 mTimerPicker.setCanShowAnim(true);
                 mTimerPicker.show(beginTime);
+                break;
+            case R.id.et_deadline_time:
+                String endTime1 = "2025-12-31 23:59:00";
+                String beginTime1 = BaseUtils.getInstence().getTime();
+                mTimerPicker = new CustomDatePicker(this, new CustomDatePicker.Callback() {
+                    @Override
+                    public void onTimeSelected(long timestamp) {
+                        deadline_time.setText(DateFormatUtils.long2Str(timestamp, true));
+                    }
+                }, beginTime1, endTime1);
+                // 允许点击屏幕或物理返回键关闭
+                mTimerPicker.setCancelable(true);
+                // 显示时和分
+                mTimerPicker.setCanShowPreciseTime(true);
+                // 允许循环滚动
+                mTimerPicker.setScrollLoop(true);
+                // 允许滚动动画
+                mTimerPicker.setCanShowAnim(true);
+                mTimerPicker.show(beginTime1);
                 break;
             case R.id.et_repair_address:
                 Intent intent = new Intent(RepairAddActivity.this, AddressSearchActivity.class);
@@ -489,29 +517,26 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
         }
         imagePaths.addAll(paths);
         imagePaths.add("paizhao");
-        Thread thread=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                imagePathUp.clear();
-                    for (int i = 0; i < imagePaths.size(); i++) {
-                        String s = imagePaths.get(i);
-                        if (s.equals("paizhao")) {
-                            //continue;
+        Thread thread=new Thread(() -> {
+            imagePathUp.clear();
+                for (int i = 0; i < imagePaths.size(); i++) {
+                    String s = imagePaths.get(i);
+                    if (s.equals("paizhao")) {
+                        //continue;
+                    } else {
+                        File file = new File(s);
+                        long fileSize = FileUtils.getInstance().getFileSize(file);
+                        if (fileSize > 1048576L) {
+                            s = FileUtils.getInstance().compressReSave(s, mContext, 100);
+                            imagePathUp.add(s);
                         } else {
-                            File file = new File(s);
-                            long fileSize = FileUtils.getInstance().getFileSize(file);
-                            if (fileSize > 1048576L) {
-                                s = FileUtils.getInstance().compressReSave(s, mContext, 100);
-                                imagePathUp.add(s);
-                            } else {
-                                imagePathUp.add(s);
-                            }
-
+                            imagePathUp.add(s);
                         }
+
                     }
-                mHandler.sendEmptyMessage(1);
                 }
-        });
+            mHandler.sendEmptyMessage(1);
+            });
         thread.start();
 
         gridAdapter  = new GridAdapter(this,imagePaths);
@@ -716,8 +741,10 @@ private void subPics(){
            repairAddContent.setProjectId(projectInfos.get(projectTmp).getId());//
            repairAddContent.setStatus(0);//
            repairAddContent.setSuggestion("");//
-           repairAddContent.setTitle(addressArray[addressTmp]);//
-           repairAddContent.setTotalCost(0);//
+           repairAddContent.setTitle(et_repair_name.getText().toString().trim());//
+           if (!TextUtils.isEmpty(total_cost.getText().toString().trim())) {
+               repairAddContent.setTotalCost(Integer.parseInt(total_cost.getText().toString().trim()));
+           }
            repairAddContent.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "111")));//
            repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDescription(fault_description.getText().toString().trim());
            repairAddContent.getMdmcAddTaskItemDtoList().get(0).setDeviceId(deviceTypes.get(deviceTypeTmp).getId());//
@@ -740,6 +767,9 @@ private void subPics(){
         if (TextUtils.isEmpty(et_appointment_time.getText().toString().trim())) {
             Toast.makeText(this,"请选择预约时间", Toast.LENGTH_SHORT).show();
             return false;
+        }else if(TextUtils.isEmpty(deadline_time.getText().toString().trim())) {
+            Toast.makeText(this,"请选择最晚维修时间", Toast.LENGTH_SHORT).show();
+            return false;
         } else if (TextUtils.isEmpty(et_repair_tel.getText().toString().trim())) {
             Toast.makeText(this,"请填写联系方式", Toast.LENGTH_SHORT).show();
             return false;
@@ -760,6 +790,9 @@ private void subPics(){
             return false;
         }else if (TextUtils.isEmpty(fault_addr.getText().toString().trim())) {
             Toast.makeText(this,"请选择故障位置", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(TextUtils.isEmpty(et_repair_name.getText().toString().trim())) {
+            Toast.makeText(this,"请填写维修名称", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

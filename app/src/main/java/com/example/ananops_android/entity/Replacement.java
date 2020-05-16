@@ -3,14 +3,85 @@ package com.example.ananops_android.entity;
 import java.io.Serializable;
 
 public class Replacement implements Serializable {
+
+   /**
+    * id : 887476148190064640
+    * version : null
+    * creator : ycadmin
+    * creatorId : 886966462575543296
+    * createdTime : 2020-05-09 11:36:41
+    * lastOperator : ycadmin
+    * lastOperatorId : 886966462575543296
+    * updateTime : 2020-05-09 11:36:41
+    * pageNum : null
+    * pageSize : null
+    * orderBy : null
+    * name : IASZone_8753
+    * price : null
+    * type : IASZone
+    * manufacture : Gantch
+    * model : FB56-WTS01HM1.2
+    * store : null
+    * longitude : null
+    * latitude : null
+    * refNo : 887476148190064641
+    * deviceId : ad496790-11a0-11ea-a2aa-13da45b8cdf8
+    * groupId : 826086529397949440
+    */
+
+   private Long id;
+   private String creator;
+   private Long creatorId;
+   private String createdTime;
    private String name;
-   private String id;
+   private int price;
    private String type;
-   private int count;
-   private int store;
-   private float price;
-   private float replacement_totalPricce;
    private String manufacture;
+   private String model;
+   private int store;
+   private String deviceId;
+   private Long groupId;
+   private int count;
+
+   public int getCount() {
+      return count;
+   }
+
+   public void setCount(int count) {
+      this.count = count;
+   }
+
+   public Long getId() {
+      return id;
+   }
+
+   public void setId(Long id) {
+      this.id = id;
+   }
+
+   public String getCreator() {
+      return creator;
+   }
+
+   public void setCreator(String creator) {
+      this.creator = creator;
+   }
+
+   public Long getCreatorId() {
+      return creatorId;
+   }
+
+   public void setCreatorId(Long creatorId) {
+      this.creatorId = creatorId;
+   }
+
+   public String getCreatedTime() {
+      return createdTime;
+   }
+
+   public void setCreatedTime(String createdTime) {
+      this.createdTime = createdTime;
+   }
 
    public String getName() {
       return name;
@@ -20,12 +91,12 @@ public class Replacement implements Serializable {
       this.name = name;
    }
 
-   public String getId() {
-      return id;
+   public int getPrice() {
+      return price;
    }
 
-   public void setId(String id) {
-      this.id = id;
+   public void setPrice(int price) {
+      this.price = price;
    }
 
    public String getType() {
@@ -36,12 +107,20 @@ public class Replacement implements Serializable {
       this.type = type;
    }
 
-   public int getCount() {
-      return count;
+   public String getManufacture() {
+      return manufacture;
    }
 
-   public void setCount(int count) {
-      this.count = count;
+   public void setManufacture(String manufacture) {
+      this.manufacture = manufacture;
+   }
+
+   public String getModel() {
+      return model;
+   }
+
+   public void setModel(String model) {
+      this.model = model;
    }
 
    public int getStore() {
@@ -52,27 +131,19 @@ public class Replacement implements Serializable {
       this.store = store;
    }
 
-   public float getPrice() {
-      return price;
+   public String getDeviceId() {
+      return deviceId;
    }
 
-   public void setPrice(float price) {
-      this.price = price;
+   public void setDeviceId(String deviceId) {
+      this.deviceId = deviceId;
    }
 
-   public float getReplacement_totalPricce() {
-      return replacement_totalPricce;
+   public Long getGroupId() {
+      return groupId;
    }
 
-   public void setReplacement_totalPricce(float replacement_totalPricce) {
-      this.replacement_totalPricce = replacement_totalPricce;
-   }
-
-   public String getManufacture() {
-      return manufacture;
-   }
-
-   public void setManufacture(String manufacture) {
-      this.manufacture = manufacture;
+   public void setGroupId(Long groupId) {
+      this.groupId = groupId;
    }
 }

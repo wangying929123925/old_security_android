@@ -97,6 +97,7 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
 
         initView();
         initData();
+        initSet();
         mCanDialogShow = true;
     }
 
@@ -222,6 +223,9 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
         }
     }
 
+    private void initSet() {
+
+    }
     private void initDateUnits(int endMonth, int endDay, int endHour, int endMinute) {
         for (int i = mBeginYear; i <= mEndYear; i++) {
             mYearUnits.add(String.valueOf(i));

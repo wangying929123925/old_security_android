@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,7 @@ public class OrderDetailReplacementFragment extends Fragment {
     private TextView tv2;
     private TextView tv3;
     private TextView tv4;
+    private LinearLayout replacement_title;
     public static OrderDetailReplacementFragment getInstance(ArrayList<String> datas,String orderId,String statusDo) {
         OrderDetailReplacementFragment orderDetailReplacementFragment = new OrderDetailReplacementFragment();
         Bundle bundle = new Bundle();
@@ -80,6 +82,7 @@ public class OrderDetailReplacementFragment extends Fragment {
         replacement_submit = view.findViewById(R.id.choose_replacement_button);
         tv_choose_whether_replace.setVisibility(View.INVISIBLE);
         fragment_order_choose_replacement.setVisibility(View.INVISIBLE);
+        replacement_title=view.findViewById(R.id.replace_title);
         tv1 = view.findViewById(R.id.tv_facilities_name);
         tv2 = view.findViewById(R.id.tv_repairer_name);
         tv3 = view.findViewById(R.id.tv_repair_result);
@@ -104,9 +107,7 @@ public class OrderDetailReplacementFragment extends Fragment {
                 List<Replacement> replacementListTest = new ArrayList<>();
                      replacementListTest= (List<Replacement>) intent.getSerializableExtra("dataList");
                      replacementList.clear();
-                for(Replacement replacement:replacementListTest){
-                    replacementList.add(replacement);
-                }
+                replacementList.addAll(replacementListTest);
                 tv_whether_replace.setText("是");
                 refresh();
             }
@@ -115,7 +116,8 @@ public class OrderDetailReplacementFragment extends Fragment {
 
     }
     private void initView(){
-        setListAdapter();
+        replacement_title.setVisibility(View.INVISIBLE);
+      //  setListAdapter();
     }
     private void initData() {
        // setListAdapter();
@@ -128,36 +130,35 @@ public class OrderDetailReplacementFragment extends Fragment {
         tv2.setText(datas.get(2));
         tv3.setText(datas.get(3));
         tv4.setText(datas.get(4));
-        if (STATUS_FLAG == "3-2" || STATUS_FLAG.equals("3-2")) {
-            initDiffDetail();
-        } else {
-            //从后台拉取数据,获取备品备件
-           Net.instance.getDeviceOrderInfo(Long.valueOf(ORDER_ID),1,SPUtils.getInstance(mContext).getString("Token",""))
-                   .subscribeOn(Schedulers.newThread())
-                   .observeOn(AndroidSchedulers.mainThread())
-                   .subscribe(new Subscriber<DeviceOrderResult>() {
-                       @Override
-                       public void onCompleted() {
 
-                       }
-
-                       @Override
-                       public void onError(Throwable e) {
-
-                       }
-
-                       @Override
-                       public void onNext(DeviceOrderResult deviceOrderResult) {
-                           if (TextUtils.equals(deviceOrderResult.getCode(), "200")) {
-                               String devices=deviceOrderResult.getResult().getDeviceOrderList().get(0).getDeviceOrder().getItems();
-                               Gson gson = new Gson();
-                               replacementList=gson.fromJson(devices,new TypeToken<List<Replacement>>(){}.getType());
-                               refresh();
-                           }
-                       }
-                   });
         }
 
+    private void getDeviceOrder() {
+        //从后台拉取数据,获取备品备件
+        Net.instance.getDeviceOrderInfo(Long.valueOf(ORDER_ID),1,SPUtils.getInstance(mContext).getString("Token",""))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<DeviceOrderResult>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(DeviceOrderResult deviceOrderResult) {
+                        if (TextUtils.equals(deviceOrderResult.getCode(), "200")) {
+                            String devices=deviceOrderResult.getResult().getDeviceOrderList().get(0).getDeviceOrder().getItems();
+                            Gson gson = new Gson();
+                            replacementList=gson.fromJson(devices,new TypeToken<List<Replacement>>(){}.getType());
+                          //  refresh();
+                        }
+                    }
+                });
     }
 
     private void setListAdapter() {
@@ -165,10 +166,10 @@ public class OrderDetailReplacementFragment extends Fragment {
             @Override
             protected void convert(final ListViewHolder viewHolder, final Replacement replacement, final int position) {
                 viewHolder.setText(R.id.replacement_table_name, replacement.getName());
-                viewHolder.setText(R.id.replacement_table_id, replacement.getId());
+             //   viewHolder.setText(R.id.replacement_table_id, replacement.getId());
                 viewHolder.setText(R.id.replacement_table_num, String.valueOf(replacement.getCount()));
                 viewHolder.setText(R.id.replacement_table_price, String.valueOf(replacement.getPrice()));
-                replacementList.get(position).setReplacement_totalPricce(replacement.getCount() * replacement.getPrice());
+              //  replacementList.get(position).setReplacement_totalPricce(replacement.getCount() * replacement.getPrice());
                 viewHolder.setText(R.id.replacement_table_money, String.valueOf(replacement.getCount() * replacement.getPrice()));
                 // final int value1=viewHolder.getItemPosition();
                 viewHolder.setOnClickListener(R.id.replacement_table_num, new View.OnClickListener() {
@@ -191,7 +192,7 @@ public class OrderDetailReplacementFragment extends Fragment {
                                             e.printStackTrace();
                                         }
                                         replacementList.get(value).setCount(num);
-                                        replacementList.get(value).setReplacement_totalPricce(replacementList.get(value).getPrice() * num);
+                                   //     replacementList.get(value).setReplacement_totalPricce(replacementList.get(value).getPrice() * num);
                                         notifyDataSetChanged();
                                     }
                                 })
@@ -254,16 +255,18 @@ public class OrderDetailReplacementFragment extends Fragment {
                 }
             }
         });
-        tv_whether_replace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(v);
-            }});
+        tv_whether_replace.setOnClickListener(v -> showDialog(v));
             }
             //刷新
             private void refresh(){
-               mAdapter.notifyDataSetChanged();
-            }
+                if (replacementList.size() > 0) {
+                    replacement_title.setVisibility(View.VISIBLE);
+                }  else {
+                    replacement_title.setVisibility(View.INVISIBLE);
+                }
+                    mAdapter.notifyDataSetChanged();
+                }
+
 
   private void showDialog(View view)
   {

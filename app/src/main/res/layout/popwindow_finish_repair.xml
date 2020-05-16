@@ -14,12 +14,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
             android:text="提交结果"
-            android:textColor="@color/deep_blue"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            />
 
         <TextView
             android:id="@+id/tv_confirm"
@@ -28,7 +28,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="取消"
-            android:textColor="@color/deep_blue"
+            android:textColor="@color/shallow_blue"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -236,11 +236,12 @@
     </RelativeLayout>
     <Button
         android:id="@+id/button_finish"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:background="@drawable/shape_corner_blue"
+        android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/shape_corner_large"
-        android:text="结束并提交"
-        android:textSize="25dp"/>
+        android:text="提交"
+        android:textColor="@color/state_selected"
+        android:textSize="16sp"/>
 </LinearLayout>
