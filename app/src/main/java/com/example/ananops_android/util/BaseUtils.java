@@ -214,9 +214,7 @@ public class BaseUtils {
                     public void onNext(OrderResponse orderResponse) {
                         if(TextUtils.equals(orderResponse.getCode(),"200")){
                             repairContents.clear();
-                            for (int i = 0; i < orderResponse.getResult().size(); i++) {
-                            repairContents.add(orderResponse.getResult().get(i));
-                        }
+                            repairContents.addAll(orderResponse.getResult().getList());
                         Toast.makeText(mContext,"repairContents", Toast.LENGTH_SHORT).show();
                     }
                     else{
@@ -236,7 +234,6 @@ public class BaseUtils {
                 .subscribe(new Subscriber<CodeMessageResponse>(){
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override

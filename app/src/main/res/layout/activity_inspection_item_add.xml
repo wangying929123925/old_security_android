@@ -389,6 +389,44 @@
             android:layout_alignParentBottom="true"
             android:background="#dbdbdb" />
     </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/setting_item_selector"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="3dp"
+                >
+                <TextView
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="上传："
+                    android:textColor="#353535"
+                    android:textSize="16sp"
+
+                    />
+                <TextView
+                    android:id="@+id/inspection_item_add_pic"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="160dp"
+                    android:singleLine="true"
+                    android:textColorHint="#DDDDDD"
+                    android:textSize="16sp"
+                    android:text="上传图片"
+                    android:gravity="center"
+                    android:textColor="@color/state_pressed"
+                    android:background="@color/deep_blue"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#dbdbdb" />
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
     <RelativeLayout

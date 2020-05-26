@@ -8,7 +8,6 @@ import android.widget.Toast;
 import com.example.ananops_android.activity.UserMainActivity;
 import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.CodeMessageResponse;
-import com.example.ananops_android.db.InspectionItemListImcRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
 import com.example.ananops_android.db.InspectionListResponse;
 import com.example.ananops_android.db.InspectionLogResponse;
@@ -125,46 +124,6 @@ public List<InspectionInfo> getInspectionList(final List<InspectionInfo> inspect
      return inspectionTaskItemList;
  }
  //查询 获取巡检子项
-public List<InspectionTaskItem> getInspectionTaskItemsImc(final List<InspectionTaskItem> inspectionTaskItemList, Long inspectTaskId,final Context mContext){
-    if (inspectTaskId != null) {
-        InspectionItemListImcRequest inspectionItemListImcRequest=new InspectionItemListImcRequest();
-        inspectionItemListImcRequest.setTaskId(inspectTaskId);
-      Net.instance.getInspectionItemListImc(inspectionItemListImcRequest, SPUtils.getInstance(mContext).getString("Token", " "))
-              .subscribeOn(Schedulers.newThread())
-              .observeOn(AndroidSchedulers.mainThread())
-              .subscribe(new Subscriber<InspectionItemListResponse>() {
-                  @Override
-                  public void onCompleted() {
-
-                  }
-
-                  @Override
-                  public void onError(Throwable e) {
-                      Log.v("ErrorGetInspectionItem", System.currentTimeMillis() + "");
-                      e.printStackTrace();
-                  }
-
-                  @Override
-                  public void onNext(InspectionItemListResponse inspectionItemListResponse) {
-                      if (TextUtils.equals(inspectionItemListResponse.getCode(), "200")) {
-                          inspectionTaskItemList.clear();
-                          if (inspectionItemListResponse.getResult().size() > 0) {
-                              inspectionTaskItemList.addAll(inspectionItemListResponse.getResult());
-                              Log.v("巡检子项列表1", inspectionItemListResponse.getResult().get(0).getId() + "");
-                          } else {
-                              Toast.makeText(mContext, "无巡检子项列表！", Toast.LENGTH_LONG).show();
-                          }
-                      } else {
-                          Toast.makeText(mContext, inspectionItemListResponse.getMessage(), Toast.LENGTH_LONG).show();
-                      }
-                  }
-              });
-
-    } else {
-        Toast.makeText(mContext, "无巡检！", Toast.LENGTH_LONG).show();
-    }
-    return inspectionTaskItemList;
-}
     //获取巡检子项详情
 
  //获取巡检进度条

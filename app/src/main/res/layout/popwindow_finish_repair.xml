@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:hint="请选择开始时间"
+            android:hint="请选择结束时间"
             android:paddingLeft="90dp"
             android:singleLine="true"
             android:textColorHint="#DDDDDD"
@@ -121,12 +121,13 @@
             android:id="@+id/et_order_fault_reason"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="11dp"
+            android:background="@null"
             android:hint="请填写故障原因"
             android:paddingLeft="90dp"
             android:singleLine="true"
             android:textColorHint="#DDDDDD"
-            android:background="@null"
             android:textSize="16sp" />
 
         <View

@@ -3,7 +3,6 @@ package com.example.ananops_android.db;
 import com.example.ananops_android.entity.InspectionInfo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AllUnDistributedWorkOrdersResponse {
 
@@ -70,6 +69,7 @@ public class AllUnDistributedWorkOrdersResponse {
         private Integer size;
         private Integer startRow;
         private Integer endRow;
+        private int pages;
         private Float total;
         private ArrayList<InspectionInfo> list;
 
@@ -121,7 +121,15 @@ public class AllUnDistributedWorkOrdersResponse {
             this.total = total;
         }
 
-       public ArrayList<InspectionInfo> getList() {
+        public int getPages() {
+            return pages;
+        }
+
+        public void setPages(int pages) {
+            this.pages = pages;
+        }
+
+        public ArrayList<InspectionInfo> getList() {
             return list;
         }
 

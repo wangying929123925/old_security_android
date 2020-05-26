@@ -32,7 +32,10 @@ public class ListMultiItemTypeAdapter<T> extends BaseAdapter {
     private boolean useItemViewDelegateManager() {
         return mItemViewDelegateManager.getItemViewDelegateCount() > 0;
     }
-
+    public void updateList(List<T> list){//更新数据
+        this.mDatas = list;
+        notifyDataSetChanged();
+    }
     @Override
     public int getViewTypeCount() {
         if (useItemViewDelegateManager())

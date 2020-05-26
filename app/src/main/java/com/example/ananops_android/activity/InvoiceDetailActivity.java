@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -123,7 +125,7 @@ public class InvoiceDetailActivity extends BaseActivity {
 
                         @Override
                         public void onError(Throwable e) {
-
+                           e.printStackTrace();
                         }
 
                         @Override
@@ -168,16 +170,35 @@ public class InvoiceDetailActivity extends BaseActivity {
             ins_num.setText(String.valueOf(i+1));
             RadioButton normal = inspection_detail_list.getChildAt(i).findViewById(R.id.normal);
             RadioButton abnormal = inspection_detail_list.getChildAt(i).findViewById(R.id.abnormal);
-            if (invoiceDetail.getInspcDetailList().get(i).getItemState().equals("Y")) {
-                normal.setChecked(true);
-                abnormal.setChecked(false);
-                tv1.setText("--");
-                tv1.setFocusable(false);
-            } else {
+            RadioGroup group= inspection_detail_list.getChildAt(i).findViewById(R.id.radioGroupID);
+            if (invoiceDetail.getInspcDetailList().get(i).getItemState() == null) {
                 normal.setChecked(false);
                 abnormal.setChecked(true);
-                tv1.setFocusable(true);
             }
+               else if (invoiceDetail.getInspcDetailList().get(i).getItemState().equals("Y")) {
+                    normal.setChecked(true);
+                    abnormal.setChecked(false);
+                    //  tv1.setFocusable(false);
+                } else {
+                    normal.setChecked(false);
+                    abnormal.setChecked(true);
+                    //    tv1.setFocusable(true);
+                }
+
+            group.setOnCheckedChangeListener((group1, checkedId) -> {
+                switch (checkedId){
+                    case R.id.normal:
+                     //   tv1.setFocusable(false);
+                        break;
+                    case R.id.abnormal:
+                  //      tv1.setFocusable(true);
+                        break;
+                        default:
+                            break;
+
+                }
+            });
+
         }
     }
 
@@ -195,6 +216,8 @@ public class InvoiceDetailActivity extends BaseActivity {
 
                         @Override
                         public void onError(Throwable e) {
+                            Log.e(TAG,"巡检单据问题");
+                            e.printStackTrace();
                             Toast.makeText(mContext,"提交失败！", Toast.LENGTH_SHORT).show();
                         }
 

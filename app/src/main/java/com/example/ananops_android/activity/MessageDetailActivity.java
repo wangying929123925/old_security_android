@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.db.InspectionDetailResponse;
@@ -77,67 +76,74 @@ public class MessageDetailActivity extends BaseActivity {
             text_message_value2.setText(messageContent);
             if (messageType.equals("MDMC_TOPIC")) {//获取维修维护信息
                 text_message_value1.setText("维修消息");
-                Net.instance.getOrderDetail(Long.valueOf(orderId), SPUtils.getInstance(mContext).getString("Token"," "))
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<OrderDetailResponse>() {
-                            @Override
-                            public void onCompleted() {
+                if(orderId!=null) {
+                    Net.instance.getOrderDetail(Long.valueOf(orderId), SPUtils.getInstance(mContext).getString("Token", " "))
+                            .subscribeOn(Schedulers.newThread())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<OrderDetailResponse>() {
+                                @Override
+                                public void onCompleted() {
 
-                            }
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e("getRepairDetail", System.currentTimeMillis() + "");
-                                if (e instanceof HttpException) {
-                                    HttpException httpException = (HttpException) e;
-                                    try {
-                                        String error = httpException.response().errorBody().string();
-                                        Log.e("RepairDetail", error);
-                                    } catch (IOException e1) {
-                                        e1.printStackTrace();
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Log.e("getRepairDetail", System.currentTimeMillis() + "");
+                                    if (e instanceof HttpException) {
+                                        HttpException httpException = (HttpException) e;
+                                        try {
+                                            String error = httpException.response().errorBody().string();
+                                            Log.e("RepairDetail", error);
+                                        } catch (IOException e1) {
+                                            e1.printStackTrace();
+                                        }
+                                    } else {
+                                        //ToastUtil.showLongToast("请求失败");
                                     }
-                                } else {
-                                    //ToastUtil.showLongToast("请求失败");
+                                    //     Toast.makeText(mContext, "获取维修信息失败！", Toast.LENGTH_SHORT).show();
                                 }
-                                Toast.makeText(mContext, "获取维修信息失败！", Toast.LENGTH_SHORT).show();
-                            }
-                            @Override
-                            public void onNext(OrderDetailResponse orderDetailResponse) {
-                                if (TextUtils.equals(orderDetailResponse.getCode(), "200")) {
-                                    String title = orderDetailResponse.getResult().getMdmcTask().getTitle();
-                                    text_message_value3.setText(title);
-                                } else {
-                                    //Toast.makeText(mContext,orderDetailResponse.getMessage(),Toast.LENGTH_SHORT).show();
+
+                                @Override
+                                public void onNext(OrderDetailResponse orderDetailResponse) {
+                                    if (TextUtils.equals(orderDetailResponse.getCode(), "200")) {
+                                        String title = orderDetailResponse.getResult().getMdmcTask().getTitle();
+                                        text_message_value3.setText(title);
+                                    } else {
+                                        //Toast.makeText(mContext,orderDetailResponse.getMessage(),Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
             } else if (messageType.equals("IMC_TOPIC")) {//获取巡检信息
                 text_message_value1.setText("巡检消息");
-                Net.instance.getInspectionDetails(Long.valueOf(orderId), SPUtils.getInstance(mContext).getString("Token", " "))
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<InspectionDetailResponse>() {
-                            @Override
-                            public void onCompleted() {
+                if (orderId != null) {
+                    Net.instance.getInspectionDetails(Long.valueOf(orderId), SPUtils.getInstance(mContext).getString("Token", " "))
+                            .subscribeOn(Schedulers.newThread())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<InspectionDetailResponse>() {
+                                @Override
+                                public void onCompleted() {
 
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.v("ErrorGetInspectionInfo", System.currentTimeMillis() + "");
-                                e.printStackTrace();
-                            }
-
-                            @Override
-                            public void onNext(InspectionDetailResponse inspectionDetailResponse) {
-                                if (TextUtils.equals(inspectionDetailResponse.getCode(), "200")) {
-                                    String title = inspectionDetailResponse.getResult().getTaskName();
-                                    text_message_value3.setText(title);
-                                } else {
-                                  //  Toast.makeText(mContext, inspectionDetailResponse.getMessage(), Toast.LENGTH_LONG).show();
                                 }
-                            }
-                        });
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Log.v("ErrorGetInspectionInfo", System.currentTimeMillis() + "");
+                                    e.printStackTrace();
+                                }
+
+                                @Override
+                                public void onNext(InspectionDetailResponse inspectionDetailResponse) {
+                                    if (TextUtils.equals(inspectionDetailResponse.getCode(), "200")) {
+                                        String title = inspectionDetailResponse.getResult().getTaskName();
+                                        text_message_value3.setText(title);
+                                    } else {
+                                        //  Toast.makeText(mContext, inspectionDetailResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                }
+
             }
         }
 

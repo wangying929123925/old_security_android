@@ -34,10 +34,26 @@
             style="@style/RadioButtonBottomTab"
             android:text="支付消息" />
     </RadioGroup>
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    <include layout="@layout/layout_search_result"/>
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <com.scwang.smartrefresh.layout.header.ClassicsHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     <ListView
-        android:background="@color/state_pressed"
         android:id="@+id/message_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@color/state_pressed"
+        android:divider="@null"
+        />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </FrameLayout>
 </LinearLayout>

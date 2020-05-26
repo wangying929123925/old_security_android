@@ -25,7 +25,7 @@ public class InspectionQueryByStatusAndIdRequest {
     }
 
     public void setPageSize(int pageSize) {
-        this.pageSize = 100;
+        this.pageSize = pageSize;
     }
 
     public int getPageNum() {
@@ -33,7 +33,7 @@ public class InspectionQueryByStatusAndIdRequest {
     }
 
     public void setPageNum(int pageNum) {
-        this.pageNum = 0;
+        this.pageNum = pageNum;
     }
 
     public Long getMaintainerId() {

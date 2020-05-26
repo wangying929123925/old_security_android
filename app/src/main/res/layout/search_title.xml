@@ -32,7 +32,7 @@
             android:layout_marginRight="0dp"
             android:layout_toRightOf="@+id/search_title_img"
             android:background="@null"
-            android:hint="请输入关键字"
+            android:hint="请输入标题关键字"
             android:singleLine="true" />
     </RelativeLayout>
 

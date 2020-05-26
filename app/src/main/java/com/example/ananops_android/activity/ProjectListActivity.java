@@ -2,7 +2,9 @@ package com.example.ananops_android.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,6 +26,8 @@ import com.example.ananops_android.view.EditTextWithDel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -38,8 +42,6 @@ public class ProjectListActivity extends BaseActivity {
     private List<ProjectInfo> projectInfos=new ArrayList<>();
     private ListCommonAdapter mAdapter;
     private Context mContext;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,23 +101,16 @@ public class ProjectListActivity extends BaseActivity {
                 finish();
             }
         });
-    }
-    private void initDatas() {
-        if (projectInfos.size() == 0) {
-            noResult.setVisibility(View.VISIBLE);
-        }else {
-            noResult.setVisibility(View.GONE);
-        }
-            mAdapter = new ListCommonAdapter<ProjectInfo>(getApplicationContext(), R.layout.item_project_list, projectInfos) {
-                @Override
-                protected void convert(ListViewHolder viewHolder, ProjectInfo projectInfo, int position) {
-                    viewHolder.setText(R.id.Plist_name, projectInfo.getProjectName());//名称
-                    viewHolder.setText(R.id.Plist_id, projectInfo.getCreator());//id
-                    viewHolder.setText(R.id.Plist_type, "开始时间："+projectInfo.getStartTime());//类型
-                    viewHolder.setText(R.id.Plist_price, "结束时间："+projectInfo.getEndTime());//价格
-                    viewHolder.setImageDrawable(R.id.inspection_sub, getResources().getDrawable(R.drawable.ic_project));
-                }
-            };
+        mAdapter = new ListCommonAdapter<ProjectInfo>(getApplicationContext(), R.layout.item_project_list, projectInfos) {
+            @Override
+            protected void convert(ListViewHolder viewHolder, ProjectInfo projectInfo, int position) {
+                viewHolder.setText(R.id.Plist_name, projectInfo.getProjectName());//名称
+                viewHolder.setText(R.id.Plist_id, projectInfo.getCreator());//id
+                viewHolder.setText(R.id.Plist_type, "开始时间："+projectInfo.getStartTime());//类型
+                viewHolder.setText(R.id.Plist_price, "结束时间："+projectInfo.getEndTime());//价格
+                viewHolder.setImageDrawable(R.id.inspection_sub, getResources().getDrawable(R.drawable.ic_project));
+            }
+        };
         sortListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -125,8 +120,56 @@ public class ProjectListActivity extends BaseActivity {
                 BaseUtils.getInstence().intent(mContext, ProjectDetailActivity.class,bundle0);
             }
         });
-        mAdapter.notifyDataSetInvalidated();
         sortListView.setAdapter(mAdapter);
+        mEtSearchName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            showSearchResult(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+    private void initDatas() {
+        if (projectInfos.size() == 0) {
+            noResult.setVisibility(View.VISIBLE);
+        }else {
+            noResult.setVisibility(View.GONE);
+        }
+           mAdapter.notifyDataSetChanged();
+
+    }
+    private void showSearchResult(String searchContent){
+        List<ProjectInfo> repairContentsFilterd=new ArrayList<>();
+        if (TextUtils.isEmpty(searchContent)) {
+            repairContentsFilterd = projectInfos;
+        }else {
+            repairContentsFilterd.clear();
+            for (ProjectInfo repairContent : projectInfos) {
+                String name = repairContent.getProjectName();
+                Pattern p = Pattern.compile(searchContent);
+                if(name!=null){
+                    Matcher m = p.matcher(name);
+                    if (m.find()) {
+                        repairContentsFilterd.add(repairContent);
+                    }
+                }
+
+            }
+        }
+        mAdapter.updateList(repairContentsFilterd);
+        if (repairContentsFilterd.size() == 0) {
+            noResult.setVisibility(View.VISIBLE);
+        } else {
+            noResult.setVisibility(View.GONE);
+        }
     }
 }

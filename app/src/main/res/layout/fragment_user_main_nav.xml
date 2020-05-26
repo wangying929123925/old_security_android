@@ -343,7 +343,7 @@
                 android:paddingRight="5dp"
                 android:text="查看项目巡检 >"/>
         </RelativeLayout>
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/state_pressed"/>
@@ -606,6 +606,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="15dp"/>
+
     <LinearLayout
         android:id="@+id/main_undo"
         android:layout_width="match_parent"
@@ -642,13 +643,19 @@
                 android:textSize="16dp"
                 tools:text="查看代办事项 >"/>
         </RelativeLayout>
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/state_pressed"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        <include layout="@layout/layout_search_result"/>
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/contact_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+        </FrameLayout>
     </LinearLayout>
 </LinearLayout>

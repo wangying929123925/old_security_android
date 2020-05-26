@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RadioGroup
+        android:id="@+id/fragment_tab"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:background="#fafafa"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+        <RadioButton
+            android:id="@+id/inspection_rb1"
+            style="@style/RadioButtonFragment"
+            android:checked="true"
+            android:text="全部子项" />
+
+        <RadioButton
+            android:id="@+id/inspection_rb2"
+            style="@style/RadioButtonFragment"
+            android:checked="false"
+            android:text="待分配" />
+
+        <RadioButton
+            android:id="@+id/inspection_rb3"
+            style="@style/RadioButtonFragment"
+            android:text="待确认" />
+
+        <RadioButton
+            android:id="@+id/inspection_rb4"
+            style="@style/RadioButtonFragment"
+            android:text="执行中" />
+        <RadioButton
+            android:id="@+id/inspection_rb5"
+            style="@style/RadioButtonFragment"
+            android:text="已完成" />
+    </RadioGroup>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    <include layout="@layout/layout_search_result"/>
+    <ListView
+        android:id="@+id/lv_inspection_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:divider="@null"
+         />
+    </FrameLayout>
+</LinearLayout>

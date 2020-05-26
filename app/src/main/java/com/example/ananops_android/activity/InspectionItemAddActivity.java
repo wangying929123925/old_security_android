@@ -21,6 +21,9 @@ import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.AnnotationUtils;
 import com.example.ananops_android.util.SPUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -48,9 +51,13 @@ public class InspectionItemAddActivity extends BaseActivity {
     private Button invoice_submit_bt;
     @ViewInject(R.id.inspection_item_back)
     private ImageView img_back;
+    @ViewInject(R.id.inspection_item_add_pic)
+    private TextView add_pic;
     private String inspectionId;
     private Context mContext;
     private int result;
+    private static final int REQUEST_LOADPIC = 1;
+    private List<Long> attachmentIds = new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,11 +76,34 @@ public class InspectionItemAddActivity extends BaseActivity {
        img_back.setOnClickListener(v -> {
          finish();
        });
+        add_pic.setOnClickListener(v -> {
+            Intent intent1 = new Intent(InspectionItemAddActivity.this, InspectionAddPicActivity.class);
+            startActivityForResult(intent1, REQUEST_LOADPIC);
+        });
         invoice_submit_bt.setOnClickListener(v ->{
             submitInspectionItem();
         });
      getInspectionInfo();
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_LOADPIC) {
+            if (resultCode == InspectionAddPicActivity.RESULT_CODE_INSPICS && data != null) {
+                ArrayList<String> strings = new ArrayList<>();
+                strings = data.getStringArrayListExtra("attachmentIds");
+                Log.v("获取到的strings：",strings+"");
+                attachmentIds.clear();
+                for (String s : strings) {
+                    if(s!=null) {
+                        Long id = Long.valueOf(s);
+                        attachmentIds.add(id);
+                    }
+                }
+            }
+        }
+    }
+
     private void getInspectionInfo() {
         Net.instance.getInspectionDetails(Long.valueOf(inspectionId), SPUtils.getInstance(mContext).getString("Token", " "))
                 .subscribeOn(Schedulers.newThread())
@@ -117,6 +147,7 @@ public class InspectionItemAddActivity extends BaseActivity {
             inspectionItemAddRequest.setLocation(inspection_item_add_tv8.getText().toString().trim());
             inspectionItemAddRequest.setCount(Integer.parseInt(inspection_item_add_tv9.getText().toString().trim()));
             inspectionItemAddRequest.setUserId(Long.valueOf(SPUtils.getInstance(mContext).getString("user_id", "1")));
+            inspectionItemAddRequest.setAttachmentIds(attachmentIds);
             Net.instance.inspectionItemAdd(inspectionItemAddRequest,SPUtils.getInstance(mContext).getString("Token", " "))
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())

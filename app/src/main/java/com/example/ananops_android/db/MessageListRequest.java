@@ -17,7 +17,7 @@ public class MessageListRequest {
     private String orderBy;
     private int pageNum;
     private int pageSize;
-    private int status;
+    private Integer status;
     private Long userId;
 
     public String getMessageTag() {
@@ -60,11 +60,11 @@ public class MessageListRequest {
         this.pageSize = pageSize;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

@@ -311,8 +311,13 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                     public void onNext(OrderDetailResponse orderDetailResponse) {
                         if (TextUtils.equals(orderDetailResponse.getCode(), "200")) {
                                 value1.clear();
+                            if (orderDetailResponse.getResult().getPmcProjectDto() != null) {
                                 value1.add(orderDetailResponse.getResult().getPmcProjectDto().getProjectName());//项目
                                 value1.add(orderDetailResponse.getResult().getPmcProjectDto().getPartyAName());//
+                            } else {
+                                value1.add("--");
+                                value1.add("--");
+                            }
                                 value1.add(orderDetailResponse.getResult().getMdmcTask().getCreator());//
                                 value1.add(orderDetailResponse.getResult().getMdmcTask().getCall());//
                                 value1.add(orderDetailResponse.getResult().getMdmcTask().getAppointTime());//
@@ -406,7 +411,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
                                   if (urlSize > 0) {
                                       value3.clear();
                                       for (int i = 0; i < urlSize; i++) {
-                                          String url = repairFileUrlResponse.getResult().get(0).getElementImgUrlDtoList().get(i).getAttachmentId().replace("\\", "");
+                                          String url = repairFileUrlResponse.getResult().get(0).getElementImgUrlDtoList().get(i).getUrl().replace("\\", "");
                                           value3.add(url);
                                           Log.i("取到的URL为：", url);
                                       }

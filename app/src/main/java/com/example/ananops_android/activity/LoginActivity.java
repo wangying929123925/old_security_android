@@ -74,8 +74,9 @@ public class LoginActivity extends BaseActivity implements CompoundButton.OnChec
             mAccount.setText(name);
             mPwd.setText(pwd);
             mRememberCheck.setChecked(true);
-            getImg();
+
         }
+        getImg();
         mLoginButton.setOnClickListener(mListener);
         refresh_button.setOnClickListener(mListener);
         check_password_cb.setOnCheckedChangeListener(this);

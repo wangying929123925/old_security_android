@@ -49,6 +49,10 @@ public class RepairAdapter extends RecyclerView.Adapter<RepairAdapter.ViewHolder
     public RepairAdapter(List<RepairContent> repairContentlist){
         mrepairContentList = repairContentlist;
     }
+    public void updateList(List<RepairContent> list){
+        this.mrepairContentList = list;
+        notifyDataSetChanged();
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewTye){//创建ViewHolder实例
         if (mContext == null) {

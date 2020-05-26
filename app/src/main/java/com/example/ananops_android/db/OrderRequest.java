@@ -39,7 +39,7 @@ public class OrderRequest {
     }
 
     public void setPageNum(int pageNum) {
-        this.pageNum = 0;
+        this.pageNum = pageNum;
     }
 
     public int getPageSize() {
@@ -47,7 +47,7 @@ public class OrderRequest {
     }
 
     public void setPageSize(int pageSize) {
-        this.pageSize = 100;
+        this.pageSize = pageSize;
     }
 
     public String getRoleCode() {

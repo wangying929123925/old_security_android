@@ -179,8 +179,8 @@ public class InspectionItemDetailActivity extends BaseActivity {
                                 public void onError(Throwable e) {
                                     Log.v("ErrorAcceptInspection", System.currentTimeMillis() + "");
                                     e.printStackTrace();
-                                    Toast.makeText(mContext, "服务器异常", Toast.LENGTH_SHORT).show();
-                                    BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
+                                    Toast.makeText(mContext, "操作失败！", Toast.LENGTH_SHORT).show();
+                                  //  BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                 }
 
                                 @Override
@@ -190,7 +190,7 @@ public class InspectionItemDetailActivity extends BaseActivity {
                                       //  InspectionUtils.getInstence().changeInspectionItemStatus(3,inspectionItemId,mContext);
                                         BaseUtils.getInstence().intent(mContext, UserMainActivity.class);
                                     } else {
-                                        Toast.makeText(mContext, codeMessageResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(mContext, "操作失败", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });

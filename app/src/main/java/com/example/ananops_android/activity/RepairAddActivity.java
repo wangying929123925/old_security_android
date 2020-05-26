@@ -10,8 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -60,9 +59,13 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.HttpException;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import top.zibin.luban.Luban;
 
 public class RepairAddActivity extends BaseActivity implements View.OnClickListener {
     final private RepairAddContent repairAddContent=new RepairAddContent();
@@ -97,7 +100,7 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
     private ArrayList<String> imagePaths = new ArrayList<>();//图片
     ArrayList<String> imagePathUp = new ArrayList<>();//上传
     private int projectTmp=0;
-    private static int tmp=1;
+    private volatile int tmp=1;
     private String[] result = new String[4];
     private List<ProjectInfo> projectInfos = new ArrayList<>();
     private String[] projectArray;
@@ -116,7 +119,7 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
     private List<TroubleAddEntity> deviceTypes = new ArrayList<>();
     private String[] deviceTypeArray;//设备类型
     private int deviceTypeTmp=0;
-
+    private  Long  deviceId = new Date().getTime();
     private Context mContext;
     private static String[] PERMISSION_STORAGE_PHOTO ={
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -127,22 +130,6 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
     private int compressFlag = 0;
     private CustomDatePicker mTimerPicker;//时间选择
     private List<Long> attachmentIdList = new ArrayList<>();
-    private final Handler mHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what)
-            {
-                case 1:
-                    compressFlag=1;
-                    break;
-                case 2:
-                    break;
-                default:
-                    break;
-            }
-            return false;
-        }
-    });
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -501,7 +488,8 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
                 addRepairSubmit();
                 break;
             case R.id.repair_submit_pics:
-               repairPicsSubmit();
+              // repairPicsSubmit();
+                subPics();
                 break;
             default:
                 break;
@@ -517,28 +505,16 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
         }
         imagePaths.addAll(paths);
         imagePaths.add("paizhao");
-        Thread thread=new Thread(() -> {
-            imagePathUp.clear();
-                for (int i = 0; i < imagePaths.size(); i++) {
-                    String s = imagePaths.get(i);
-                    if (s.equals("paizhao")) {
-                        //continue;
-                    } else {
-                        File file = new File(s);
-                        long fileSize = FileUtils.getInstance().getFileSize(file);
-                        if (fileSize > 1048576L) {
-                            s = FileUtils.getInstance().compressReSave(s, mContext, 100);
-                            imagePathUp.add(s);
-                        } else {
-                            imagePathUp.add(s);
-                        }
-
-                    }
-                }
-            mHandler.sendEmptyMessage(1);
-            });
-        thread.start();
-
+        imagePathUp.clear();
+        for (int i = 0; i < imagePaths.size(); i++) {
+            String s = imagePaths.get(i);
+            if (s.equals("paizhao")) {
+                //continue;
+            }else {
+                imagePathUp.add(s);
+            }
+        }
+       // thread.start();
         gridAdapter  = new GridAdapter(this,imagePaths);
         gridView.setAdapter(gridAdapter);
         try{
@@ -624,7 +600,7 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
         builder.create().show();
     }
     private void showProgressBar(int tmp) {
-        progressDialog=ProgressDialog.show(this,"提示","正在上传第"+tmp+"张图片",false);
+        progressDialog=ProgressDialog.show(this,"提示","正在上传图片...",false);
         progressDialog.setCanceledOnTouchOutside(true);
     }
     private void hideProgressBar() {
@@ -639,7 +615,105 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-//        imagePathUp.clear();
+    private void compressWithRx(File file) {
+
+        Luban.get(this)
+                .load(file) //加载图片
+                 .putGear(Luban.THIRD_GEAR)  //设置压缩等级
+                .asObservable()     //返回一个Obsetvable观察者对象
+                .subscribeOn(Schedulers.io())   //压缩指定IO线程
+                .observeOn(AndroidSchedulers.mainThread())  //回调返回主线程
+                .doOnError(new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {     //运行异常回调
+                        throwable.printStackTrace();
+                    }
+                })
+                .onErrorResumeNext(new Func1<Throwable, Observable<? extends File>>() {
+                    @Override
+                    public Observable<? extends File> call(Throwable throwable) {   //异常处理
+                        return Observable.empty();
+                    }
+                })
+                .subscribe(new Action1<File>() {
+                    @Override
+                    public void call(File file) {
+                        upLoadPicSingle(file);
+                    }
+                });
+    }
+    private void upLoadPicSingle(File file) {
+        String string = file.getAbsolutePath();
+        String type = string.substring(string.lastIndexOf(".") + 1);
+        Log.d("imgType", type);
+        //  客户端这样写 application/octet-stream，  服务器才认识，  规则
+        //   RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), tempFile);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/" + type), file);
+        Log.d("RequestBody", requestFile+"");
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", string, requestFile);
+        Net.instance.upLoadFiles(type, "mdmcTaskAndroid", "ananops", body, SPUtils.getInstance(mContext).getString("Token", ""), deviceId)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<UpLoadFilesResponse>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.v("上传","第"+tmp+"张照片");
+                     //   hideProgressBar();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("UploadTime", System.currentTimeMillis() + "");
+                        //  e.printStackTrace();
+                        attachmentIdList.clear();
+                        Toast.makeText(mContext, "提交失败,请重新上传图片", Toast.LENGTH_SHORT).show();
+                        if (e instanceof HttpException) {
+                            HttpException httpException = (HttpException) e;
+                            try {
+                                String error = httpException.response().errorBody().string();
+                                Log.e("InspectionUpError", error);
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onNext(List<UpLoadFilesResponse> upLoadFilesResponses) {
+                        hideProgressBar();
+                        Log.v("upLoadFilesResponses", upLoadFilesResponses + "");
+                        if (upLoadFilesResponses.size() > 0) {
+                            Toast.makeText(mContext, "提交照片成功！", Toast.LENGTH_SHORT).show();
+                            // BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
+                            Long s = upLoadFilesResponses.get(0).getAttachmentId();
+                            String url =upLoadFilesResponses.get(0).getAttachmentUrl().replace("\\","");
+                            Log.i("AttachmentUrl",url);
+                            //strings[i] = upLoadFilesResponse.getAttachmentId();
+                            attachmentIdList.add(s);
+                            Log.i("AttachmentLists", attachmentIdList+"");
+                            Log.i("tmp", tmp+"");
+                            FileUtils.getInstance().deleteCacheFile(file);
+                            if (tmp == imagePathUp.size()) {
+                                hideProgressBar();
+                                tmp=1;
+                            }else {
+                                tmp++;
+                                Log.v("tmp+", tmp+"");
+                            }
+                        }
+
+                    }
+                });
+    }
+    private String setLuBanPath() {
+        String path = Environment.getExternalStorageDirectory() + "/MyLuBan/image/";
+        File file = new File(path);
+        if (file.mkdirs()) {
+            return path;
+        }
+        return path;
+    }
+
+    //        imagePathUp.clear();
 //        imagePathUp.addAll(imagePaths);
 //        if (imagePathUp.contains("paizhao")) {
 //            imagePathUp.remove("paizhao");
@@ -647,77 +721,16 @@ public class RepairAddActivity extends BaseActivity implements View.OnClickListe
 //        }
 private void subPics(){
         attachmentIdList.clear();
-        Long deviceId = new Date().getTime();
         if (imagePathUp.size() > 0) {
+            showProgressBar(tmp);
             Log.d("imagePathUp上传", imagePathUp + "");
             for (int i = 0; i < imagePathUp.size(); i++) {
                 int num = i+1;
-                showProgressBar(num);
+                Log.i("第num=",num+"");
+
                 String string = imagePathUp.get(i);
                 File file = new File(string);
-//                long fileSize = FileUtils.getInstance().getFileSize(file);
-//                if (fileSize > 1048576L) {
-//                           string = FileUtils.getInstance().compressReSave(string, mContext, 100);
-//                           file = new File(string);
-//                       }
-                String type = string.substring(string.lastIndexOf(".") + 1);
-                Log.d("imgType", type);
-                RequestBody requestFile = RequestBody.create(MediaType.parse("image/" + type), file);
-                Log.d("RequestBody", requestFile+"");
-                MultipartBody.Part body = MultipartBody.Part.createFormData("file", string, requestFile);
-                Net.instance.upLoadFiles(type, "mdmcTaskAndroid", "ananops", body, SPUtils.getInstance(mContext).getString("Token", ""), deviceId)
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<List<UpLoadFilesResponse>>() {
-                            @Override
-                            public void onCompleted() {
-                                Log.v("上传","第"+tmp+"张照片");
-                                hideProgressBar();
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                hideProgressBar();
-                                Log.e("UploadTime", System.currentTimeMillis() + "");
-                                //  e.printStackTrace();
-                                attachmentIdList.clear();
-                                Toast.makeText(mContext, "提交失败,请重新上传图片", Toast.LENGTH_SHORT).show();
-                                if (e instanceof HttpException) {
-                                    HttpException httpException = (HttpException) e;
-                                    try {
-                                        String error = httpException.response().errorBody().string();
-                                        Log.e("InspectionUpError", error);
-                                    } catch (IOException e1) {
-                                        e1.printStackTrace();
-                                    }
-                                } else {
-                                    //ToastUtil.showLongToast("请求失败");
-                                }
-                            }
-                            @Override
-                            public void onNext(List<UpLoadFilesResponse> upLoadFilesResponses) {
-                                Log.v("upLoadFilesResponses", upLoadFilesResponses + "");
-                                if (upLoadFilesResponses.size() > 0) {
-                                    Toast.makeText(mContext, "提交照片成功！", Toast.LENGTH_SHORT).show();
-                                    // BaseUtils.getInstence().intent(mContext,UserMainActivity.class);
-                                        Long s = upLoadFilesResponses.get(0).getAttachmentId();
-                                        //strings[i] = upLoadFilesResponse.getAttachmentId();
-                                        attachmentIdList.add(s);
-                                        Log.v("AttachmentLists", attachmentIdList+"");
-                                        Log.v("tmp", tmp+"");
-                                    if (tmp == imagePathUp.size()) {
-                                        FileUtils.getInstance().deleteCacheFile();
-                                        hideProgressBar();
-                                        tmp=1;
-                                    }else {
-                                        tmp++;
-                                        Log.v("tmp+", tmp+"");
-                                    }
-                                } else {
-                                    Toast.makeText(mContext, "无返回！", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                compressWithRx(file);
             }
         }
             else{

@@ -152,8 +152,8 @@ public class FileUtils {
     /**
      * 清除缓存文件
      */
-    public void deleteCacheFile(){
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"myImg");
+    public void deleteCacheFile(File file){
+     //   File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"myImg");
         RecursionDeleteFile(file);
         Log.d("删除文件", "删除");
     }

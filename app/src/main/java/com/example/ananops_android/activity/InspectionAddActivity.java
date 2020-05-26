@@ -79,18 +79,18 @@ public class InspectionAddActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_LOADPIC) {
-            if (resultCode == InspectionAddPicActivity.RESULT_CODE_INSPICS && data != null) {
-                ArrayList<String> strings = new ArrayList<>();
-                strings = data.getStringArrayListExtra("attachmentIds");
-                 Log.v("获取到的strings：",strings+"");
-                int i = data.getIntExtra("num", 0);
+      //  if (requestCode == REQUEST_LOADPIC) {
+       //     if (resultCode == InspectionAddPicActivity.RESULT_CODE_INSPICS && data != null) {
+      //          ArrayList<String> strings = new ArrayList<>();
+       //         strings = data.getStringArrayListExtra("attachmentIds");
+       //          Log.v("获取到的strings：",strings+"");
+        //        int i = data.getIntExtra("num", 0);
 //
 //                if (null != inspectionTaskItemList1.get(i)) {
 //                    inspectionTaskItemList1.get(i).setAttachmentIds(strings);
 //                }
-            }
-        }
+     //       }
+    //    }
     }
 
     private void initViews() {

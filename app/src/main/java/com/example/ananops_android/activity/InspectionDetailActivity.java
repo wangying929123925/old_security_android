@@ -21,8 +21,8 @@ import com.example.ananops_android.db.ChangeInspectionStatusRequest;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.ConfirmWorkOrderRequest;
 import com.example.ananops_android.db.InspectionDetailResponse;
-import com.example.ananops_android.fragment.InspectionItemClassifyFragment;
 import com.example.ananops_android.fragment.InspectionItemFragment;
+import com.example.ananops_android.fragment.InspectionItemListFragment;
 import com.example.ananops_android.fragment.InspectionTimeLineFragment;
 import com.example.ananops_android.net.Net;
 import com.example.ananops_android.util.BaseUtils;
@@ -81,7 +81,7 @@ public class InspectionDetailActivity extends BaseActivity {
             list_title = new ArrayList<>();
             list_title.add("巡检信息");
             list_title.add("进度条");
-            list_title.add("子项类别");
+            list_title.add("巡检子项");
             list_title.add("其他信息");
         }
         if (list_fragment == null) {
@@ -128,7 +128,7 @@ public class InspectionDetailActivity extends BaseActivity {
 //        list_value4.add("");
         list_fragment.add(InspectionItemFragment.newIntance("1", list_item1, list_value1));
         list_fragment.add(InspectionTimeLineFragment.newIntance(inspectionId));
-        list_fragment.add(InspectionItemClassifyFragment.newInstance(inspectionId,statusDo));
+        list_fragment.add(InspectionItemListFragment.newInstance(inspectionId,statusDo));
         list_fragment.add(InspectionItemFragment.newIntance("1", list_item4, list_value4));
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list_fragment, list_title);
         //viewPager设置adapter

@@ -163,6 +163,13 @@
         android:layout_height="0dp"
         android:layout_weight="1">
         <include layout="@layout/layout_search_result"/>
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <com.scwang.smartrefresh.layout.header.ClassicsHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <ListView
             android:id="@+id/lv_contact"
             android:layout_width="match_parent"
@@ -170,15 +177,6 @@
             android:layout_gravity="center"
             android:divider="@null"
             android:scrollbars="none" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
     </FrameLayout>
-    <Button
-        android:visibility="gone"
-        android:id="@+id/inspection_complete_button1"
-        android:layout_width="match_parent"
-        android:layout_height="38dp"
-        android:text="完成巡检"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:background="@color/deep_blue"
-        android:textColor="@color/state_selected"/>
 </LinearLayout>

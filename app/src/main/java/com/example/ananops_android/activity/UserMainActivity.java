@@ -304,7 +304,8 @@ public class UserMainActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(chatMessageReceiver);
         super.onDestroy();
+        unregisterReceiver(chatMessageReceiver);
+        unbindService(serviceConnection);
     }
 }

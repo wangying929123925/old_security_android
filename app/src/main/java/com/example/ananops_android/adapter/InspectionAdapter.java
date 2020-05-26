@@ -17,6 +17,10 @@ public class InspectionAdapter extends BaseRecyclerAdapter {
     public InspectionAdapter(List<InspectionInfo> inspectionContents){
         this.inspectionContents=inspectionContents;
     }
+    public void updateList(List<InspectionInfo> list){
+        this.inspectionContents = list;
+        notifyDataSetChanged();
+    }
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_inspection_board,parent,false);

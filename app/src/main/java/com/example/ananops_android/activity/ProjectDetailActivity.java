@@ -17,8 +17,6 @@ import android.widget.Toast;
 
 import com.example.ananops_android.R;
 import com.example.ananops_android.adapter.MyFragmentPagerAdapter;
-import com.example.ananops_android.db.InspectionListByProjectRequest;
-import com.example.ananops_android.db.InspectionListResponse;
 import com.example.ananops_android.db.ProjectInfoResponse;
 import com.example.ananops_android.entity.InspectionInfo;
 import com.example.ananops_android.fragment.InspectionItemFragment;
@@ -156,49 +154,12 @@ public class ProjectDetailActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.order_detail_button2:
-                Long projectId = Long.valueOf(PROJECT_ID);
+               // Long projectId = Long.valueOf(PROJECT_ID);
                 //查询 获取项目巡检列表
-                if (projectId != null) {
-                    InspectionListByProjectRequest inspectionListByProjectRequest=new InspectionListByProjectRequest();
-                    inspectionListByProjectRequest.setProjectId(projectId);
-                    Net.instance.getInspectionListByProjectId(inspectionListByProjectRequest, SPUtils.getInstance(mContext).getString("Token", " "))
-                            .subscribeOn(Schedulers.newThread())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Subscriber<InspectionListResponse>() {
-                                @Override
-                                public void onCompleted() {
-                                    Bundle bundle0=new Bundle();
-                                    bundle0.putParcelableArrayList("result",inspectionInfoList);
-                                    bundle0.putString("statusDo","no");
-                                    BaseUtils.getInstence().intent(mContext, InspectionSearchListActivity.class,bundle0);
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-                                    Log.v("ErrorGetInspection_pro", System.currentTimeMillis() + "");
-                                    e.printStackTrace();
-                                }
-
-                                @Override
-                                public void onNext(InspectionListResponse inspectionListResponse) {
-                                    if (TextUtils.equals(inspectionListResponse.getCode(), "200")) {
-                                        inspectionInfoList.clear();
-                                        if (inspectionListResponse.getResult().size() > 0) {
-                                            inspectionInfoList.addAll(inspectionListResponse.getResult());
-
-                                            Log.v("巡检列表1", inspectionListResponse.getResult().get(0).getId() + "");
-                                        } else {
-                                            Toast.makeText(mContext, "无巡检列表！", Toast.LENGTH_LONG).show();
-                                        }
-                                    } else {
-                                        Toast.makeText(mContext, inspectionListResponse.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-                } else {
-                    Toast.makeText(mContext,"请选择项目！", Toast.LENGTH_LONG).show();
-                }
-
+                Bundle bundle = new Bundle();
+                bundle.putString("statusDo","no");
+                bundle.putString("projectId",PROJECT_ID);
+                BaseUtils.getInstence().intent(mContext, InspectionSearchListActivity.class,bundle);
                 break;
             default:
                 break;

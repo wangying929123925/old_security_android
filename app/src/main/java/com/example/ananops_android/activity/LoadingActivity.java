@@ -34,7 +34,7 @@ public class LoadingActivity extends BaseActivity {
 //        anima.setAnimationListener(new AnimationImpl());
         setContentView(R.layout.activity_introduction);
         introduction_title = findViewById(R.id.introduction_title);
-        introduction_title.setVisibility(View.GONE);
+        introduction_title.setVisibility(View.INVISIBLE);
         Timer timer=new Timer();
         TimerTask tast=new TimerTask() {
             @Override

@@ -42,7 +42,7 @@ public class InspectionItemAddRequest {
     private String scheduledStartTime;
     private int status;
     private Long userId;
-    private List<Integer> attachmentIds;
+    private List<Long> attachmentIds;
 
     public String getActualFinishTime() {
         return actualFinishTime;
@@ -180,11 +180,11 @@ public class InspectionItemAddRequest {
         this.userId = userId;
     }
 
-    public List<Integer> getAttachmentIds() {
+    public List<Long> getAttachmentIds() {
         return attachmentIds;
     }
 
-    public void setAttachmentIds(List<Integer> attachmentIds) {
+    public void setAttachmentIds(List<Long> attachmentIds) {
         this.attachmentIds = attachmentIds;
     }
 }

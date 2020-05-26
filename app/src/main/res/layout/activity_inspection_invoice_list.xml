@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include  android:id="@+id/layout_bar" layout="@layout/layout_title"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp">
+        <com.example.ananops_android.view.EditTextWithDel
+            android:id="@+id/et_search_contact"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:hint="搜索"
+            android:singleLine="true"
+            android:paddingLeft="16dp"
+            android:textSize="16sp"
+            android:background="@null"
+            />
+        <TextView
+            android:id="@+id/invoice_status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_toLeftOf="@+id/invoice_switch"
+            android:layout_marginRight="10dp"
+            android:text="未完成"/>
+        <Switch
+            android:id="@+id/invoice_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchMinWidth="20dp"
+            android:checked="false"
+            android:thumb="@drawable/switch_invoice_thumb"
+            android:track="@drawable/switch_invoice_track"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"/>
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/shallow_blue"
+        />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <include layout="@layout/layout_search_result"/>
+
+        <ListView
+            android:id="@+id/lv_contact"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:divider="@null"
+            android:scrollbars="none" />
+    </FrameLayout>
+    <Button
+        android:visibility="gone"
+        android:id="@+id/inspection_complete_button1"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:text="完成巡检"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:background="@color/deep_blue"
+        android:textColor="@color/state_selected"/>
+</LinearLayout>

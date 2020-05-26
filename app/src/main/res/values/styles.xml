@@ -54,4 +54,13 @@
         <item name="android:gravity">center</item>
         <item name="android:background">@color/deep_blue</item>
     </style>
+    <style name="RadioButtonFragment">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:button">@null</item>
+        <item name="android:textColor">@drawable/txtcolor_fragment_inspection</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/shape_corner_gray_shallow</item>
+    </style>
 </resources>

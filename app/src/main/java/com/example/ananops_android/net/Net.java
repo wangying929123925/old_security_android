@@ -3,6 +3,7 @@ package com.example.ananops_android.net;
 import com.example.ananops_android.db.AcceptImcTaskByPrincipalRequest;
 import com.example.ananops_android.db.AcceptInspectionItemRequest;
 import com.example.ananops_android.db.AllAcceptedItemByMaintainerRequest;
+import com.example.ananops_android.db.AllFinishedInspectionItemResponse;
 import com.example.ananops_android.db.AllItemByTaskIdAndStatuRequest;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersRequest;
 import com.example.ananops_android.db.AllUnDistributedWorkOrdersResponse;
@@ -27,6 +28,7 @@ import com.example.ananops_android.db.InspectionItemDetailResponse;
 import com.example.ananops_android.db.InspectionItemListImcRequest;
 import com.example.ananops_android.db.InspectionItemListResponse;
 import com.example.ananops_android.db.InspectionItemLogsRequest;
+import com.example.ananops_android.db.InspectionItemSubmitRequest;
 import com.example.ananops_android.db.InspectionListByProjectRequest;
 import com.example.ananops_android.db.InspectionListByUserIdAndStatusRequest;
 import com.example.ananops_android.db.InspectionListResponse;
@@ -126,7 +128,7 @@ public interface Net {
     Observable<GroupIdResponse> getGroupId(@Path("userId")Long userId,@Header("Authorization") String postToken);
     //获取工单列表
     @Headers("Content-Type:application/json")
-    @POST("mdmc/mdmcTask/getTaskListByIdAndStatus")
+    @POST("mdmc/mdmcTask/getTaskList")
     Observable<OrderResponse> getRepairList(@Body OrderRequest queryDto, @Header("Authorization") String postToken);
 
     //获取维修子项地址和设备列表
@@ -224,8 +226,8 @@ public interface Net {
     Observable<InspectionItemListResponse> getInspectionItemList(@Path("inspectTaskId") Long inspectTaskId, @Header("Authorization") String postToken);
 
     //查询 根据巡检ID获取巡检子项
-    @POST("imc/inspectionItem/getAllItemByTaskId")
-    Observable<InspectionItemListResponse> getInspectionItemListImc(@Body InspectionItemListImcRequest getAllItemByTaskId, @Header("Authorization") String postToken);
+    @POST("imc/inspectionItem/getAllItemListByTaskId")
+    Observable<AllFinishedInspectionItemResponse> getInspectionItemListImc(@Body InspectionItemListImcRequest getAllItemByTaskId, @Header("Authorization") String postToken);
 
     //获取项目详情
     @POST("pmc/project/getById/{id}")
@@ -305,24 +307,24 @@ public interface Net {
     Observable<CodeMessageResponse> inspectionDistributeEngineer(@Body InspectionEngineerDistributeRequest engineerDistributeDto, @Header("Authorization") String postToken);
 
     //维修工程师查询未接单子项,状态2//g根据状态和ID查询单据巡检子项
-    @POST("imc/inspectionItem/getItemByMaintainerIdAndStatus")
-    Observable<InspectionItemListResponse> getInspectionItemByMaintainerIdAndStatus(@Body InspectionQueryByStatusAndIdRequest getItemByMaintainerIdAndStatus, @Header("Authorization") String postToken);
+    @POST("imc/inspectionItem/getItemListByMaintainerIdAndStatus")
+    Observable<AllFinishedInspectionItemResponse> getInspectionItemByMaintainerIdAndStatus(@Body InspectionQueryByStatusAndIdRequest getItemByMaintainerIdAndStatus, @Header("Authorization") String postToken);
 
     //维修工程师查看已接单子项列表
-    @POST("imc/inspectionItem/getAllAcceptedItemByMaintainer")
-    Observable<InspectionItemListResponse> getAllAcceptedItemByMaintainer(@Body AllAcceptedItemByMaintainerRequest itemQueryDto, @Header("Authorization") String postToken);
+    @POST("imc/inspectionItem/getAllAcceptedItemListByMaintainer")
+    Observable<AllFinishedInspectionItemResponse> getAllAcceptedItemByMaintainer(@Body AllAcceptedItemByMaintainerRequest itemQueryDto, @Header("Authorization") String postToken);
 
     //维修工程师查看已完成巡检子项列表
     @POST("imc/inspectionItem/getAllFinishedImcItemByMaintainerId")
-    Observable<InspectionItemListResponse> getAllFinishedItemByMaintainer(@Body InspectionQueryByStatusAndIdRequest itemQueryDto, @Header("Authorization") String postToken);
+    Observable<AllFinishedInspectionItemResponse> getAllFinishedItemByMaintainer(@Body InspectionQueryByStatusAndIdRequest itemQueryDto, @Header("Authorization") String postToken);
 
     //维修工程师获取全部巡检子项列表
     @POST("imc/inspectionItem/getItemByMaintainerId")
     Observable<InspectionItemListResponse> getAllItemByMaintainer(@Body AllAcceptedItemByMaintainerRequest itemQueryDto, @Header("Authorization") String postToken);
 
    //根据巡检ID和状态查询子项列表
-    @POST("imc/inspectionItem/getAllItemByTaskIdAndStatus")
-    Observable<InspectionItemListResponse> getAllItemByTaskIdAndStatus(@Body AllItemByTaskIdAndStatuRequest getAllItemByTaskIdAndStatus, @Header("Authorization") String postToken);
+    @POST("imc/inspectionItem/getAllItemListByTaskIdAndStatus")
+    Observable<AllFinishedInspectionItemResponse> getAllItemByTaskIdAndStatus(@Body AllItemByTaskIdAndStatuRequest getAllItemByTaskIdAndStatus, @Header("Authorization") String postToken);
 
     //根据子项ID查看子项日志
     @POST("imc/inspectionItem/getItemLogs")
@@ -363,6 +365,9 @@ public interface Net {
    @POST("imc/itemInvoice/save")
    Observable<CodeMessageResponse>invoiceDetailSave(@Body InvoiceDetail formDataDto, @Header("Authorization") String postToken);
 
+   //
+    @POST("imc/inspectionItem/putResultByItemId")
+    Observable<CodeMessageResponse>putInspectionItemResult(@Body InspectionItemSubmitRequest itemResultDto,@Header("Authorization") String postToken);
    //获取消息列表
     @POST("websocket/websocket/queryWebsocketMsgInfo")
     Observable<MessageListResponse> getMessageList(@Body MessageListRequest queryWebsocketMsgInfo,@Header("Authorization") String postToken);
