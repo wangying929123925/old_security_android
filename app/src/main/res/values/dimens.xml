@@ -21,4 +21,6 @@
     <dimen name="invoice_item_tv_height">96dp</dimen>
     <!--comment-->
     <dimen name="comment_add_text_width">120dp</dimen>
+    <!--password-->
+    <dimen name="password_text">80dp</dimen>
 </resources>

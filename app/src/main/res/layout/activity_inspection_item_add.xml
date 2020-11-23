@@ -73,7 +73,6 @@
             android:singleLine="true"
             android:textColorHint="#DDDDDD"
             android:textSize="16sp"
-
             tools:text="测试"
             />
         <View

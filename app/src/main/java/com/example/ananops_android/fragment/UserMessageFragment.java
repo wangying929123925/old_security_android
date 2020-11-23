@@ -3,7 +3,6 @@ package com.example.ananops_android.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,7 +40,8 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class UserMessageFragment extends Fragment  {
+
+public class UserMessageFragment extends LazyFragment2  {
     private View mRootView;
     private Context mContext;
     //private MessageFragmentController controller;
@@ -64,29 +64,34 @@ public class UserMessageFragment extends Fragment  {
     private int totalPage = 1;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.activity_uer_message, container, false);
-        mContext = getActivity();
-        mListView = mRootView.findViewById(R.id.message_list);
-        //controller = MessageFragmentController.getInstance(this, R.id.id_fragment_message);
-       // controller.showFragment(0);
-        rg_tab = mRootView.findViewById(R.id.rg_tab);
-        noResult = mRootView.findViewById(R.id.no_result_text);
-        mRefreshLayout = mRootView.findViewById(R.id.refreshLayout);
-        return mRootView;
+        return super.onCreateView(inflater, container, savedInstanceState);
+
+     //   return mRootView;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    protected int getLayoutRes() {
+        return R.layout.activity_uer_message;
+    }
+
+    @Override
+    protected void initView(View view) {
+      //  mRootView = inflater.inflate(R.layout.activity_uer_message, container, false);
+        mContext = getActivity();
+        mListView = view.findViewById(R.id.message_list);
+        //controller = MessageFragmentController.getInstance(this, R.id.id_fragment_message);
+        // controller.showFragment(0);
+        rg_tab = view.findViewById(R.id.rg_tab);
+        noResult = view.findViewById(R.id.no_result_text);
+        mRefreshLayout = view.findViewById(R.id.refreshLayout);
         initView();
-        initDatas(null);
         rg_tab.setOnCheckedChangeListener((group, checkedId) -> {
             curPage=1;
             curState = STATE_INIT;
             switch (checkedId) {
                 case R.id.rb_all:
                     messageType = null;
-                 initDatas(null);
+                    initDatas(null);
                     break;
                 case R.id.rb_repair:
                     //controller.showFragment(0);
@@ -96,10 +101,10 @@ public class UserMessageFragment extends Fragment  {
                 case R.id.rb_inspection:
                     messageType = "IMC_TOPIC";
                     initDatas("IMC_TOPIC");
-                   // controller.showFragment(1);
+                    // controller.showFragment(1);
                     break;
                 case R.id.rb_pay:
-                 //   controller.showFragment(2);
+                    //   controller.showFragment(2);
                     messageType = "PAY_TOPIC";
                     initDatas("PAY_TOPIC");
                     break;
@@ -128,8 +133,8 @@ public class UserMessageFragment extends Fragment  {
             public void onLoadMore(RefreshLayout refreshLayout) {
                 curPage++;
                 curState = STATE_LOAD_MORE;
-              //  Log.i(TAG, "onLoadMore: curPage"+curPage);
-               // Log.i(TAG, "onLoadMore: totalPage"+totalPage);
+                //  Log.i(TAG, "onLoadMore: curPage"+curPage);
+                // Log.i(TAG, "onLoadMore: totalPage"+totalPage);
                 if (curPage <= totalPage) {
                     initDatas(messageType);
                     //  more
@@ -139,14 +144,51 @@ public class UserMessageFragment extends Fragment  {
                 mRefreshLayout.finishLoadMore();
             }
         });
+
     }
+
+    @Override
+    protected void onFragmentFirstVisible() {
+        curPage=1;
+        initDatas(null);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+      }
 
     @Override
     public void onResume() {
         super.onResume();
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    protected void onFragmentResume() {
+        super.onFragmentResume();
         curPage=1;
         initDatas(null);
+    }
 
+    @Override
+    protected void onFragmentPause() {
+        super.onFragmentPause();
     }
 
     private void initDatas(String topicType) {

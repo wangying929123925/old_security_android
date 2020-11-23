@@ -2,7 +2,6 @@ package com.example.ananops_android.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -50,7 +49,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class UserMainFragment extends Fragment implements View.OnClickListener{
+public class UserMainFragment extends LazyFragment2 implements View.OnClickListener{
     private LinearLayout noResult;
     private LinearLayout main_repair;
     private LinearLayout main_inspection;
@@ -113,20 +112,25 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      View view=inflater.inflate(R.layout.fragment_user_main,container,false);
-        mContext = getContext();
+        return super.onCreateView(inflater, container, savedInstanceState);
+   //   View view=inflater.inflate(R.layout.fragment_user_main,container,false);
+      //  initData();
+       // mRecyclerView.setLayoutManager(new GridLayoutManager(this,4,VERTICAL,false));
+       // return view;
+    }
+
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.fragment_user_main;
+    }
+
+    @Override
+    protected void initView(View view) {
         role_num = SPUtils.getInstance(mContext).getInt("role_num", 0);
         token = SPUtils.getInstance(mContext).getString("Token", " ");
-        if (role_num == 2 ) {
-            getInspectionListByFac();
-        } else if ( role_num == 4) {
-            getInspectionList();
-        } else if (role_num == 3) {
-            getInspectionItemList();
-        }
-        getRepairList();
-       // token = SPUtils.getInstance(mContext).getString("Token", "");
-        noResult=view.findViewById(R.id.no_result_text);
+        mContext = getContext();
+        // token = SPUtils.getInstance(mContext).getString("Token", "");
+        noResult = view.findViewById(R.id.no_result_text);
         icon_mine = view.findViewById(R.id.icon_mine);
         user_Type = view.findViewById(R.id.user_type);
         main_repair = view.findViewById(R.id.main_repair);
@@ -189,21 +193,48 @@ public class UserMainFragment extends Fragment implements View.OnClickListener{
         adapter=new RepairAdapter(repairContentsUndo);
         mRecyclerView.setAdapter(adapter);
         dataChangesNotify();
-      //  initData();
-       // mRecyclerView.setLayoutManager(new GridLayoutManager(this,4,VERTICAL,false));
-        return view;
-    }
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         initData();
         setOnListener();
     }
 
     @Override
+    protected void onFragmentFirstVisible() {
+
+        if (role_num == 2 ) {
+            getInspectionListByFac();
+        } else if ( role_num == 4) {
+            getInspectionList();
+        } else if (role_num == 3) {
+            getInspectionItemList();
+        }
+        getRepairList();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    protected void onFragmentResume() {
+        super.onFragmentResume();
+        refresh();
+    }
+
+    @Override
+    protected void onFragmentPause() {
+        super.onFragmentPause();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        refresh();
+
     }
 
     private void initData() {

@@ -11,6 +11,7 @@ import com.example.ananops_android.db.AllUnauthorizedTaskRequest;
 import com.example.ananops_android.db.AllUnauthorizedTaskResponse;
 import com.example.ananops_android.db.ChangeInspectionItemStatusRequest;
 import com.example.ananops_android.db.ChangeInspectionStatusRequest;
+import com.example.ananops_android.db.ChangePasswordRequest;
 import com.example.ananops_android.db.ChangeStatusDto;
 import com.example.ananops_android.db.CodeMessageResponse;
 import com.example.ananops_android.db.ConfirmWorkOrderRequest;
@@ -118,7 +119,7 @@ public interface Net {
                                     @Field("client_id") String client_id,
                                     @Field("client_secret") String client_secret,
                                     @Header("deviceId") Long deviceId
-    );
+            );
 
     //获取用户信息
     @POST("uac/user/queryUserInfo/{loginName}")
@@ -126,6 +127,9 @@ public interface Net {
     //获取组织信息
     @POST("uac/user/getUacUserById/{userId}")
     Observable<GroupIdResponse> getGroupId(@Path("userId")Long userId,@Header("Authorization") String postToken);
+   //修改密码
+    @POST("uac/user/authUserModifyPwd")
+    Observable<CodeMessageResponse>changePassword(@Body ChangePasswordRequest userModifyPwdDto,@Header("Authorization") String postToken);
     //获取工单列表
     @Headers("Content-Type:application/json")
     @POST("mdmc/mdmcTask/getTaskList")

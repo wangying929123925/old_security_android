@@ -103,6 +103,7 @@
         <activity android:name=".activity.InspectionItemAddActivity"/>
         <activity android:name=".activity.InspectionInvoiceListActivity"/>
         <activity android:name=".activity.InvoiceDetailActivity" />
+        <activity android:name=".activity.ChangePasswordActivity"/>
         <activity android:name=".activity.LoadingActivity"
             >
             <intent-filter>

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ananops_android.R;
+import com.example.ananops_android.activity.ChangePasswordActivity;
 import com.example.ananops_android.activity.IntroductionActivity;
 import com.example.ananops_android.activity.LoginActivity;
 import com.example.ananops_android.activity.QuestionSubmitActivity;
@@ -27,10 +28,12 @@ public class UserMineFragment extends Fragment implements View.OnClickListener {
     private TextView my_wallet;
     private TextView my_config;//我的信息
     private TextView mine_my_intro;
+    private TextView mine_my_safe;
 
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_mine, container, false);
+        mine_my_safe=view.findViewById(R.id.mine_my_safe);
         icon_mine = view.findViewById(R.id.icon_mine);
         mine_text = view.findViewById(R.id.mine_text);
         my_join = view.findViewById(R.id.mine_my_join);
@@ -52,6 +55,7 @@ public class UserMineFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setOnListener() {
+        mine_my_safe.setOnClickListener(this);
         my_join.setOnClickListener(this);
         my_message.setOnClickListener(this);
         my_wallet.setOnClickListener(this);
@@ -62,6 +66,10 @@ public class UserMineFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.mine_my_safe:
+                Intent intent = new Intent(this.getContext(), ChangePasswordActivity.class);
+                startActivity(intent);
+                break;
             case R.id.mine_my_join:
                 Toast.makeText(this.getContext(),"Ops,正在开发中",Toast.LENGTH_LONG).show();
                 break;
